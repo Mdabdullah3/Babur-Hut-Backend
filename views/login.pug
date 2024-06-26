@@ -1,0 +1,32 @@
+doctype html
+html(lang="en")
+	head
+		meta(charset="UTF-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		title #{title}
+		script(type="module", src="/js/pages/login.js") 
+	body 
+
+		form(method='POST' action='/login')
+			label Email 
+			br
+			input(type='email' name='email' placeholder='abc@gmail.com') 
+			br
+			label Password 
+			br
+			input(type='password' name='password' placeholder='********') 
+			br
+			button() Login
+
+			br
+			br
+			a(href='/auth/google') Login By Google
+			br
+			p 
+				span Don't have an account ? 
+				a(href='/register') Register
+
+			br
+			p 
+				a(href='/') Home Page
+

@@ -1,0 +1,87 @@
+doctype html
+html(lang="en")
+	head
+		meta(charset="UTF-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		title #{title}
+
+		script(defer type='module' src="/js/pages/dashboard/product.js") 
+
+		//- To prevent XSS attack on inline script: comes from app.ts : res.locals.cspNonce
+		script(nonce=cspNonce).
+			const logedInUser = !{logedInUserJs} 		// pass logedInUser to client-side too
+
+
+	body 
+		a(href='#' name='add-product-link') Toggle Add Product From
+
+		//- div(name='add-product-container' hidden)
+		div(name='add-product-container' )
+			h2(name='product-title') Create Product
+			p(name='product-id-container' hidden)
+				small(name='product-id') Product Id: 
+				small(name='product-id-value') 
+
+			form(name='add-product')
+				div
+					label Name
+					input(type='text' name='name' placeholder='product name')
+
+				div
+					label Price 
+					input(type='number' name='price' placeholder='300')
+
+				div
+					label Quantity 
+					input(type='number' name='quantity' placeholder='1')
+
+				div
+					label Summary 
+					input(type='text' name='summary' placeholder='product short summary')
+
+				div
+					label Description 
+					input(type='text' name='description' placeholder='product details')
+
+				div
+					label Category 
+					select(name='category')
+						option(value='shirt') Shirt
+						option(value='pant') Pant  
+
+				div
+					label Brand 
+					select(name='brand')
+						option(value='adidas') Adidas
+						option(value='ramon') Ramon  
+
+				div
+					label Size 
+					select(name='size')
+						option(value='sm') sm
+						option(value='lg') lg  
+						option(value='xl') xl  
+
+				div
+					label Cover Photo 
+					input(type='file' name='coverPhoto' )
+
+				div
+					label Images
+					input(type='file' multiple=true name='images' )
+
+				div
+					br
+					button(type='submit') Add Product
+
+
+		br
+		br
+		div(name='show-products')
+		br
+		h2 Products
+		pre
+			div(name='show-products-in-details')
+			//- #{JSON.stringify(products, null, 2)}
+		
+

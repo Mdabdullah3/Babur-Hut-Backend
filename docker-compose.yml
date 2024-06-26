@@ -1,0 +1,45 @@
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb-database
+    ports:
+      - 27017:27017
+    restart:
+      on-failure
+
+    volumes:
+      - mongo-db:/data/db
+    networks:
+      - mern-network
+
+  backend:
+    build: .
+    container_name: node-app
+    working_dir: /app
+    ports:
+      - 5000:5000
+      - 35729:35729
+    restart:
+      on-failure
+
+    volumes:
+      - .:/app
+
+    environment:
+      # DB_LOCAL_URL: mongodb://mongodb:27017/test-db
+      # DB_REMOTE_URL: mongodb://mongodb:27017/test-db
+      DB_LOCAL_URL: "${DB_LOCAL_URL}"
+      DB_REMOTE_URL: "${DB_REMOTE_URL}"
+    
+    depends_on:
+      - mongodb
+    
+    networks:
+      - mern-network
+
+
+volumes:
+  mongo-db:
+
+networks:
+  mern-network: {}

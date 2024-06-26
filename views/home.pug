@@ -1,0 +1,27 @@
+doctype html
+html(lang="en")
+	head
+		meta(charset="UTF-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		title #{title}
+		script(type="module", src="/js/pages/home.js") 
+	body 
+
+		br
+		div
+			a(href="/login") Login 
+		div
+			a(href="/profile") Profile 
+
+		br
+		br
+		div
+			//- a(href="/api/users/logout") Logout by POST /logout route
+			button(name="logout") Logout 
+		
+
+		div
+			if user
+				pre
+					#{JSON.stringify(user, null, 2)}
+		

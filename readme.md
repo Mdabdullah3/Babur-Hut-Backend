@@ -1,0 +1,689 @@
+![dockarize-nodejs-application.png](https://github.com/JavaScriptForEverything/babur-hat/blob/main/public/images/dockarize-nodejs-application.png)
+
+
+
+## Common 4 type of Error Handling
+1. Nodejs Error
+2. Express Error
+3. MongoDB Error
+4. JsonWebToken Error
+
+### Nodejs Error
+- Handled Node.js has 2 type of error:
+	- Synchronous Error (Globally):
+		- **code**: *throw 'Test synchronous error handler'*
+		- **code**: *throw new Error('Test synchronous error handler')*
+
+	- ASynchronous Error (Globally)
+		- **code**: *Promise.reject('Test Asynchronous Error handler')*
+		- **code**: *Promise.reject(new Error('Test Asynchronous Error handler'))*
+	
+
+
+
+### Express Error
+Express has it's own built-in Global Error handler
+- Uses Express Global Error handler
+- Handled Route NotFound error
+
+### Database Error
+Database has common 4 type of errors 
+- DBConnection Error 									: handled
+- Invalid Id Error 		(CastError)			: provide simple message instead of technical mesage
+- Duplicate Error 		(11000) 				: 	" 			" ....
+- Validation Error 	(ValidationError)	:  	" 			" ....
+
+
+## Routes
+- GET / 							(just for testing)
+- GET /register 			(just for testing)
+- GET /login 		 			(just for testing)
+- GET /logout 		 		: logout from local, google, ... 
+- GET /error 		 			(just for testing) 
+
+- GET /auth/google 					: Google Login
+- GET /api/auth/register 		: Local Register
+- GET /api/auth/login 			: Local Login
+- GET /api/auth/out 				: logout (local + google)
+		
+
+- GET /api/users
+- DELETE /api/users/:id
+
+- GET /api/products
+- POST /api/products
+
+- GET /api/reviews
+- POST /api/reviews
+
+
+### Login and Registration
+- We can login multiple ways:
+	- Local Login: 
+	- Google Login: 
+
+
+
+##### For Local Register
+` - POST 	`http://localhost:5000/api/auth/register'
+`
+```
+const fields = {
+	email: 'abc@gmail.com',
+	password: 'yourpassword',
+}
+
+try {
+	const res = await fetch('/api/auth/register', {
+		method: 'POST',
+		body: JSON.stringify(fields),
+		headers: {
+			'content-type': 'application/json',
+			'accept': 'application/json',
+		}
+	})
+	if( !res.ok ) throw await res.json()
+
+	const data = await res.json()
+	console.log(data)
+
+} catch( err ) {
+	console.log(err)
+}
+
+```
+
+##### For Google Login
+`	GET `http://localhost:5000/auth/google'`
+
+
+##### For Local Login
+` - POST 	`http://localhost:5000/api/auth/login'
+`
+```
+const fields = {
+	email: 'abc@gmail.com',
+	password: 'yourpassword',
+}
+
+try {
+	const res = await fetch('/api/auth/login', {
+		method: 'POST',
+		body: JSON.stringify(fields),
+		headers: {
+			'content-type': 'application/json',
+			'accept': 'application/json',
+		}
+	})
+	if( !res.ok ) throw await res.json()
+
+	const data = await res.json()
+	console.log(data)
+
+} catch (err) {
+	console.log(err)
+}
+```
+
+##### For Logout (local/google)
+` - POST 	`http://localhost:5000/api/auth/logout'
+`
+```
+try {
+	const res = await fetch('/api/auth/logout', { method: 'POST' })
+	if( !res.ok ) throw await res.json()
+
+	const data = await res.json()
+	console.log(data)
+
+} catch (err) {
+	console.log(err)
+}
+```
+
+
+
+### API Features 
+- pagination | search | sort | filtered fields are applied on every `GET /api/[route-name]`
+
+	- `GET {{origin}}/api/products`
+	- `GET {{origin}}/api/reviews`
+	- `GET {{origin}}/api/users`
+
+
+```
+{{origin}}/api/products
+	?_page=2
+	&_limit=3
+	&_sort=-createdAt,price 						# field1,field2,...
+	&_search=awesome product,name,summary,description 			# find text 'awesome product' in name, or summary or description any of  field
+	&_fields=name,summary,price 			# only get those 3 fields + populated + build-in fields
+
+
+http://localhost:5000/api/products?_limit=3&_page=2&_search=awesome product,name,summary,description&_sort=-createdAt,price&-fields=name,summary,price
+
+```
+
+
+##### Pagination
+Request: ` GET {{origin}}/api/products?_limit=2&_page=1 `
+
+Respose:
+``` 
+{
+  "status": "success",
+  "total": 2,
+  "data": [
+    {
+      "coverPhoto": {
+        "public_id": "26735687-95f7-4f41-a1c1-b5d8411a35d6",
+        "secure_url": "/upload/images/cover-photo.jpg"
+      },
+      "_id": "6649eb35dabbe03d553861f0",
+      "user": "6649e861c74ab9431356dce9",
+      "name": "my-product-name-1",
+      "slug": "my-product-name-1",
+      "price": 40,
+      "quantity": 2,
+      "summary": "summary description between 10-150",
+      "description": "description between 10-1000",
+      "category": "shirt",
+      "brand": "niki",
+      "size": "xs",
+      "images": [
+        {
+          "public_id": "9d362a03-0412-4505-ae8e-6fff5c1f24db",
+          "secure_url": "/upload/images/photo-1.jpg",
+          "_id": "6649eb35dabbe03d553861f1"
+        },
+        {
+          "public_id": "9a4ea4a0-e61f-426f-ba6f-2a5983ef44f5",
+          "secure_url": "/upload/images/photo-2.jpg",
+          "_id": "6649eb35dabbe03d553861f2"
+        },
+        {
+          "public_id": "30463a7c-f89f-4504-9ba2-72e354a353eb",
+          "secure_url": "/upload/images/photo-3.jpg",
+          "_id": "6649eb35dabbe03d553861f3"
+        }
+      ],
+      "stock": 0,
+      "sold": 0,
+      "revenue": 0,
+      "numReviews": [],
+      "ratings": 4,
+      "createdAt": "2024-05-19T12:06:13.298Z",
+      "updatedAt": "2024-05-19T12:06:13.298Z",
+      "__v": 0
+    },
+    {
+      "coverPhoto": {
+        "public_id": "7cc1638b-8cd0-4ed8-8864-9d64bc3eabbe",
+        "secure_url": "/upload/images/cover-photo.jpg"
+      },
+      "_id": "6649ebc8dabbe03d553861f9",
+      "user": "6649e861c74ab9431356dce9",
+      "name": "it is my sample product",
+      "slug": "it-is-my-sample-product",
+      "price": 500,
+      "quantity": 5,
+      "summary": "summary description between 10-150",
+      "description": "description between 10-1000",
+      "category": "pant",
+      "brand": "niki",
+      "size": "xs",
+      "images": [
+        {
+          "public_id": "e60a264c-a092-4fb0-90b3-9678e31de131",
+          "secure_url": "/upload/images/photo-1.jpg",
+          "_id": "6649ebc8dabbe03d553861fa"
+        },
+        {
+          "public_id": "b7556573-d26e-41ae-b8d8-89594dd6d97d",
+          "secure_url": "/upload/images/photo-2.jpg",
+          "_id": "6649ebc8dabbe03d553861fb"
+        },
+        {
+          "public_id": "bad341d0-038a-49ac-b4e1-e2e467a38a3c",
+          "secure_url": "/upload/images/photo-3.jpg",
+          "_id": "6649ebc8dabbe03d553861fc"
+        }
+      ],
+      "stock": 0,
+      "sold": 0,
+      "revenue": 0,
+      "numReviews": [],
+      "ratings": 4,
+      "createdAt": "2024-05-19T12:08:40.114Z",
+      "updatedAt": "2024-05-19T12:08:40.114Z",
+      "__v": 0
+    }
+  ]
+}
+```
+
+
+
+##### Search 
+find 'sample product' text in ***name*** or ***slug*** or ***summary*** or ***descript*** fields
+
+Request: ` GET {{origin}}/api/products?_search=sample product,name,slug,summary,description `
+
+
+Respose:
+``` 
+{
+  "status": "success",
+  "total": 1,
+  "data": [
+    {
+      "coverPhoto": {
+        "public_id": "7cc1638b-8cd0-4ed8-8864-9d64bc3eabbe",
+        "secure_url": "/upload/images/cover-photo.jpg"
+      },
+      "_id": "6649ebc8dabbe03d553861f9",
+      "user": "6649e861c74ab9431356dce9",
+      "name": "it is my sample product",
+      "slug": "it-is-my-sample-product",
+      "price": 500,
+      "quantity": 5,
+      "summary": "summary description between 10-150",
+      "description": "description between 10-1000",
+      "category": "pant",
+      "brand": "niki",
+      "size": "xs",
+      "images": [
+        {
+          "public_id": "e60a264c-a092-4fb0-90b3-9678e31de131",
+          "secure_url": "/upload/images/photo-1.jpg",
+          "_id": "6649ebc8dabbe03d553861fa"
+        },
+        {
+          "public_id": "b7556573-d26e-41ae-b8d8-89594dd6d97d",
+          "secure_url": "/upload/images/photo-2.jpg",
+          "_id": "6649ebc8dabbe03d553861fb"
+        },
+        {
+          "public_id": "bad341d0-038a-49ac-b4e1-e2e467a38a3c",
+          "secure_url": "/upload/images/photo-3.jpg",
+          "_id": "6649ebc8dabbe03d553861fc"
+        }
+      ],
+      "stock": 0,
+      "sold": 0,
+      "revenue": 0,
+      "numReviews": [],
+      "ratings": 4,
+      "createdAt": "2024-05-19T12:08:40.114Z",
+      "updatedAt": "2024-05-19T12:08:40.114Z",
+      "__v": 0
+    }
+  ]
+}
+``` 
+
+
+
+##### Filter Fields 
+instead of fetch entire ***document*** object, we can get only required ***fields*** which save bandwidth and response will be faster, because get minimum required data only.
+
+Request: ` GET {{origin}}/api/products?_fields=name,price,brand`
+
+Respose:
+``` 
+{
+  "status": "success",
+  "total": 2,
+  "data": [
+    {
+      "_id": "6649eb35dabbe03d553861f0",
+      "name": "my-product-name-1",
+      "price": 40,
+      "brand": "niki"
+    },
+    {
+      "_id": "6649ebc8dabbe03d553861f9",
+      "name": "it is my sample product",
+      "price": 500,
+      "brand": "niki"
+    }
+  ]
+}
+
+``` 
+
+
+
+
+
+
+##### Sort by Fields 
+we can sort our product by any fields, to show in UI according to user's needs
+
+- show only latest 20 products
+- show law price products 
+- show top buy/sold products 
+- ...
+
+
+Request: ` GET {{origin}}/api/products?_limit=20&_sort=-createdAt`
+Respose: Get Recently created 20 products only
+
+Request: ` GET {{origin}}/api/products?_limit=20&_sort=price`
+Respose: Get lawest pricey products
+
+Request: ` GET {{origin}}/api/products?_limit=20&_sort=-price`
+Respose: Get highest pricey products
+...
+
+
+
+## Products
+Product GET/PATCH/DELETE can be either by `id` or by `slug`
+
+- GET {{origin}}/api/products
+- POST {{origin}}/api/products
+
+- GET {{origin}}/api/products/6649ebc8dabbe03d553861f9
+- GET {{origin}}/api/products/it-is-my-sample-product
+-
+- PATCH {{origin}}/api/products/6649ebc8dabbe03d553861f9
+- PATCH {{origin}}/api/products/it-is-my-sample-product
+-
+- DELETE {{origin}}/api/products/6649ebc8dabbe03d553861f9
+- DELETE {{origin}}/api/products/it-is-my-sample-product
+-
+- GET {{origin}}/api/products/get-random-products
+
+
+```
+GET /api/products/
+GET /api/products/?_page=1&_limit=4
+GET /api/products/?_sort='createdAt' 										: any field name, or multiple field name
+GET /api/products/?_search='search value, name,slug' 		: Search on any fields: namly `name` & `slug`
+GET /api/products/?_fields='name,slug,price' 						: Only got 3 fields (+ _id, populated fields)
+```
+
+#### Get Products
+```
+# Get all products
+- GET {{origin}}/api/products
+
+# Get 20 products per page
+- GET {{origin}}/api/products?_limit=20&_page=1
+
+# Search 'sample product' in `name` | `slug` | `summary` | `description`
+- GET {{origin}}/api/products?_search=sample product,name,slug,summary,description
+
+# Only got given fields, instead of entire Doc
+- GET {{origin}}/api/products?_fields=name,price,brand
+
+# Show products based on price : lowest to height order
+- GET {{origin}}/api/products?_sort=-price
+```
+
+#### Get Random Products
+```
+- GET {{origin}}/api/products/get-random-products
+```
+
+#### Add Product
+```
+body: {
+	"user": logedInUser.id,
+	"name": "it is my sample product",
+	"slug": "it-is-my-sample-product-unitque",
+	"price": 500,
+	"quantity": 5,
+	"summary": "summary description between 10-150",
+	"description": "description between 10-1000",
+
+	"category": "pant",
+	"brand": "niki",
+	"size": "xs",
+
+	"coverPhoto": "data:jpg/images;alkjdfajd...=",
+	"images": [
+		"data:jpg/images;alkjdfajd...=",
+		"data:jpg/images;rraksdjfasdkjf...=",
+		"data:jpg/images;fflkjdfajd...=",
+	]
+}
+
+- POST {{origin}}/api/products
+```
+
+
+#### Update Product
+```
+body: {
+	"name": "it is my sample product",
+	"slug": "it-is-my-sample-product-unitque",
+	"price": 500,
+	"quantity": 5,
+	"summary": "summary description between 10-150",
+	"description": "description between 10-1000",
+
+	"category": "pant",
+	"brand": "niki",
+	"size": "xs",
+
+	"coverPhoto": "data:jpg/images;alkjdfajd...=",
+	"images": [
+		"data:jpg/images;alkjdfajd...=",
+		"data:jpg/images;rraksdjfasdkjf...=",
+		"data:jpg/images;fflkjdfajd...=",
+	]
+}
+
+- PATCH {{origin}}/api/products/6649ebc8dabbe03d553861f9
+- PATCH {{origin}}/api/products/it-is-my-sample-product
+```
+
+
+
+
+
+
+
+
+#### delete Product
+```
+- DELETE {{origin}}/api/products/6649ebc8dabbe03d553861f9
+- DELETE {{origin}}/api/products/it-is-my-sample-product
+```
+
+
+
+
+
+
+
+
+## Reviews
+
+- GET {{origin}}/api/reviews 		// get all reviews
+- POST {{origin}}/api/reviews
+
+- GET {{origin}}/api/reviews/6649ebc8dabbe03d553861f9
+- PATCH {{origin}}/api/reviews/6649ebc8dabbe03d553861f9
+- DELETE {{origin}}/api/reviews/6649ebc8dabbe03d553861f9
+
+- GET {{origin}}/api/products/:productId/reviews 		// get all reviews on specific products
+
+```
+GET /api/reviews/
+GET /api/reviews/?_page=1&_limit=4
+GET /api/reviews/?_sort='createdAt' 										: any field name, or multiple field name
+GET /api/reviews/?_search='search value, review' 				: Search on any fields: namly `review` 
+GET /api/reviews/?_fields='review,product,user' 				: Only got 3 fields (+ _id, populated fields)
+```
+
+
+## Users
+
+- GET {{origin}}/api/users
+
+- POST {{origin}}/api/auth/register
+- POST {{origin}}/api/auth/login
+- POST {{origin}}/api/auth/logout
+- GET {{origin}}/auth/google
+
+- GET {{origin}}/api/users/6649ebc8dabbe03d553861f9
+- GET {{origin}}/api/users/me 
+
+- PATCH {{origin}}/api/users/6649ebc8dabbe03d553861f9
+- DELETE {{origin}}/api/users/6649ebc8dabbe03d553861f9
+
+- PATCH {{origin}}/api/auth/update-password
+- POST {{origin}}/api/auth/forgot-password
+- PATCH {{origin}}/api/auth/reset-password
+
+```
+GET /api/users/
+GET /api/users/?_page=1&_limit=4
+GET /api/users/?_sort='createdAt' 										: any field name, or multiple field name
+GET /api/users/?_search='search value, name,email' 		: Search on any fields: namly `name,email` 
+GET /api/users/?_fields='review,product,user' 				: Only got 3 fields (+ _id, populated fields)
+```
+
+#### Register User (Locally)
+```
+body: {
+  "name" : "delete me",
+	"email" : "delete@gmail.com",
+	"password" : "asdfasdf",
+	"confirmPassword" : "asdfasdf",
+	"role" : "admin",
+	"avatar" : "data:image/jpeg;base64,/9j/4AAQSkZJRgA..."
+}
+
+- POST {{origin}}/api/auth/register
+```
+
+
+#### User Login 
+```
+body: {
+  "email": "riajul@gmail.com",
+  "password": "{{pass}}"
+}
+
+- POST {{origin}}/api/auth/register
+```
+
+#### User Logout 
+```
+- POST {{origin}}/api/auth/logout
+```
+
+
+#### Update User  (name & avatar only)
+```
+body: {
+  "name": "riajul islam",
+	"avatar" : "data:image/jpeg;base64,/9j/4AAQSkZJRgA..."
+}
+
+- PATCH {{origin}}/api/users/6649ebc8dabbe03d553861f9
+```
+
+#### Update User password
+```
+body: {
+  "currentPassword": "asdfasdff",
+  "password": "asdfasdf",
+  "confirmPassword": "asdfasdf"
+}
+
+- PATCH {{origin}}/api/auth/update-password
+```
+
+
+
+#### Forgot User password
+```
+body: {
+  "email": "riajul@gmail.com"
+}
+
+- POST {{origin}}/api/auth/forgot-password
+```
+
+
+
+#### Reset User password
+```
+body: {
+  "resetToken" : "8a25491050a62334fb1ec5ca4a14c43aaebcdb5f6813806e9fda66e67a0decbd",
+  "password": "{{pass}}",
+  "confirmPassword": "{{pass}}"
+}
+
+- PATCH {{origin}}/api/auth/reset-password
+```
+
+
+
+
+
+
+
+## Image Upload
+
+- To upload file, file must be `base64` encoded `dataUrl`
+
+```
+const image  = input(type='file' name='avatar')
+
+image.addEventListener('change', async (evt) => {
+	cosnt file = evt.files[0]
+
+	const reader = new FileReader()
+	reader.readAsDataUrl( file )
+	reader.onload = () => {
+		if(reader.readyState === 2) {
+			const dataUrl = reader.result
+
+			try {
+
+				const res = await fetch('/api/auth/register', {
+					method: 'POST',
+					body: JSON.stringify({ ..., avatar: dataUrl })
+					headers: {
+						'content-type': 'application/json',
+						'accept': 'application/json',
+					},
+					credentials: 'include'
+				})
+
+				if(!res.ok) throw await res.json()
+				const { status, data } = await res.json()
+				console.log( data )
+
+			} catch (error) {
+				console.log( error )
+			}
+		}
+	}
+})
+```
+
+- Upload image on File Storage : Hard Dist 
+- if file upload `maxSize`, cross limit then file upload will be failed with throwing error to user
+- only user himself or admin user can update or delete other user
+
+- restrict user based on `user.role`
+
+```
+GET /api/users 			: Only `user.role = 'admin'`  allows to see the users
+PATCH /api/users 		: Only user himself or admin can update other users
+DELETE /api/users 	: Only user himself or admin can delete other users
+```
+
+
+
+
+
+
+

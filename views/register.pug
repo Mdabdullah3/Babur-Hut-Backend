@@ -1,0 +1,37 @@
+doctype html
+html(lang="en")
+	head
+		meta(charset="UTF-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		title #{title}
+		script(defer type="module", src="/js/pages/register.js") 
+	body 
+
+		//- form(method='POST' action='/register')
+		form
+			label Name 
+			br
+			input(type='text' name='name' value='riajul islam' ) 
+			br
+			label Email 
+			br
+			input(type='email' name='email' value='abc@gmail.com') 
+			br
+			label Password 
+			br
+			input(type='password' name='password' value='asdfasdf') 
+			br
+			label Confirm Password 
+			br
+			input(type='password' name='confirmPassword' value='asdfasdf') 
+			br
+			label Avatar
+			br
+			input(type='file' name='avatar') 
+			br
+			button() Register
+
+			br
+			p 
+				span If already registered,please 
+				a(href='/login') Login

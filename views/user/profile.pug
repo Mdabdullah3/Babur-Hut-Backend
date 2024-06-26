@@ -1,0 +1,37 @@
+doctype html
+html(lang="en")
+	head
+		meta(charset="UTF-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		title Profile | #{logedInUser.name}
+	body 
+
+		h1 User Profile: #{logedInUser.name}
+
+		pre= JSON.stringify(logedInUser, null, 2)
+
+		div
+			a(href="/") 
+				button(type="button") Home
+
+		div
+			button(name="logout") Logout 
+
+		script.
+			const button = document.querySelector('[name=logout]')
+			button.addEventListener('click', async (evt) => {
+				evt.preventDefault()
+
+				try {
+					const res = await fetch('/api/auth/logout', { method: 'POST' })
+					//- if(!res.ok) throw new Error('logout filed')
+					if(!res.ok) throw await res.json()
+
+					const data = await res.json()
+					console.log(data)
+
+				} catch (err) {
+					//- alert('Logout failed, see in console: ', err.message)
+					console.log(err)
+				}
+			})
