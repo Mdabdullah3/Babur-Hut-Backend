@@ -26,10 +26,10 @@ services:
       - .:/app
 
     environment:
-      # DB_LOCAL_URL: mongodb://mongodb:27017/test-db
-      # DB_REMOTE_URL: mongodb://mongodb:27017/test-db
-      DB_LOCAL_URL: "${DB_LOCAL_URL}"
-      DB_REMOTE_URL: "${DB_REMOTE_URL}"
+      DB_LOCAL_URL: mongodb://mongodb:27017/test-db
+      DB_REMOTE_URL: mongodb://mongodb:27017/test-db
+      # DB_LOCAL_URL: "${DB_LOCAL_URL}"
+      # DB_REMOTE_URL: "${DB_REMOTE_URL}"
     
     depends_on:
       - mongodb

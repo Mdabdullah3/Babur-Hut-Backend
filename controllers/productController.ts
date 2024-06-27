@@ -88,8 +88,10 @@ export const addProduct:RequestHandler = async (req, res, next) => {
 		})
 
 		req.body.images = await Promise.all( images )
+		console.log(req.body)
 		const product = await Product.create(req.body)
 		if(!product) return next(appError('product not found'))
+
 		
 		res.json({
 			status: 'success',

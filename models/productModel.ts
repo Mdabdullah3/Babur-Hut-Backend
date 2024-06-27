@@ -48,7 +48,7 @@ const productSchema = new Schema<ProductDocument>({
 		unique: true,
 		trim: true,
 		lowercase: true,
-		minlength: 5,
+		// minlength: 5, 		// if add validation then failed slug mising
 		default: '',
 	},
 	price: {
