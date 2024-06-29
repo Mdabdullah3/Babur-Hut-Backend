@@ -137,8 +137,8 @@ addProductForm.addEventListener('submit', async (evt) => {
 
 
 	} catch (err) {
-		if(err instanceof Error) return showError(err.message)
-		if( typeof err === 'string') return showError(err)
+		if(err.message) return showError(err)
+
 		console.log(err)
 	}
 })

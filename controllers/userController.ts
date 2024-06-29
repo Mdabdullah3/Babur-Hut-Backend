@@ -49,7 +49,7 @@ export const getUserById:RequestHandler = catchAsync(async (req, res, next) => {
 	})
 })
 
-// GET /api/users/me
+// GET /api/users/me 	+ authController.protect
 export const getMe:RequestHandler = catchAsync(async (req, res, next) => {
 	const logedInUser = req.user as LogedInUser
 
@@ -61,6 +61,17 @@ export const getMe:RequestHandler = catchAsync(async (req, res, next) => {
 		data: user
 	})
 })
+
+
+
+// PATCH /api/users/me 	+ authController.protect
+export const updateMe: RequestHandler = (req, _res, next) => {
+	const logedInUser = req.user as LogedInUser
+
+	req.params.id = logedInUser._id.toString()
+
+	next()
+}
 
 // PATCH /api/users/:id
 export const updateUserById:RequestHandler = async (req, res, next) => {
@@ -92,13 +103,17 @@ export const updateUserById:RequestHandler = async (req, res, next) => {
 		const user = await User.findById(userId)
 		if(!user) return next(appError(`user not found by: ${userId}`))
 
-		const updatedUser = await User.findOne({ _id: userId }, filteredBody)
+		// console.log({ body: filteredBody })
+
+		// const updatedUser = await User.findOne({ _id: userId }, filteredBody)
+		const updatedUser = await User.findOneAndUpdate({ _id: userId }, filteredBody)
 		if(!updatedUser) return next(appError('review not found'))
 		
 		// remove old image
 		if(user.avatar) {
 			promisify(fileService.removeFile)(user.avatar.secure_url)
 		}
+
 
 		res.status(200).json({
 			status: 'success',
@@ -113,6 +128,17 @@ export const updateUserById:RequestHandler = async (req, res, next) => {
 		if(typeof error === 'string') next(appError(error))
 	}
 
+}
+
+
+
+// DELETE /api/users/me 	+ authController.protect
+export const deleteMe: RequestHandler = (req, _res, next) => {
+	const logedInUser = req.user as LogedInUser
+
+	req.params.id = logedInUser._id.toString()
+
+	next()
 }
 
 // DELETE /api/users/:id

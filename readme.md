@@ -1,14 +1,43 @@
 ![dockarize-nodejs-application.png](https://github.com/JavaScriptForEverything/babur-hat/blob/main/public/images/dockarize-nodejs-application.png)
 
 
+###### Method-1: (Regular) Project Setup
+```
+# make sure mongodb is running on (default) port 27017
+$ sudo systemctl status mongod 	
 
-## Common 4 type of Error Handling
+$ yarn dev
+
+
+$ yarn build
+$ yarn start
+```
+
+###### Method-2: (Docker) Project Setup
+```
+# make sure docker and docker socket deamon running
+$ sudo systemctl status docker docker.socket 	
+
+$ docker compose build
+$ docker compose up --detach
+$ docker compose start
+$ docker compose stop
+
+$ docker compose logs --follow backend
+```
+
+
+
+
+## Document Section:
+
+### Common 4 type of Error Handling
 1. Nodejs Error
 2. Express Error
 3. MongoDB Error
 4. JsonWebToken Error
 
-### Nodejs Error
+#### Nodejs Error
 - Handled Node.js has 2 type of error:
 	- Synchronous Error (Globally):
 		- **code**: *throw 'Test synchronous error handler'*
@@ -34,7 +63,7 @@ Database has common 4 type of errors
 - Validation Error 	(ValidationError)	:  	" 			" ....
 
 
-## Routes
+### Routes
 - GET / 							(just for testing)
 - GET /register 			(just for testing)
 - GET /login 		 			(just for testing)
@@ -529,10 +558,13 @@ GET /api/reviews/?_fields='review,product,user' 				: Only got 3 fields (+ _id, 
 - POST {{origin}}/api/auth/logout
 - GET {{origin}}/auth/google
 
-- GET {{origin}}/api/users/6649ebc8dabbe03d553861f9
 - GET {{origin}}/api/users/me 
+- GET {{origin}}/api/users/6649ebc8dabbe03d553861f9
 
+- PATCH {{origin}}/api/users/me
 - PATCH {{origin}}/api/users/6649ebc8dabbe03d553861f9
+
+- DELETE {{origin}}/api/users/me
 - DELETE {{origin}}/api/users/6649ebc8dabbe03d553861f9
 
 - PATCH {{origin}}/api/auth/update-password
@@ -577,15 +609,23 @@ body: {
 - POST {{origin}}/api/auth/logout
 ```
 
+		'name',
+		'avatar', 								// need to delete old photo, so use seperate route
+		'address',
+		'gender',
 
-#### Update User  (name & avatar only)
+#### Update User  
 ```
 body: {
   "name": "riajul islam",
+  "address": "gulshan, badda, dhaka-1212",
+  "gender" : "male",
 	"avatar" : "data:image/jpeg;base64,/9j/4AAQSkZJRgA..."
+
 }
 
 - PATCH {{origin}}/api/users/6649ebc8dabbe03d553861f9
+- PATCH {{origin}}/api/users/me
 ```
 
 #### Update User password
@@ -624,6 +664,11 @@ body: {
 ```
 
 
+#### Delete User 
+```
+- DELETE {{origin}}/api/users/me
+- DELETE {{origin}}/api/users/6649ebc8dabbe03d553861f9
+```
 
 
 

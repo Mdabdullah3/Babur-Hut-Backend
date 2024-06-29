@@ -1,5 +1,4 @@
 import type { Express } from 'express'
-import dotenv from 'dotenv'
 import path from 'node:path'
 import crypto from 'node:crypto'
 import express from 'express'
@@ -11,17 +10,19 @@ import MongoStore from 'connect-mongo'
 import routers from './routes'
 import * as errorController from './controllers/errorController'
 import { passportConfig } from './controllers/passportConfig'
+import { dbConnect } from './models/dbConnect'
 
-dotenv.config()
+dbConnect() 		// also add dotenv.config()
 errorController.exceptionErrorHandler() // put it very top
 
-const { NODE_ENV, DB_LOCAL_URL, DB_REMOTE_URL, SESSION_SECRET } = process.env || {}
-const DATABASE_URL = NODE_ENV === 'production' ? DB_REMOTE_URL : DB_LOCAL_URL
-if(!DATABASE_URL) throw new Error(`DATABASE_URL=${DATABASE_URL}`)
-
-
+const { SESSION_SECRET,  MONGO_HOST } = process.env || {}
 const publicDirectory = path.join(process.cwd(), 'public')
 
+
+// MONGO_HOST required into session({ store })
+const DATABASE_URL = `mongodb://${MONGO_HOST}/babur-hat`
+if(!MONGO_HOST) throw new Error(`Error => MONGO_HOST: ${MONGO_HOST}`)
+if(!SESSION_SECRET) throw new Error(`Error: => SESSION_SECRET=${SESSION_SECRET}`)
 
 
 const app: Express = express()
@@ -43,7 +44,6 @@ app.use(express.json({ limit: '10mb' }))
 app.set('view engine', 'pug')
 
 
-if(!SESSION_SECRET) throw new Error(`SESSION_SECRET=${SESSION_SECRET}`)
 
 // Step-1: set session
 app.use(session({

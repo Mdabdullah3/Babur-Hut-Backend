@@ -1,7 +1,7 @@
 services:
   mongodb:
     image: mongo
-    container_name: mongodb-database
+    container_name: mongodb
     ports:
       - 27017:27017
     restart:
@@ -9,12 +9,17 @@ services:
 
     volumes:
       - mongo-db:/data/db
+
     networks:
       - mern-network
 
   backend:
-    build: .
-    container_name: node-app
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: baburhat-backend
+
+    container_name: backend
     working_dir: /app
     ports:
       - 5000:5000
@@ -26,10 +31,7 @@ services:
       - .:/app
 
     environment:
-      DB_LOCAL_URL: mongodb://mongodb:27017/test-db
-      DB_REMOTE_URL: mongodb://mongodb:27017/test-db
-      # DB_LOCAL_URL: "${DB_LOCAL_URL}"
-      # DB_REMOTE_URL: "${DB_REMOTE_URL}"
+      MONGO_HOST: mongodb:27017
     
     depends_on:
       - mongodb
@@ -42,4 +44,4 @@ volumes:
   mongo-db:
 
 networks:
-  mern-network: {}
+  mern-network: 

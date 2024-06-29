@@ -1,10 +1,7 @@
 import app from './app'
 import * as errorController from './controllers/errorController'
-import { dbConnect } from './models/dbConnect'
 
-dbConnect()
-
-const PORT = process.env.PORT || 5000
+const PORT = 5000 					// used fixed port because we going to bind container fixed port host 
 const server = app.listen(PORT, async () => {
 
 	console.log(`server running on http://localhost:${PORT}`)

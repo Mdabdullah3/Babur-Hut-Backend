@@ -14,4 +14,6 @@ router
 	.patch('/update-password', authController.protect, authController.updatePassword)
 
 
+	.post('/send-otp', authController.sendOTP)
+
 

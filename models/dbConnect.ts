@@ -3,13 +3,16 @@ import { connect, connection } from 'mongoose'
 
 dotenv.config()
 
-const { NODE_ENV, DB_LOCAL_URL, DB_REMOTE_URL } = process.env || {}
+
 
 
 export const dbConnect = async () => {
 	try {
-		const DATABASE_URL = NODE_ENV === 'production' ? DB_REMOTE_URL : DB_LOCAL_URL
-		if(!DATABASE_URL) return console.log(`DATABASE url empty`)
+		// DATABASE_URL also used in session({... store })
+		const MONGO_HOST = process.env.MONGO_HOST
+		const DATABASE_URL = `mongodb://${MONGO_HOST}/babur-hat`
+
+		if(!MONGO_HOST) throw new Error(`Database Connection Error: => DATABASE_URL: ${DATABASE_URL}`)
 
 		if(connection.readyState >= 1) return
 		const conn = await connect(DATABASE_URL)	

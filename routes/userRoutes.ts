@@ -6,15 +6,23 @@ import * as authController from '../controllers/authController'
 export const router = Router()
 
 router.get('/me', authController.protect, userController.getMe)
+router.patch('/me', authController.protect, userController.updateMe, userController.updateUserById)
+router.delete('/me', authController.protect, userController.deleteMe, userController.deleteUserById)
 
 router.route('/')
 	.get(
-		authController.protect,
+		// authController.protect,
 		// authController.restrictTo('admin'), 
 		userController.getAllUsers
 	)
 
 router.route('/:id')
 	.get(userController.getUserById)
-	.patch(userController.updateUserById)
-	.delete(userController.deleteUserById)
+	.patch(
+		authController.protect,
+		userController.updateUserById
+	)
+	.delete(
+		authController.protect,
+		userController.deleteUserById
+	)

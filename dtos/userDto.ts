@@ -71,7 +71,10 @@ export const filterBodyForUpdate = (body: UpdateUser) => {
 	const allowedFields = [
 		'name',
 		'avatar', 								// need to delete old photo, so use seperate route
-		// 'email', 								// update seperate route to verify email
+		'address',
+		'gender',
+		// 'email', 							// update seperate route to verify email
+		// 'phone', 							// update seperate route to verify otp
 	]
 	return filterObjectByArray(body, allowedFields)
 }

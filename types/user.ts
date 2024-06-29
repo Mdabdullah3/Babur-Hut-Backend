@@ -40,6 +40,7 @@ export type UserDocument = Document & {
 	updatedAt: Date
 
 	name: string
+	slug: string
 	email: string
 	password: string
 	confirmPassword?: string
@@ -48,6 +49,10 @@ export type UserDocument = Document & {
 	role: string
 	isActive: boolean
 	passwordResetToken?: string
+
+	phone: string
+	address: string
+	gender: 'male' | 'female' | 'other' | 'undefined'
 
 	comparePassword: (password: string) => Promise<boolean>
 	getPasswordResetToken: () => Promise<string>

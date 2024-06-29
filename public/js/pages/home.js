@@ -1,6 +1,6 @@
-import { showError, redirectTo, } from '/js/module/utils.js'
+import { $, showError, redirectTo, } from '/js/module/utils.js'
 
-const button = document.querySelector('[name=logout]')
+const button = $('[name=logout]')
 button.addEventListener('click', async (evt) => {
 	evt.preventDefault()
 
@@ -18,3 +18,31 @@ button.addEventListener('click', async (evt) => {
 		console.log(err)
 	}
 })
+
+
+
+const showUsersInUI = (data) => {
+	const usersContainer = $('[name=users-container]')
+	const pre = document.createElement('pre')
+	pre.textContent = JSON.stringify(data, null, 2)
+
+	usersContainer.appendChild(pre)
+
+}
+
+const getAllUsers = async () => {
+	try {
+		const res = await fetch('/api/users', { method: 'GET',  })
+		if(!res.ok) throw await res.json()
+
+		const data = await res.json()
+		showUsersInUI(data)
+
+		
+	} catch (err) {
+		showError(err.message)
+		console.log(err)
+	}
+}
+
+getAllUsers()

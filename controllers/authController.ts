@@ -8,6 +8,8 @@ import User from '../models/userModel'
 import * as fileService from '../services/fileService'
 import * as userDto from '../dtos/userDto'
 import { getDataUrlSize } from '../utils'
+import * as otpService from '../services/otpService'
+import * as hashService from '../services/hashService'
 
 
 // router.get('/api/users' protect, ...)
@@ -252,4 +254,153 @@ export const resetPassword:RequestHandler = catchAsync( async (req, res, next) =
 	})
 
 })
+
+
+/*
+*/
+// ---
+// const userService = require('../services/userService')
+// const tokenService = require('../services/tokenService')
+// const fileService = require('../services/fileService')
+// const userDto = require('../dtos/userDto')
+
+
+// POST 	/api/auth/send-otp 
+/* We can store hashed otp in database:
+		. store into database is reduce complexity
+		. send user both otp and hashedOTP + expires date  + phone number: when need to varify get from user again.
+*/
+export const sendOTP = catchAsync( async(req, res, next) => {
+	const { phone } = req.body
+	if(!phone) return next(appError('you must send: `phone` property '))
+
+	// Step-1: 
+	const otp = await otpService.generateOTP()
+
+	/* Step-2: To send user otp and hashedOtp too, so that no need to store 
+						into database, and later get hashedOtp back from client to validate
+	*/
+	const ttl = 1000 * 60 * 50 						// => TTL = Time To Live
+	const expires = Date.now() + ttl
+	const data = `${phone}.${otp}.${expires}`
+	const hashedOtp = await hashService.hashOTP(data)
+
+	// Step-3: 
+	try {
+		await otpService.sendSMS(phone, otp) 				// get twilio details first
+
+	} catch (error: unknown) {
+		if(error instanceof Error) return next(appError(error.message, 401, 'OTP_error'))		
+
+		if( typeof error === 'string')
+		return next(appError(error, 400, 'OTP_error'))		
+	}
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			message: `an message is send to you via SMS: ${otp}`, 	// don't send OTP here (for testing only)
+			phone,
+			hash: `${hashedOtp}.${expires}`, 												// send phone, expires + hashedOTP which will be require later
+		}
+	})
+})
+
+
+/* POST 	/api/auth/verify-otp  	
+body {
+	"otp": 8430,
+	"phone": "01957500605",
+	"hash": "Lp+1ufeABW9LtlInKNI1Des6nSNYzcttp0I5tHtZVDI=.1719580163272"
+}
+*/
+export const verifyOTP = catchAsync( async (req, res, next) => {
+	const { phone, otp, hash } = req.body
+
+	if(!phone || !otp || !hash) return next(appError('you must send: { phone, otp, hash: hashedOTP }'))
+
+	// step-1: check expires
+	const [ hashedOTP, expires ] = hash.split('.')
+
+	const isValidHashed = expires > Date.now()
+	if(!isValidHashed) return next(appError('your OTP expires, please collect new OTP', 401, 'TokenError'))
+
+	// step-2: check hashed hash
+	const data = `${phone}.${otp}.${expires}` 			// get the same pattern from send otp
+	const isValid = await hashService.validateOTP(data, hashedOTP)
+	if(!isValid) return next(appError('hashed otp violated'))
+
+	// step-3: Create user
+	// create only email and other fields will be temporary pupulate with same phone text
+	// remote required fields from email, because email don't have update features
+
+	const requiredFields = {
+		name: '',
+		email: '',
+		password: '',
+		confirmPassword: '',
+		avatar: '',
+		isActive: true,
+
+		phone,
+	}
+	const user = await User.create(requiredFields)
+
+
+	// const userId = user._id
+
+	// // step-4: Generate token
+	// const payload = { _id: userId, }
+	// const { accessToken, refreshToken } = await tokenService.generateTokens(payload)
+
+	// // step-5: store token into database
+	// const token = await tokenService.findRefreshToken(userId)
+	// if(token) {
+	// 	tokenService.updateRefreshToken(refreshToken, userId)
+	// } else {
+	// 	const storedRefreshToken = await tokenService.storeRefreshToken(refreshToken, userId)
+	// 	if(!storedRefreshToken) return next(appError('string refreshToken failed', 401, 'TokenError'))
+	// }
+
+
+	// // step-6: Store both token into cookie which is HTTPS only : To prevent any XSS attach
+	// res.cookie('accessToken', accessToken, {
+	// 	maxAge: 1000 * 60 * 60 * 24 * 30, 				// expres require new Date(), but maxAge just value
+	// 	httpOnly: true
+	// })
+	// res.cookie('refreshToken', refreshToken, {
+	// 	maxAge: 1000 * 60 * 60 * 24 * 30,
+	// 	httpOnly: true
+	// })
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			message: 'your registration is success',
+			isAuth: true, 														// To indicate client that auth success
+			user
+			// user: userDto.filterUser(user._doc)
+		},
+	})
+})
+
+// // PATCH 	/api/auth/active-user + auth
+// exports.activeUser = catchAsync(async (req, res, next) => {
+// 	const { name, avatar } = req.body
+// 	if(!name || !avatar) return next(appError('missing fields: [name,avatar]'))
+
+// 	const { error, url } = await fileService.handleBase64File(avatar)
+// 	if(error) return next(appError(error))
+
+// 	const userId = req.userId
+// 	const user = await userService.activeUser(userId, { name, avatar: url, isActive: true })
+// 	if(!user) return next(appError('update user failed'))
+
+// 	res.status(201).json({
+// 		status: 'success', 
+// 		data: {
+// 			user: userDto.filterUser(user._doc)
+// 		}
+// 	})
+// })
 

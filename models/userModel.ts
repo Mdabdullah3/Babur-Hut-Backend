@@ -96,6 +96,21 @@ const userSchema = new Schema<UserDocument>({
 		size: String
 	},
 
+	phone: {
+		type: String,
+		default: ''
+	},
+	address: {
+		type: String,
+		default: ''
+	},
+
+	gender: {
+		type: String,
+		enum: ['male', 'female', 'other', 'undefined'],
+		default: 'undefined'
+	}
+
 }, {
 	timestamps: true
 })
