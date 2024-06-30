@@ -4,6 +4,7 @@ import * as authController from '../controllers/authController'
 // => /api/auth/
 export const router = Router()
 
+
 router
 	.post('/register', authController.register)
 	.post('/login', authController.login)
@@ -15,5 +16,7 @@ router
 
 
 	.post('/send-otp', authController.sendOTP)
+	.post('/verify-otp', authController.verifyOTP)
+
 
 

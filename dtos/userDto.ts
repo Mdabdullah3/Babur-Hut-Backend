@@ -38,8 +38,12 @@ export const filterBodyForCreateUser = (body: CreateUser) => {
 		'password',
 		'confirmPassword',
 		'avatar',
+		'phone',
+		'gender',
+		'address',
 		// 'role',
 		// 'isActive',
+		// 'isVerified',
 	]
 
 	return filterObjectByArray(body, allowedFields)

@@ -48,6 +48,7 @@ export type UserDocument = Document & {
 	clientId: string 							// social media login 
 	role: string
 	isActive: boolean
+	isVerified: boolean
 	passwordResetToken?: string
 
 	phone: string

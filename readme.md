@@ -20,9 +20,10 @@ $ sudo systemctl status docker docker.socket
 
 $ docker compose build
 $ docker compose up --detach
-$ docker compose start
 $ docker compose stop
+$ docker compose start
 
+$ docker compose config --services 	# => backend ...
 $ docker compose logs --follow backend
 ```
 
@@ -90,6 +91,7 @@ Database has common 4 type of errors
 - We can login multiple ways:
 	- Local Login: 
 	- Google Login: 
+	- OTP Login: 
 
 
 
@@ -153,6 +155,36 @@ try {
 	console.log(err)
 }
 ```
+
+
+
+##### For OTP Login
+` - POST 	`http://localhost:5000/api/auth/login'
+`
+```
+POST 	/api/auth/send-otp 
+{
+  "phone" : "01957500605"
+}
+
+- Check Message for OTP 
+- for testing, I'm  sending otp via email
+
+testing email: credentials checkout in group
+```
+
+
+```
+POST 	/api/auth/verify-otp  	
+{
+	"otp": 2429,
+    "phone": "01957500605",
+    "hash": "g0jjVjXHr+q2ZBiKsS+4pvmgpbHJ4jAbS8q0MbF+uAs=.1719659241411"
+}
+```
+
+
+
 
 ##### For Logout (local/google)
 ` - POST 	`http://localhost:5000/api/auth/logout'

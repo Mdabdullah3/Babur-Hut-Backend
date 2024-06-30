@@ -58,7 +58,7 @@ const userSchema = new Schema<UserDocument>({
 	},
 	email: {
 		type: String,
-		required: true,
+		// required: true,
 		lowercase: true,
 		trim: true,
 		unique: true,
@@ -85,6 +85,10 @@ const userSchema = new Schema<UserDocument>({
 		default: 'user'
 	},
 	isActive: {
+		type: Boolean,
+		default: false
+	},
+	isVerified: {
 		type: Boolean,
 		default: false
 	},

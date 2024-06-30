@@ -10,6 +10,8 @@ import * as userDto from '../dtos/userDto'
 import { getDataUrlSize } from '../utils'
 import * as otpService from '../services/otpService'
 import * as hashService from '../services/hashService'
+import OtpModel from '../models/otpModel'
+import { sendMail } from '../utils/nodemailer'
 
 
 // router.get('/api/users' protect, ...)
@@ -40,7 +42,7 @@ export const restrictTo = (...roles: string[]) => (req:Request, _res:Response, n
 }
 
 
-/* POST /api/users/register 		: add user
+/* POST /api/users/register 		: add user (register by form)
 {
   "name" : "delete me",
 	"email" : "delete@gmail.com",
@@ -68,6 +70,8 @@ export const register:RequestHandler = async (req, res, next) => {
 
 		const user = await User.create(filteredBody)
 		if(!user) return next(appError('user not found'))
+
+
 
 		// send email to active account instead of success response
 		
@@ -287,7 +291,13 @@ export const sendOTP = catchAsync( async(req, res, next) => {
 
 	// Step-3: 
 	try {
-		await otpService.sendSMS(phone, otp) 				// get twilio details first
+		// await otpService.sendSMS(phone, otp) 				// get twilio details first
+		await sendMail({
+			from: 'letmeexplore01@gmail.com',
+			to: 'your_target_user@gmail.com',
+			subject: 'Testing | sending OTP via email',
+			text: `otp: ${otp}`
+		})
 
 	} catch (error: unknown) {
 		if(error instanceof Error) return next(appError(error.message, 401, 'OTP_error'))		
@@ -296,12 +306,21 @@ export const sendOTP = catchAsync( async(req, res, next) => {
 		return next(appError(error, 400, 'OTP_error'))		
 	}
 
+	// save phone number into database temporaryly, after verify will delete and create user
+	let otpDoc = await OtpModel.findOne({ phone })
+	if(!otpDoc) {
+		otpDoc = await OtpModel.create({ phone })
+		if(!otpDoc) return next(appError('phone number can not save into otp model'))
+	}
+
+	console.log('authController.sendOTP', { otp }) 	// require for local testing
+
 	res.status(200).json({
 		status: 'success',
 		data: {
-			message: `an message is send to you via SMS: ${otp}`, 	// don't send OTP here (for testing only)
+			message: `an otp message is send to you via SMS`, 
 			phone,
-			hash: `${hashedOtp}.${expires}`, 												// send phone, expires + hashedOTP which will be require later
+			hash: `${hashedOtp}.${expires}`, 				// send phone, expires + hashedOTP which will be require later
 		}
 	})
 })
@@ -330,59 +349,90 @@ export const verifyOTP = catchAsync( async (req, res, next) => {
 	const isValid = await hashService.validateOTP(data, hashedOTP)
 	if(!isValid) return next(appError('hashed otp violated'))
 
+
+	// const	otpDoc = await OtpModel.findOneAndUpdate({ phone }, { $set: { isVerified: true }}, { new: true })
+	const	otpDoc = await OtpModel.findOneAndDelete({ phone })
+	if(!otpDoc) return next(appError('please retry with your new otp'))
+	// console.log(otpDoc)
+
 	// step-3: Create user
-	// create only email and other fields will be temporary pupulate with same phone text
-	// remote required fields from email, because email don't have update features
-
-	const requiredFields = {
-		name: '',
-		email: '',
-		password: '',
-		confirmPassword: '',
-		avatar: '',
-		isActive: true,
-
-		phone,
+	let user = await User.findOne({ phone })
+	if(!user) {
+		const password = crypto.randomBytes(6).toString('hex')
+		const requiredFields = {
+			phone,
+			name: crypto.randomBytes(4).toString('hex'), 								// => 590e4eec
+			password,
+			confirmPassword : password,
+			isVerified: true,
+			isActive: true,
+		}
+		user = await User.create(requiredFields)
 	}
-	const user = await User.create(requiredFields)
 
 
-	// const userId = user._id
+	// step-4: login User 
+	req.logIn(user, (err) => {
+		if(err) return next(err)
 
-	// // step-4: Generate token
-	// const payload = { _id: userId, }
-	// const { accessToken, refreshToken } = await tokenService.generateTokens(payload)
+		res.status(200).json({
+			status: 'success',
+			message: 'make sure your change your password for next login',
+			data: user
+		})
 
-	// // step-5: store token into database
-	// const token = await tokenService.findRefreshToken(userId)
-	// if(token) {
-	// 	tokenService.updateRefreshToken(refreshToken, userId)
-	// } else {
-	// 	const storedRefreshToken = await tokenService.storeRefreshToken(refreshToken, userId)
-	// 	if(!storedRefreshToken) return next(appError('string refreshToken failed', 401, 'TokenError'))
-	// }
-
-
-	// // step-6: Store both token into cookie which is HTTPS only : To prevent any XSS attach
-	// res.cookie('accessToken', accessToken, {
-	// 	maxAge: 1000 * 60 * 60 * 24 * 30, 				// expres require new Date(), but maxAge just value
-	// 	httpOnly: true
-	// })
-	// res.cookie('refreshToken', refreshToken, {
-	// 	maxAge: 1000 * 60 * 60 * 24 * 30,
-	// 	httpOnly: true
-	// })
-
-	res.status(200).json({
-		status: 'success',
-		data: {
-			message: 'your registration is success',
-			isAuth: true, 														// To indicate client that auth success
-			user
-			// user: userDto.filterUser(user._doc)
-		},
 	})
+
+
+	// res.status(200).json({
+	// 	status: 'success',
+	// 	data: {
+	// 		name: user.name,
+	// 		password,
+	// 		message: 'temporary password, you shold change it later',
+	// 	},
+	// })
+
 })
+
+
+
+// // otp-create user middleware
+// // post('/otp-registration', authController.otpLoginMiddleware, authController.register)
+// export const otpLoginMiddleware:RequestHandler = catchAsync( async (req, _res, next) => {
+// 	// const otpDoc = await OtpModel.findOne({ phone: req.body.phone })
+// 	// if(!otpDoc) return next(appError('please get otp first, before going to create account'))
+
+// 	// if(!otpDoc.isVerified) return next(appError('please verify otp first, before going to create account'))
+// 	// next()
+
+
+// 	const password = crypto.randomBytes(6).toString('hex')
+
+// 	const requiredFields = {
+// 		phone,
+// 		name: crypto.randomBytes(4).toString('hex'), 								// => 590e4eec
+// 		password,
+// 		confirmPassword : password
+// 	}
+// 	const user = await User.create(requiredFields)
+
+// })
+
+/*
+		// check is user otp verified: by phone number
+		if(req.body.phone) {
+			const otpDoc = await OtpModel.findOne({ phone: req.body.phone })
+			if(!otpDoc) return next(appError('please get otp first, before going to create account'))
+			if(!otpDoc.isVerified) return next(appError('please verify otp first, before going to create account'))
+
+			filteredBody.isVerified = true
+
+			otpDoc.deleteOne({ phone: req.body.phone })
+		}
+*/
+		
+
 
 // // PATCH 	/api/auth/active-user + auth
 // exports.activeUser = catchAsync(async (req, res, next) => {

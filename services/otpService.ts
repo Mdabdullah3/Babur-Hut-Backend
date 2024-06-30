@@ -1,4 +1,6 @@
 import crypto from 'crypto'
+// import type { Request } from 'express'
+// import { sendMail } from '../utils/nodemailer'
 
 
 // const { SMS_SID='', SMS_SECRET='', SMS_FROM_NUMBER } = process.env
@@ -16,4 +18,13 @@ export const sendSMS = async (phone: string, otp: number) => {
 	// })
 
 	console.log({ phone, otp })
+
 }
+
+
+// export const sendOtpMail = async (req: Request, email: string) => {
+//   // send resetToken via email.
+//   let text = 'Please copy/paste the bellow url to reset the password: \n'
+//       text += `${req.protocol}://${req.get('host')}/api/users/reset-password/${resetToken}`
+//   await sendMail({ to: email, text })   // from, to, subject, text
+// }
