@@ -7,6 +7,7 @@ export type Image = {
 export type ProductDocument = {
 	_id: Types.ObjectId
 	id: string
+	vendorId: string
 	createdAt: Date
 	updatedAt: Date
 

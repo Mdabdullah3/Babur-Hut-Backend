@@ -159,7 +159,6 @@ try {
 
 
 ##### For OTP Login
-` - POST 	`http://localhost:5000/api/auth/login'
 `
 ```
 POST 	/api/auth/send-otp 

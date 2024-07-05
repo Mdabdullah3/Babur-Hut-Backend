@@ -104,9 +104,52 @@ const userSchema = new Schema<UserDocument>({
 		type: String,
 		default: ''
 	},
-	address: {
-		type: String,
-		default: ''
+
+	location: {
+		address1: {
+			type: String,
+			trim: true,
+			lowercase: true,
+			minlength: 8,
+			maxlength: 200,
+			default: ''
+		},
+		address2: {
+			type: String,
+			trim: true,
+			lowercase: true,
+			default: ''
+		},
+		city: {
+			type: String,
+			trim: true,
+			lowercase: true,
+			minlength: 3,
+			maxlength: 200,
+			default: 'dhaka',
+		},
+		state: {
+			type: String,
+			trim: true,
+			lowercase: true,
+			minlength: 3,
+			maxlength: 200,
+			default: 'dhaka',
+		},
+		postcode: {
+			type: Number,
+			min: 100,
+			max: 99999,
+			default: 1212,
+		},
+		country: {
+			type: String,
+			trim: true,
+			lowercase: true,
+			minlength: 3,
+			maxlength: 200,
+			default: 'bangladesh',
+		},
 	},
 
 	gender: {

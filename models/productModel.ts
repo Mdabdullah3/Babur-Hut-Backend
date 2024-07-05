@@ -30,6 +30,11 @@ import { product } from '../data/product'
 
 
 const productSchema = new Schema<ProductDocument>({
+	vendorId: {
+		type: String,
+		required: true,
+		unique: true,
+	},
 
 	user: {
 		type: Schema.Types.ObjectId,

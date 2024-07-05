@@ -25,14 +25,27 @@ type Image = {
 // 	user='user'
 // }
 
+type Location = {
+	address1: string
+	address2: string
+	city: string
+	state: string
+	postcode: number,
+	country: string
+}
+
 export type LogedInUser = {
 	role: string
   _id: Types.ObjectId
   name: string
   email: string
+  phone: string
+	location: Location
   createdAt: Date
   updatedAt: Date
 }
+
+
 
 export type UserDocument = Document & {
 	_id: Types.ObjectId
@@ -52,7 +65,7 @@ export type UserDocument = Document & {
 	passwordResetToken?: string
 
 	phone: string
-	address: string
+	location: Location,
 	gender: 'male' | 'female' | 'other' | 'undefined'
 
 	comparePassword: (password: string) => Promise<boolean>

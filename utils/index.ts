@@ -85,3 +85,17 @@ export const filterObjectByArray = (body={}, allowedFields=['']) => {
 
 
 
+/*
+const currentDocuments = await Product.countDocuments()
+const vendorId = generateRandomVendorId('babur hat', 'electronics', currentDocuments)
+console.log({ vendorId })
+*/
+export const generateRandomVendorId = (projectName: string, categoryName: string, countDocuments: number) => {
+	
+	const productCode = projectName.split(' ').map( (item: string) => item[0]).join('').toUpperCase()
+	const categoryCode = categoryName[0].toUpperCase()
+	const sequentialDecimalValue = String(countDocuments + 1).padStart(8, '0')
+
+	const vendorId = `${productCode}${categoryCode}${sequentialDecimalValue}`
+	return vendorId
+}

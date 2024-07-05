@@ -3,8 +3,19 @@ import { $ } from '/js/module/utils.js'
 
 const showProducts = $('[name=show-products]')
 
+
+const showProductsInUI = (data) => {
+	const productsContainer = $('[name=products-container]')
+	const pre = document.createElement('pre')
+	pre.textContent = JSON.stringify(data, null, 2)
+
+	productsContainer.appendChild(pre)
+
+}
+
 const updateProductsUI = async () => {
 	const { data: products } = await getProducts()
+	showProductsInUI(products)
 
 	// showProducts.textContent = JSON.stringify(products, null, 2)
 	const ul = document.createElement('ul')

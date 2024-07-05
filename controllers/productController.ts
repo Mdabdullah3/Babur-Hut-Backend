@@ -3,7 +3,7 @@ import type { ProductDocument, Image} from '../types/product'
 import Product from '../models/productModel'
 // import crypto from 'crypto'
 import { appError, catchAsync } from './errorController'
-import { apiFeatures, getDataUrlSize } from '../utils'
+import { apiFeatures, generateRandomVendorId, getDataUrlSize } from '../utils'
 import { isValidObjectId } from 'mongoose'
 import * as productDto from '../dtos/productDto'
 import * as fileService from '../services/fileService'
@@ -71,7 +71,6 @@ export const addProduct:RequestHandler = async (req, res, next) => {
 
 		const { error: avatarError, image: coverPhoto } = await fileService.handleBase64File(req.body.coverPhoto, '/products')
 		if(avatarError || !coverPhoto) return next(appError(avatarError))
-
 		req.body.coverPhoto = coverPhoto
 
 		const images = req.body.images.map( async (dataUrl: string) => {
@@ -86,8 +85,14 @@ export const addProduct:RequestHandler = async (req, res, next) => {
 
 			return image
 		})
-
 		req.body.images = await Promise.all( images )
+
+
+		// add vendorId
+		const currentDocuments = await Product.countDocuments()
+		const vendorId = generateRandomVendorId('babur hat', 'electronics', currentDocuments)
+		req.body.vendorId = vendorId
+
 		const product = await Product.create(req.body)
 		if(!product) return next(appError('product not found'))
 

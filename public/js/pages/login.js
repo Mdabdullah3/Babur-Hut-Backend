@@ -1,6 +1,6 @@
 import { showError, redirectTo, } from '/js/module/utils.js'
 
-const form = document.querySelector('form')
+const form = document.querySelector('[name=local-login]')
 form.addEventListener('submit', async (evt) => {
 	evt.preventDefault()
 

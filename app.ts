@@ -15,9 +15,8 @@ import { dbConnect } from './models/dbConnect'
 dbConnect() 		// also add dotenv.config()
 errorController.exceptionErrorHandler() // put it very top
 
-const { SESSION_SECRET,  MONGO_HOST } = process.env || {}
+const { SESSION_SECRET,  MONGO_HOST, CLIENT_ORIGIN } = process.env || {}
 const publicDirectory = path.join(process.cwd(), 'public')
-
 
 // MONGO_HOST required into session({ store })
 const DATABASE_URL = `mongodb://${MONGO_HOST}/babur-hat`
@@ -35,7 +34,7 @@ app.use((_req, res, next) => {
 
 
 app.use(cors({ 
-	origin: "*",
+	origin: CLIENT_ORIGIN || "*",
 	credentials: true,
 }))
 app.use(express.static( publicDirectory ))

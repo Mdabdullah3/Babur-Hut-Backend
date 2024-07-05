@@ -6,8 +6,52 @@ html(lang="en")
 		title #{title}
 		script(type="module", src="/js/pages/login.js") 
 	body 
+		a(href='/') 
+			button Home Page
 
-		form(method='POST' action='/login')
+		br
+		br
+		hr
+
+		p Login By Google
+		a(href='/auth/google') 
+			button Login By Google
+		br
+		br
+		br
+		hr
+
+		p Login By OTP
+		form(name='otp-login' method='POST' action='/api/auth/send-otp')
+			label Phone 
+			br
+			input(type='text' name='phone' placeholder='+880xxxxxxxxxx') 
+			br
+			button() Get OTP
+
+		br
+		form(name='otp-verify' method='POST' action='/api/auth/verify-otp')
+			label otp 
+			br
+			input(type='number' name='otp' placeholder='xxxx') 
+			br
+			label Phone 
+			br
+			input(type='text' name='phone' placeholder='+880xxxxxxxxxx') 
+			br
+			label Hash 
+			br
+			input(type='text' name='hash' placeholder='your hash token') 
+			br
+			button() Verify
+
+		br
+		br
+		br
+		hr
+
+
+		form(name='local-login')
 			label Email 
 			br
 			input(type='email' name='email' placeholder='abc@gmail.com') 
@@ -19,14 +63,9 @@ html(lang="en")
 			button() Login
 
 			br
-			br
-			a(href='/auth/google') Login By Google
-			br
 			p 
 				span Don't have an account ? 
 				a(href='/register') Register
 
 			br
-			p 
-				a(href='/') Home Page
 
