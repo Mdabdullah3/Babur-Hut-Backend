@@ -4,9 +4,8 @@ services:
     container_name: mongodb
     ports:
       - 27017:27017
-    restart:
-      on-failure
 
+    restart: on-failure
     volumes:
       - mongo-db:/data/db
 
@@ -24,9 +23,8 @@ services:
     ports:
       - 5000:5000
       - 35729:35729
-    restart:
-      on-failure
 
+    restart: always
     volumes:
       - .:/app
 

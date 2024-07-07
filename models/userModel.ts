@@ -110,14 +110,15 @@ const userSchema = new Schema<UserDocument>({
 			type: String,
 			trim: true,
 			lowercase: true,
-			minlength: 8,
+			minlength: 4,
 			maxlength: 200,
-			default: ''
+			default: 'unknown'
 		},
 		address2: {
 			type: String,
 			trim: true,
 			lowercase: true,
+			maxlength: 200,
 			default: ''
 		},
 		city: {

@@ -131,6 +131,22 @@ const productSchema = new Schema<ProductDocument>({
 		}
 	}],
 
+	video: {
+		type: {
+			type: String,
+			enum: ['file', 'url']	
+		},
+		public_id: {
+			type: String,
+			required: true,
+		},
+		secure_url: {
+			type: String,
+			required: true,
+		}
+
+	},
+
 
 	stock: { 								// increase stock on every Product.create() & reduce on Product.findAndDelete()
 		type: Number,
@@ -154,6 +170,19 @@ const productSchema = new Schema<ProductDocument>({
 		type: Number,
 		default: 4
 	},
+
+	specifications: {
+		screenSize: String,
+		batteryLife: String,
+		cameraResolution: String,
+		storageCapacity: String,
+		os: String,
+		size: String,
+		material: String,
+		color: String,
+		gender: String
+	}
+
 
 }, {
 	timestamps: true

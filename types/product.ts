@@ -4,6 +4,22 @@ export type Image = {
 	public_id: string
 	secure_url: string
 }
+export type Video = Image & {
+	type: 'file' | 'url'
+}
+
+
+type Specifications = {
+	screenSize: string,
+	batteryLife: string,
+	cameraResolution: string,
+	storageCapacity: string,
+	os: string,
+	size: string,
+	material: string,
+	color: string,
+	gender: string
+}
 export type ProductDocument = {
 	_id: Types.ObjectId
 	id: string
@@ -22,7 +38,7 @@ export type ProductDocument = {
 	quantity: number,
 	coverPhoto: Image
 	images: Image[]
-
+	video: Video
 
 	slug: string
 	stock: number
@@ -30,6 +46,8 @@ export type ProductDocument = {
 	revenue: number
 	numReviews: number
 	ratings: number
+
+	specifications: Specifications
 }
 
 export type CreateProduct = {
@@ -45,6 +63,9 @@ export type CreateProduct = {
 	quantity: number,
 	coverPhoto: string
 	images: string[]
+	video: Video
+
+	specifications: Specifications
 }
 
 export type UpdateProduct = {
@@ -59,6 +80,9 @@ export type UpdateProduct = {
 	quantity: number,
 	coverPhoto: string
 	images: string[]
+	video: Video
+
+	specifications: Specifications
 }
 
 

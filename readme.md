@@ -508,6 +508,15 @@ body: {
 		"data:jpg/images;rraksdjfasdkjf...=",
 		"data:jpg/images;fflkjdfajd...=",
 	]
+
+	# to upload raw video
+	"video" : "data:image/jpeg;base64,/9j/4A...",
+	"videoType": "file"
+
+	# to upload video link
+	"video" : "http://your-video-lingk-',
+	"videoType": "url"
+	
 }
 
 - POST {{origin}}/api/products

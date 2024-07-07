@@ -93,12 +93,12 @@ export const exceptionErrorHandler = () => {
 	process.on('uncaughtException', (err: unknown) => {
 
 		if(err instanceof Error) {
-			console.log(`Global Error Handler: ${err.message}`)
+			console.log(`Blocking: Global Error Handler: ${err.message}`)
 			process.exit(1)
 			return
 		}
 
-		console.log(`Global Error Handler: ${err}`)
+		console.log(`Blocking: Error Handler: ${err}`)
 		process.exit(1)
 
 	})
@@ -113,13 +113,15 @@ export const promiseErrorHandler = (server: Server<typeof IncomingMessage, typeo
 	process.on('unhandledRejection', (err: unknown) => {
 
 		if(err instanceof Error) {
-			console.log(`Global Error Handler: ${err.message}`)
+			console.log(`Unblocking: Global Error Handler: ${err.message}`)
 			server.close( (_err) => process.exit(1))
 			return
 		}
 
-		console.log(`Global Error Handler: ${err}`)
+		console.log(`Unblocking: Global Error Handler: ${err}`)
 		server.close( (_err) => process.exit(1))
+
+
 	})
 }
 

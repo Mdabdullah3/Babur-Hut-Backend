@@ -33,8 +33,11 @@ export const handleBase64File = async (dataUrl: string, subDir='/users', _fileTy
 	if(!dataUrl) return tempObj
 	const baseDir = '/upload'
 	
+
+
 	try {
-		if( !dataUrl.startsWith('data') ) throw new Error(`'${dataUrl}' is not valid dataUrl`) 
+		// if( !dataUrl.startsWith('data') ) throw new Error(`'${dataUrl}' is not valid dataUrl`) 
+		if( !dataUrl.startsWith('data') ) return { error: `'${dataUrl}' is not valid dataUrl`, image: null  }
 
 		// Step-1: seperate metadata from base64 string dataUrl 
 		const [ metadata, base64 ] = dataUrl.split(';base64,')
@@ -76,10 +79,10 @@ export const handleBase64File = async (dataUrl: string, subDir='/users', _fileTy
 		}
 
 	} catch (err) {
-		// if(err instanceof Error) return appError(err.message)
-		// if(typeof err === 'string' ) return appError(err)
-		if(err instanceof Error) return { error: err.message, image: null }
-		if(typeof err === 'string' ) return { error: err, image: null }
+		if(err instanceof Error) throw appError(err.message)
+		if(typeof err === 'string' ) throw appError(err)
+		// if(err instanceof Error) return { error: err.message, image: null }
+		// if(typeof err === 'string' ) return { error: err, image: null }
 	}
 
 
