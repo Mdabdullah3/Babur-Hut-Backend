@@ -4,10 +4,6 @@ export type Image = {
 	public_id: string
 	secure_url: string
 }
-export type Video = Image & {
-	type: 'file' | 'url'
-}
-
 
 type Specifications = {
 	screenSize: string,
@@ -38,7 +34,7 @@ export type ProductDocument = {
 	quantity: number,
 	coverPhoto: Image
 	images: Image[]
-	video: Video
+	video: Image
 
 	slug: string
 	stock: number
@@ -63,7 +59,7 @@ export type CreateProduct = {
 	quantity: number,
 	coverPhoto: string
 	images: string[]
-	video: Video
+	video: Image
 
 	specifications: Specifications
 }
@@ -80,7 +76,7 @@ export type UpdateProduct = {
 	quantity: number,
 	coverPhoto: string
 	images: string[]
-	video: Video
+	video: Image
 
 	specifications: Specifications
 }

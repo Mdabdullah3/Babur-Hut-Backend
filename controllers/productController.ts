@@ -1,9 +1,9 @@
 import type { RequestHandler } from 'express'
 import type { ProductDocument, Image} from '../types/product'
 import Product from '../models/productModel'
-import crypto from 'crypto'
+// import crypto from 'crypto'
 import { appError, catchAsync } from './errorController'
-import { apiFeatures, generateRandomVendorId, getDataUrlSize } from '../utils'
+import { apiFeatures, getDataUrlSize } from '../utils'
 import { isValidObjectId } from 'mongoose'
 import * as productDto from '../dtos/productDto'
 import * as fileService from '../services/fileService'
@@ -58,127 +58,117 @@ req.body = {
 		"data:jpg/images;fflkjdfajd...=",
 	],
 
-	"videoType": "file",
+	# base64 dataUrl
 	"video": "data:jpg/images;alkjdfajd...=",
 
 	or 
 
-	"videoType": "url",
+	# link url
 	"video": "http://youtube.com/video-url",
+
+
 }
 */
-// export const addProduct:RequestHandler = async (req, res, next) => {
-// 	try {
-// 		if(!req.body.coverPhoto) return next(appError('coverPhoto field required'))
-// 		if(!req.body.images?.length) return next(appError('you must pass images of array'))
-// 		if(req.body.images.length > 3 ) return next(appError('only allow upto 3 images'))
+export const addProduct:RequestHandler = catchAsync(async (req, res, next) => {
 
-// 		const imageSize = getDataUrlSize(req.body.coverPhoto)
-// 		const maxImageSize = 1024 * 1024 * 5 			// => 5 MB
-// 		if(imageSize > maxImageSize) return next(appError('You cross the max image size: 5MB(max)'))
+	//--- For vendorId
+	// const { category } = req.body
+	// if(!category) return next(appError('category must needed'))
 
-// 		const { error: avatarError, image: coverPhoto } = await fileService.handleBase64File(req.body.coverPhoto, '/products')
-// 		if(avatarError || !coverPhoto) return next(appError(avatarError))
-// 		req.body.coverPhoto = coverPhoto
+	// const currentDocuments = await Product.countDocuments()
+	// const vendorId = generateRandomVendorId('babur hat', category, currentDocuments)
+	// req.body.vendorId = vendorId
 
-// 		const images = req.body.images.map( async (dataUrl: string) => {
-// 			// Check image size
-// 			const imageSize = getDataUrlSize(dataUrl)
-// 			const maxImageSize = 1024 * 1024 * 5 			// => 5 MB
-// 			if(imageSize > maxImageSize) return next(appError('You cross the max image size: 5MB(max)'))
-
-// 			// save image into disk
-// 			const { error:imageError, image } = await fileService.handleBase64File(dataUrl, '/products')
-// 			if(imageError || !image) throw new Error(imageError) 
-
-// 			return image
-// 		})
-// 		req.body.images = await Promise.all( images )
+	try {
+		if(!req.body.coverPhoto) return next(appError('coverPhoto field required'))
+		if(!req.body.images?.length) return next(appError('you must pass images of array'))
+		if(req.body.images.length > 3 ) return next(appError('only allow upto 3 images'))
 
 
-// 		// add vendorId
-// 		const currentDocuments = await Product.countDocuments()
-// 		const vendorId = generateRandomVendorId('babur hat', 'electronics', currentDocuments)
-// 		req.body.vendorId = vendorId
+		// // console.log(req.body.video)
+		// // handle video upload
+		// if(req.body.video) {
+		// 	if(req.body.video !== 'string') return next(appError('video must be url or base64 dataUrl'))
 
-// 		const product = await Product.create(req.body)
-// 		if(!product) return next(appError('product not found'))
+		// 	if(req.body.video.startsWith('http')) {
+		// 		req.body.video = {
+		// 			public_id: crypto.randomUUID(),
+		// 			secure_url: req.body.video
+		// 		} 
+		// 	} else if(req.body.video.startsWith('data:')) {
+		// 		const imageSize = getDataUrlSize(req.body.video)
+		// 		const maxImageSize = 1024 * 1024 * 200 			// => 200 MB
+		// 		if(imageSize > maxImageSize) return next(appError('You cross the max image size: 200MB(max)'))
 
-// 		// console.log(product)
+		// 		const { error: avatarError, image: video } = await fileService.handleBase64File(req.body.video, '/products')
+		// 		if(avatarError || !video) return next(appError(avatarError))
+		// 		req.body.video = video
+				
+
+		// 	} else {
+		// 		const videoErrorMessage = 'req.body.video must have url or base64 bit dataUrl'
+		// 		return next(appError(videoErrorMessage))
+		// 	}
+
+
+		// 	// if videoType not url or not file
+		// 	// return next(appError(videoErrorMessage))
+
+		// } else {
+		// 	req.body.video = undefined 		// if video empty then just remove
+		// }
+
+
+
+		const imageSize = getDataUrlSize(req.body.coverPhoto)
+		const maxImageSize = 1024 * 1024 * 5 			// => 5 MB
+		if(imageSize > maxImageSize) return next(appError('You cross the max image size: 5MB(max)'))
+
+		const { error: avatarError, image: coverPhoto } = await fileService.handleBase64File(req.body.coverPhoto, '/products')
+		if(avatarError || !coverPhoto) return next(appError(avatarError))
+		req.body.coverPhoto = coverPhoto
+
+		const images = req.body.images.map( async (dataUrl: string) => {
+			// Check image size
+			const imageSize = getDataUrlSize(dataUrl)
+			const maxImageSize = 1024 * 1024 * 5 			// => 5 MB
+			if(imageSize > maxImageSize) return next(appError('You cross the max image size: 5MB(max)'))
+
+			// save image into disk
+			const { error:imageError, image } = await fileService.handleBase64File(dataUrl, '/products')
+			if(imageError || !image) throw new Error(imageError) 
+
+			return image
+		})
+		req.body.images = await Promise.all( images )
+
+		const product = await Product.create(req.body)
+		if(!product) return next(appError('product not found'))
+
+		// console.log(product)
 		
-// 		res.json({
-// 			status: 'success',
-// 			data: product
-// 		})
-
-// 	} catch (err) {
-// 		setTimeout(() => {
-// 			promisify(fileService.removeFile)(req.body.coverPhoto.secure_url)
-// 			req.body.images.forEach( (image: Image) => {
-// 				promisify(fileService.removeFile)(image.secure_url)
-// 			})
-// 		}, 1000)
-
-// 		if(err instanceof Error) next(appError(err.message))
-// 		if(typeof err === 'string') next(appError(err))
-// 	}
-// }
-export const addProduct:RequestHandler = catchAsync( async (req, res, next) => {
-
-	const currentDocuments = await Product.countDocuments()
-	const vendorId = generateRandomVendorId('babur hat', 'electronics', currentDocuments)
-	req.body.vendorId = vendorId
-	//---
-
-
-	if(req.body.video) {
-		let videoErrorMessage = 'if pass video then vidoeType must be pass, and '
-				videoErrorMessage += 'videoType can be eighter url string or base64 bit raw dataUrl'
-
-		if(!req.body.videoType) return next(appError(videoErrorMessage))
-		console.log({ 
-			video: req.body.video,
-			videoType: req.body.videoType, 
+		res.json({
+			status: 'success',
+			data: product
 		})
 
+	} catch (err) {
+		console.log(err)
+		setTimeout(() => {
+			promisify(fileService.removeFile)(req.body.coverPhoto.secure_url)
+			req.body.images.forEach( (image: Image) => {
+				promisify(fileService.removeFile)(image.secure_url)
+			})
+		}, 1000)
 
-		if(req.body.videoType === 'url') {
-			req.body.video = {
-				type: 'url',
-				public_id: crypto.randomUUID(),
-				secure_url: req.body.video
-			} 
-
-		} else if(req.body.videoType === 'file') {
-			const imageSize = getDataUrlSize(req.body.video)
-			const maxImageSize = 1024 * 1024 * 200 			// => 200 MB
-			if(imageSize > maxImageSize) return next(appError('You cross the max image size: 200MB(max)'))
-
-			const { error: avatarError, image: video } = await fileService.handleBase64File(req.body.video, '/products')
-			if(avatarError || !video) return next(appError(avatarError))
-			req.body.video = {
-				type: 'file',
-				...video,
-			}
-
-		}
-
-
-		// if videoType not url or not file
-		// return next(appError(videoErrorMessage))
-
-	} else {
-		req.body.video = undefined 		// if video empty then just remove
-		// console.log(req.body)
+		if(err instanceof Error) next(appError(err.message))
+		if(typeof err === 'string') next(appError(err))
 	}
-
-
-	//---
-	res.status(200).json({
-		status: 'success',
-		data: req.body
-	})
 })
+
+// export const addProduct:RequestHandler = catchAsync(async (req, res, next) => {
+// 	res.json({ body: req.body })
+// })
 
 // => GET /api/products/:productId
 export const getProductByIdOrSlug:RequestHandler = catchAsync(async (req, res, next) => {

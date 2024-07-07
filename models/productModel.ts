@@ -32,7 +32,7 @@ import { product } from '../data/product'
 const productSchema = new Schema<ProductDocument>({
 	vendorId: {
 		type: String,
-		required: true,
+		// required: true,
 		unique: true,
 	},
 
@@ -132,17 +132,13 @@ const productSchema = new Schema<ProductDocument>({
 	}],
 
 	video: {
-		type: {
-			type: String,
-			enum: ['file', 'url']	
-		},
 		public_id: {
 			type: String,
-			required: true,
+			// required: true,
 		},
 		secure_url: {
 			type: String,
-			required: true,
+			// required: true,
 		}
 
 	},

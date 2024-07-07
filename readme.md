@@ -490,6 +490,7 @@ GET /api/products/?_fields='name,slug,price' 						: Only got 3 fields (+ _id, p
 #### Add Product
 ```
 body: {
+	"vendorId": 'unique-id',
 	"user": logedInUser.id,
 	"name": "it is my sample product",
 	"slug": "it-is-my-sample-product-unitque",

@@ -120,6 +120,16 @@ addProductForm.addEventListener('submit', async (evt) => {
 	try {
 		// console.log(fields)
 		if(fields.coverPhoto) fields.coverPhoto = await readAsDataURL(fields.coverPhoto)
+
+
+		if(fields.video instanceof File) {
+			try {
+				fields.video = await readAsDataURL(fields.video, { type: 'file' })
+			} catch (err) {
+				console.log(err)	
+			}
+		} 
+		// 	console.log(fields.video)
 		
 		const imageFiles = $('[name=images]').files
 		const images = [...imageFiles].map( async (image) => await readAsDataURL(image))
