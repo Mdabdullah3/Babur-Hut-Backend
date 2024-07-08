@@ -129,7 +129,7 @@ addProductForm.addEventListener('submit', async (evt) => {
 				console.log(err)	
 			}
 		} 
-		// 	console.log(fields.video)
+			// console.log(fields.video)
 		
 		const imageFiles = $('[name=images]').files
 		const images = [...imageFiles].map( async (image) => await readAsDataURL(image))

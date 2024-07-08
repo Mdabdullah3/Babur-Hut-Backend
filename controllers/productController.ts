@@ -85,38 +85,38 @@ export const addProduct:RequestHandler = catchAsync(async (req, res, next) => {
 		if(req.body.images.length > 3 ) return next(appError('only allow upto 3 images'))
 
 
-		// // console.log(req.body.video)
-		// // handle video upload
-		// if(req.body.video) {
-		// 	if(req.body.video !== 'string') return next(appError('video must be url or base64 dataUrl'))
+		console.log({ video: typeof req.body.video })
+		// handle video upload
+		if(req.body.video) {
+			if(typeof req.body.video !== 'string') return next(appError('video must be url or base64 dataUrl'))
 
-		// 	if(req.body.video.startsWith('http')) {
-		// 		req.body.video = {
-		// 			public_id: crypto.randomUUID(),
-		// 			secure_url: req.body.video
-		// 		} 
-		// 	} else if(req.body.video.startsWith('data:')) {
-		// 		const imageSize = getDataUrlSize(req.body.video)
-		// 		const maxImageSize = 1024 * 1024 * 200 			// => 200 MB
-		// 		if(imageSize > maxImageSize) return next(appError('You cross the max image size: 200MB(max)'))
+			if(req.body.video.startsWith('http')) {
+				req.body.video = {
+					public_id: crypto.randomUUID(),
+					secure_url: req.body.video
+				} 
+			} else if(req.body.video.startsWith('data:')) {
+				const imageSize = getDataUrlSize(req.body.video)
+				const maxImageSize = 1024 * 1024 * 200 			// => 200 MB
+				if(imageSize > maxImageSize) return next(appError('You cross the max image size: 200MB(max)'))
 
-		// 		const { error: avatarError, image: video } = await fileService.handleBase64File(req.body.video, '/products')
-		// 		if(avatarError || !video) return next(appError(avatarError))
-		// 		req.body.video = video
+				const { error: avatarError, image: video } = await fileService.handleBase64File(req.body.video, '/products')
+				if(avatarError || !video) return next(appError(avatarError))
+				req.body.video = video
 				
 
-		// 	} else {
-		// 		const videoErrorMessage = 'req.body.video must have url or base64 bit dataUrl'
-		// 		return next(appError(videoErrorMessage))
-		// 	}
+			} else {
+				const videoErrorMessage = 'req.body.video must have url or base64 bit dataUrl'
+				return next(appError(videoErrorMessage))
+			}
 
 
-		// 	// if videoType not url or not file
-		// 	// return next(appError(videoErrorMessage))
+			// if videoType not url or not file
+			// return next(appError(videoErrorMessage))
 
-		// } else {
-		// 	req.body.video = undefined 		// if video empty then just remove
-		// }
+		} else {
+			req.body.video = undefined 		// if video empty then just remove
+		}
 
 
 
@@ -159,6 +159,10 @@ export const addProduct:RequestHandler = catchAsync(async (req, res, next) => {
 			req.body.images.forEach( (image: Image) => {
 				promisify(fileService.removeFile)(image.secure_url)
 			})
+
+			if( !req.body?.video?.secure_url.startsWith('http') ) {
+				promisify(fileService.removeFile)(req.body.video.secure_url)
+			}
 		}, 1000)
 
 		if(err instanceof Error) next(appError(err.message))
