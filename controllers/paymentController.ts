@@ -4,11 +4,18 @@ import { Types } from 'mongoose'
 import { appError, catchAsync } from './errorController'
 import Product from '../models/productModel'
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const SSLCommerzPayment = require('sslcommerz-lts')
+const store_id = process.env.SSL_COMMERZ_STORE_ID
+const store_passwd = process.env.SSL_COMMERZ_STORE_PASSWD
+const is_live = process.env.SSL_COMMERZ_IS_LIVE === 'true'
+
+	const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
 
 // // eslint-disable-next-line @typescript-eslint/no-var-requires
 // const SSLCommerzPayment = require('sslcommerz-lts') 			// import syntax throw error
 
-// const { SSL_COMMERZ_STORE_ID, SSL_COMMERZ_STORE_PASSWD, SSL_COMMERZ_IS_LIVE } = process.env
+// // const { SSL_COMMERZ_STORE_ID, SSL_COMMERZ_STORE_PASSWD, SSL_COMMERZ_IS_LIVE } = process.env
 
 // if( 
 // 	!SSL_COMMERZ_STORE_ID || 
@@ -106,31 +113,29 @@ export const createPaymentRequest:RequestHandler = catchAsync( async (req, res, 
 		emi_option: '',
 	}
 
-	// sslcommerz.init(data)
-	// 	.then((response: unknown) => {
-	// 		console.log('Initiate Response:', response);
-	// 		// Handle response
-	// 	})
-	// 	.catch((error: unknown) => {
-	// 		console.error('Error:', error);
-	// 		// Handle error
-	// 	})
 
 
-
-	// const payment = {
-	// 	GatewayPageURL: ''
-	// }
+	const apiResponse = await sslcz.init(data)
+	// Insert order details into the database
+	// const order = { ...planDetails, tran_id, status: 'pending'};
+	// const result = ordersCollection.insertOne(order);
 
 	res.status(200).json({
 		status: 'success',
-		body: req.body,
-		data: {
-			// gatewayPageUrl: payment.GatewayPageURL
-			...data
-
+		data: { 
+			gatewayPageUrl: apiResponse.GatewayPageURL
 		}
 	})
+
+
+	// res.status(200).json({
+	// 	status: 'success',
+	// 	body: req.body,
+	// 	data: {
+	// 		// gatewayPageUrl: payment.GatewayPageURL
+	// 		...data
+	// 	}
+	// })
 
 })
 

@@ -15,7 +15,7 @@ import { dbConnect } from './models/dbConnect'
 dbConnect() 		// also add dotenv.config()
 errorController.exceptionErrorHandler() // put it very top
 
-const { SESSION_SECRET,  MONGO_HOST, CLIENT_ORIGIN } = process.env || {}
+const { SESSION_SECRET,  MONGO_HOST, CLIENT_ORIGIN, NODE_ENV } = process.env || {}
 const publicDirectory = path.join(process.cwd(), 'public')
 
 // MONGO_HOST required into session({ store })
@@ -49,7 +49,12 @@ app.use(session({
 	secret: SESSION_SECRET,
 	resave: false,
 	saveUninitialized: false,
-	store: MongoStore.create({ mongoUrl: DATABASE_URL })
+	store: MongoStore.create({ mongoUrl: DATABASE_URL }),
+	cookie: {
+		httpOnly: true,
+		secure: NODE_ENV === 'production',
+		sameSite: 'none',
+	}
 }))
 
 // Step-2: attach session with passport
