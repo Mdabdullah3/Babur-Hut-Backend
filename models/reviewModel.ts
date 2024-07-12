@@ -23,7 +23,15 @@ const reviewSchema = new Schema<ReviewDocument>({
 	},
 	review: { 								// Review message
 		type: String,
-		required: true,
+		// required: true,
+		lowercase: true,
+		trim: true,
+		maxLength: 200,
+		minLength: 5
+	},
+	comment: { 								// Review message
+		type: String,
+		// required: true,
 		lowercase: true,
 		trim: true,
 		maxLength: 200,

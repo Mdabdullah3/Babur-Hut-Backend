@@ -1,5 +1,6 @@
 import type { RequestHandler } from 'express'
 import type { ReviewDocument } from '../types/review'
+import type { LogedInUser } from '../types/user'
 import Review from '../models/reviewModel'
 import { appError, catchAsync } from './errorController'
 import { apiFeatures } from '../utils'
@@ -15,10 +16,19 @@ import * as reviewDto from '../dtos/reviewDto'
 
 // GET /api/reviews
 // GET /api/products/:productId/reviews
+// GET /api/usrs/:userId/reviews
+// GET /api/usrs/me/reviews
 export const getAllReviews:RequestHandler = catchAsync( async (req, res, _next) => {
+	const logedInUser = req.user as LogedInUser
+
 	const productId = req.params.productId
+	const userId = logedInUser._id || req.params.userId
+
+	let filter = {}
+	if(productId) filter = { product: productId.toString() } 
+	if(userId) filter = { user: userId.toString() } 
 	
-	const filter = productId ? { product: productId.toString() } : {}
+	// const filter = productId ? { product: productId.toString() } : {}
 	// const reviews = await Review.find<ReviewDocument>(filter)
 	const reviews:ReviewDocument[] = await apiFeatures(Review, req.query, filter)
 
@@ -30,12 +40,25 @@ export const getAllReviews:RequestHandler = catchAsync( async (req, res, _next) 
 })
 
 // POST /api/reviews
-// POST /api/products/:productId/reviews
+// POST /api/products/:productId/reviews 	+ protect
 export const addReview:RequestHandler = catchAsync(async (req, res, next) => {
+	const logedInUser = req.user as LogedInUser
 
-	const review = await Review.create(req.body)
-	// const review = req.body
-	if(!review) return next(appError('product not found'))
+
+	const productId = req.params.productId || req.body.product
+	if(!productId?.trim()) return next(appError('productId required fields'))
+
+	if(!req.body.review && !req.body.comment) return next(appError('must have review or comment field'))
+	if(req.body.review && req.body.comment) return next(appError('must have only review or comment field, not both'))
+
+	const body = { 
+		...req.body, 
+		user: logedInUser._id,
+		product: productId,
+	}
+
+	const review = await Review.create(body)
+	// if(!review) return next(appError('product not found'))
 	
 	res.json({
 		status: 'success',
@@ -46,10 +69,10 @@ export const addReview:RequestHandler = catchAsync(async (req, res, next) => {
 
 // GET /api/reviews/:reviewId
 // GET /api/products/:productId/reviews/:reviewId
+// GET /api/users/:userId/reviews/:reviewId
+// GET /api/users/me/reviews/:reviewId
 export const getReviewById:RequestHandler = catchAsync(async (req, res, next) => {
 	const reviewId = req.params.reviewId
-	// const productId = req.params.productId
-	// console.log({ reviewId, productId })
 
 	const filter = { _id: reviewId }
 	const reviews = await apiFeatures(Review, req.query, filter).limit(1)
@@ -60,6 +83,9 @@ export const getReviewById:RequestHandler = catchAsync(async (req, res, next) =>
 		data: reviews[0]
 	})
 })
+
+
+
 
 // PATCH /api/reviews/:reviewId
 export const updateReviewById:RequestHandler = catchAsync(async (req, res, next) => {

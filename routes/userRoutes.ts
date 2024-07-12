@@ -2,12 +2,17 @@ import { Router } from 'express'
 import * as userController from '../controllers/userController'
 import * as authController from '../controllers/authController'
 
+import { router as reviewRouter } from '../routes/reviewRoutes'
+
 // => /api/users/
 export const router = Router()
 
 router.get('/me', authController.protect, userController.getMe)
 router.patch('/me', authController.protect, userController.updateMe, userController.updateUserById)
 router.delete('/me', authController.protect, userController.deleteMe, userController.deleteUserById)
+
+router.use('/:userId/reviews', reviewRouter)
+
 
 router.route('/')
 	.get(

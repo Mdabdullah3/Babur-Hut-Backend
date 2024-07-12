@@ -572,22 +572,53 @@ body: {
 
 ## Reviews
 
-- GET {{origin}}/api/reviews 		// get all reviews
+- GET {{origin}}/api/reviews 		        // get all reviews
+- GET {{origin}}/api/productId/reviews 		// get all reviews of single product
+- GET {{origin}}/api/userId/reviews 		// get all reviews of single user
+- GET {{origin}}/api/me/reviews 		// get all reviews of logedIn user
+
+
 - POST {{origin}}/api/reviews
 
 - GET {{origin}}/api/reviews/6649ebc8dabbe03d553861f9
 - PATCH {{origin}}/api/reviews/6649ebc8dabbe03d553861f9
 - DELETE {{origin}}/api/reviews/6649ebc8dabbe03d553861f9
 
-- GET {{origin}}/api/products/:productId/reviews 		// get all reviews on specific products
+- GET {{origin}}/api/products/:productId/reviews        // get all reviews on specific products
 
-```
+
+
+``` API featues
+
 GET /api/reviews/
 GET /api/reviews/?_page=1&_limit=4
-GET /api/reviews/?_sort='createdAt' 										: any field name, or multiple field name
-GET /api/reviews/?_search='search value, review' 				: Search on any fields: namly `review` 
-GET /api/reviews/?_fields='review,product,user' 				: Only got 3 fields (+ _id, populated fields)
+GET /api/reviews/?_sort='createdAt' 			// any field name, or multiple field name
+GET /api/reviews/?_search='search value, review'        // Search on any fields: namly `review` 
+GET /api/reviews/?_fields='review,product,user'         // Only got 3 fields (+ _id, populated fields)
 ```
+
+#### Add Review / Comment
+```
+body: {
+  "product": "6649ebc8dabbe03d553861f9",
+
+  # for Review
+  "review" : "I'm using too (delete me)",
+
+  # or for comment
+  "comment": "this is comments on product"
+}
+
+- POST {{origin}}/api/reviews
+```
+
+
+#### Get Single Review / Comment
+
+- GET /api/reviews/reviewId                     // Get single Review by reviewId
+- GET /api/products/productId/reviews/reviewId  // Get single Review by reviewId of product
+- GET /api/users/userId/reviews/reviewId        // Get single Review by reviewId of user
+- GET /api/users/me/reviews/reviewId            // Get single Review by reviewId of logedInUser
 
 
 ## Users
@@ -765,6 +796,54 @@ image.addEventListener('change', async (evt) => {
 GET /api/users 			: Only `user.role = 'admin'`  allows to see the users
 PATCH /api/users 		: Only user himself or admin can update other users
 DELETE /api/users 	: Only user himself or admin can delete other users
+```
+
+
+
+
+
+
+
+
+
+
+
+
+## Vouchers
+- GET {{origin}}/api/vouchers 		        // get all vouchers
+- GET {{origin}}/api/vouchers/:voucherId        // Get Single Voucher by (_id), not client's voucherId
+
+- POST {{origin}}/api/vouchers                  // To create voucher
+- PATCH {{origin}}/api/vouchers/:voucherId      // To Update 
+- DELETE {{origin}}/api/vouchers/:voucherId     // To Delete
+
+
+#### Add Voucher
+```
+body {
+  "voucherId": "random-voucher-id",
+  "discount": 40,
+  "startDate": "2024-07-12T13:45:49.432Z",
+  "endDate": "2024-07-12T13:45:49.432Z",
+  "status" : "active"
+}
+
+POST {{origin}}/api/vouchers
+```
+
+
+
+
+#### Update Voucher
+```
+body {
+  "voucherId": "random-voucher-id",
+  "discount": 40,
+  "startDate": "2024-07-12T13:45:49.432Z",
+  "endDate": "2024-07-12T13:45:49.432Z",
+  "status" : "active"
+}
+PATCH {{origin}}/api/vouchers/:voucherId
 ```
 
 

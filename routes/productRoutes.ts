@@ -1,6 +1,7 @@
 import { Router } from 'express'
-import * as productController from '../controllers/productController'
 import { router as reviewRouter } from '../routes/reviewRoutes'
+import * as productController from '../controllers/productController'
+import * as authController from '../controllers/authController'
 
 // => /api/products/
 export const router = Router()
@@ -11,7 +12,10 @@ router.get('/get-random-products', productController.gerRandomProducts)
 
 router.route('/')
 	.get(productController.getAllProducts)
-	.post(productController.addProduct)
+	.post(
+		authController.protect,
+		productController.addProduct
+		)
 
 router.route('/:productId')
 	.get(productController.getProductByIdOrSlug)

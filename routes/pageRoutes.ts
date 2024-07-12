@@ -29,3 +29,7 @@ export const router = Router()
 		.get('/auth/google/callback', authController.googleCallbackHandler)
 
 
+		// just for testing
+		.get('/payment-checkout', pageController.paymentCheckoutPage)
+		.post('/payment-handler', pageController.paymentHandlerPage)
+

@@ -15,6 +15,7 @@ export type ReviewDocument = {
 	user: Types.ObjectId, 				
 	product: Types.ObjectId,
 	review: string, 			// comment field
+	comment: string, 			// comment field
 	likes: Types.ObjectId[],
 	dislikes: Types.ObjectId[],
 	createdAt: string,

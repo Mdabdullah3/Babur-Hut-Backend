@@ -99,3 +99,23 @@ export const generateRandomVendorId = (projectName: string, categoryName: string
 	const vendorId = `${productCode}${categoryCode}${sequentialDecimalValue}`
 	return vendorId
 }
+
+type CustomIdProps = {
+	projectName?: string, 
+	categoryName: string, 
+	countDocuments: number
+}
+export const generateSequentialCustomId = (props: CustomIdProps) => {
+	const {
+		projectName='babur hat',
+		categoryName,
+		countDocuments,
+	} = props
+	
+	const productCode = projectName.split(' ').map( (item: string) => item[0]).join('').toUpperCase()
+	const categoryCode = categoryName[0].toUpperCase()
+	const sequentialDecimalValue = String(countDocuments + 1).padStart(8, '0')
+
+	const vendorId = `${productCode}${categoryCode}${sequentialDecimalValue}`
+	return vendorId
+}

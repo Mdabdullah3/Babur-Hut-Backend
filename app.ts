@@ -53,7 +53,7 @@ app.use(session({
 	cookie: {
 		httpOnly: true,
 		secure: NODE_ENV === 'production',
-		sameSite: 'none',
+		sameSite: 'strict',
 	}
 }))
 

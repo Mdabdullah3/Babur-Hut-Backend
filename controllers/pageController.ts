@@ -166,3 +166,34 @@ export const profilePage:RequestHandler = (req, res, next) => {
 
 	res.render('user/profile', payload)
 }
+
+
+// => GET /payment-checkout 		(for demo only)
+export const paymentCheckoutPage:RequestHandler = (_req, res, _next) => {
+
+	const payload = {
+		title: 'payment checkout page',
+	}
+
+	res.render('payment/checkout', payload)
+}
+
+
+// => POST /payment-handler 		(for demo only)
+export const paymentHandlerPage:RequestHandler = (req, res, next) => {
+
+	const { price, transactionId, ...data } = req.body
+
+	if(!price || transactionId) return next(appError('price and transactionId is required fields'))
+
+
+	const payload = {
+		title: 'payment handler page',
+		data,
+		dataJs: JSON.stringify(data),
+	}
+
+	res.render('payment/handler', payload)
+}
+
+

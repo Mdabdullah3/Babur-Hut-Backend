@@ -90,8 +90,7 @@ const productSchema = new Schema<ProductDocument>({
 		required: true,
 		trim: true,
 		lowercase: true,
-		// enum: ['shirt', 'pant']
-		enum: product.categories
+		// enum: product.categories
 	},
 	brand: {
 		type: String,
