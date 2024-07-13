@@ -918,18 +918,18 @@ PATCH {{origin}}/api/vouchers/:voucherId
 
 
 ## Cagegory
-- GET {{origin}}/api/categories 		  // get all categories
-- GET {{origin}}/api/categories/:categoryId        // Get Single Category by categoryId
+- GET {{origin}}/api/categories 		        // get all categories
+- GET {{origin}}/api/categories/:categoryId             // Get Single Category by categoryId
 
-- POST {{origin}}/api/categories                  // To create voucher
-- PATCH {{origin}}/api/categories/:categoryId      // To Update 
-- DELETE {{origin}}/api/categories/:categoryId     // To Delete
+- POST {{origin}}/api/categories                        // To create category
+- PATCH {{origin}}/api/categories/:categoryId           // To Update 
+- DELETE {{origin}}/api/categories/:categoryId          // To Delete
 
 
-#### Add Voucher
+#### Add Category
 ```
 {
-  "name": "category11",
+  "name": "category-name",
   "shippingCharge": "200",
   "vat": "2",
   "status": "active",
@@ -940,17 +940,47 @@ POST {{origin}}/api/categories
 ```
 
 
-
-
-#### Update Voucher
+#### Update Category
 ```
 body {
-  "discount": 40,
-  "startDate": "2024-07-12T13:45:49.432Z",
-  "endDate": "2024-07-12T13:45:49.432Z",
-  "status" : "active"
+  "name": "category-new-name",
 }
 PATCH {{origin}}/api/categories/:categoryId
+```
+
+
+
+
+## SubCagegory
+- GET {{origin}}/api/sub-categories                    // get all subCategories
+- GET {{origin}}/api/sub-categories/:subCategoryId     // Get Single subCategory by subCategoryId
+
+- POST {{origin}}/api/sub-categories                    // To create subCategory
+- PATCH {{origin}}/api/sub-categories/:subCategoryId    // To Update 
+- DELETE {{origin}}/api/sub-categories/:subCategoryId   // To Delete
+
+
+#### Add SubCategory
+```
+{
+  "category": "category._id",
+  "name": "category-name",
+  "shippingCharge": "200",
+  "vat": "2",
+  "status": "active",
+  "commission": "0"
+}
+
+POST {{origin}}/api/sub-categories
+```
+
+
+#### Update SubCategory
+```
+body {
+  "name": "category-new-name",
+}
+PATCH {{origin}}/api/sub-categories/:subCategoryId
 ```
 
 

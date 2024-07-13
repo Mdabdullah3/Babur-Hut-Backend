@@ -13,7 +13,11 @@ import { Schema, models, model } from 'mongoose'
 */
 
 const categorySchema = new Schema<CategoryDocument>({
-	name: String,
+	name: {
+		type: String,
+		required: true,
+		unique: true
+	},
 	shippingCharge: String,
 	vat: String,
 	status: String,
