@@ -357,8 +357,8 @@ export const verifyOTP = catchAsync( async (req, res, next) => {
 
 	// step-3: Create user
 	let user = await User.findOne({ phone })
+	const password = crypto.randomBytes(6).toString('hex')
 	if(!user) {
-		const password = crypto.randomBytes(6).toString('hex')
 		const requiredFields = {
 			phone,
 			name: crypto.randomBytes(4).toString('hex'), 								// => 590e4eec
@@ -377,8 +377,8 @@ export const verifyOTP = catchAsync( async (req, res, next) => {
 
 		res.status(200).json({
 			status: 'success',
-			message: 'make sure your change your password for next login',
-			data: user
+			message: 'given a random password for later login, fill free to change you password any time',
+			data: { ...user, password }
 		})
 
 	})
