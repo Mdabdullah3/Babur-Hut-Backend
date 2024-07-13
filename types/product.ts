@@ -45,6 +45,7 @@ export type ProductDocument = {
 
 	specifications: Specifications
 	isLiked: boolean
+
 }
 
 export type CreateProduct = {

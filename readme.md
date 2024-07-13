@@ -687,6 +687,47 @@ body: {
 	"avatar" : "data:image/jpeg;base64,/9j/4AAQSkZJRgA..."
 }
 
+body {
+	name: "",
+	email: "*@*.*",
+	password: "********",
+	confirmPassword: "********",
+	role: "", 			: handled by backend only
+	isActive: ?, 			: handled by backend only
+	isVerified: ?, 			: handled by backend only
+	gender: '', 			: ['male', 'female', 'other', 'undefined'],
+
+	avatar: "data:....",
+	phone: "...",
+	location: {
+		address1: '',
+		address2: '',
+		city: '',
+		state: '',
+		postcode: 0000,
+		country: '',
+	},
+
+	otherPermissions : {
+		isVendor: false, 	: boolean value: true/false
+		isCustomer: false,
+		isCategories: false,
+		isProducts: false,
+		isOrders: false,
+		isReviews: false,
+		isVouchers: false,
+		isAdManager: false,
+		isRoleManager: false,
+		isMessageCenter: false,
+		isFinance: false,
+		isShipment: false,
+		isSupport: false,
+		isEventManager: false,
+		isMessage: false,
+	}
+}
+
+
 - POST {{origin}}/api/auth/register
 ```
 
@@ -875,5 +916,41 @@ PATCH {{origin}}/api/vouchers/:voucherId
 
 
 
+
+## Cagegory
+- GET {{origin}}/api/categories 		  // get all categories
+- GET {{origin}}/api/categories/:categoryId        // Get Single Category by categoryId
+
+- POST {{origin}}/api/categories                  // To create voucher
+- PATCH {{origin}}/api/categories/:categoryId      // To Update 
+- DELETE {{origin}}/api/categories/:categoryId     // To Delete
+
+
+#### Add Voucher
+```
+{
+  "name": "category11",
+  "shippingCharge": "200",
+  "vat": "2",
+  "status": "active",
+  "commission": "0"
+}
+
+POST {{origin}}/api/categories
+```
+
+
+
+
+#### Update Voucher
+```
+body {
+  "discount": 40,
+  "startDate": "2024-07-12T13:45:49.432Z",
+  "endDate": "2024-07-12T13:45:49.432Z",
+  "status" : "active"
+}
+PATCH {{origin}}/api/categories/:categoryId
+```
 
 

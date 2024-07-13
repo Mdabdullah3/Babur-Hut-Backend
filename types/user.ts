@@ -70,6 +70,24 @@ export type UserDocument = Document & {
 
 	comparePassword: (password: string) => Promise<boolean>
 	getPasswordResetToken: () => Promise<string>
+
+	otherPermissions : {
+		isVendor: boolean,
+		isCustomer: boolean,
+		isCategories: boolean,
+		isProducts: boolean,
+		isOrders: boolean,
+		isReviews: boolean,
+		isVouchers: boolean,
+		isAdManager: boolean,
+		isRoleManager: boolean,
+		isMessageCenter: boolean,
+		isFinance: boolean,
+		isShipment: boolean,
+		isSupport: boolean,
+		isEventManager: boolean,
+		isMessage: boolean,
+	}
 }
 // export type UserDocument = {
 // 	_id: Types.ObjectId
@@ -99,12 +117,46 @@ export type CreateUser = {
 	confirmPassword: string
 	avatar: string
 	role: string
+	otherPermissions : {
+		isVendor: boolean,
+		isCustomer: boolean,
+		isCategories: boolean,
+		isProducts: boolean,
+		isOrders: boolean,
+		isReviews: boolean,
+		isVouchers: boolean,
+		isAdManager: boolean,
+		isRoleManager: boolean,
+		isMessageCenter: boolean,
+		isFinance: boolean,
+		isShipment: boolean,
+		isSupport: boolean,
+		isEventManager: boolean,
+		isMessage: boolean,
+	}
 }
 
 export type UpdateUser = {
 	name: string
 	email: string
 	avatar: string
+	otherPermissions : {
+		isVendor: boolean,
+		isCustomer: boolean,
+		isCategories: boolean,
+		isProducts: boolean,
+		isOrders: boolean,
+		isReviews: boolean,
+		isVouchers: boolean,
+		isAdManager: boolean,
+		isRoleManager: boolean,
+		isMessageCenter: boolean,
+		isFinance: boolean,
+		isShipment: boolean,
+		isSupport: boolean,
+		isEventManager: boolean,
+		isMessage: boolean,
+	}
 }
 // type SignUpInput = {
 // 	name: string

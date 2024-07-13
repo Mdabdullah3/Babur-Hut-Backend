@@ -7,6 +7,7 @@ import { router as productRouter } from './productRoutes'
 import { router as reviewRouter } from './reviewRoutes'
 import { router as paymentRouter } from './paymentRoutes'
 import { router as voucherRouter } from './voucherRoutes'
+import { router as categoryRouter } from './cagegoryRouter'
 
 
 // => / 	(root)
@@ -21,5 +22,6 @@ router.use('/api/reviews', reviewRouter)
 router.use('/api/payments', paymentRouter)
 
 router.use('/api/vouchers', voucherRouter)
+router.use('/api/categories', categoryRouter)
 
 export default router

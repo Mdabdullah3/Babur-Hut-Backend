@@ -81,7 +81,7 @@ const userSchema = new Schema<UserDocument>({
 
 	role: {
 		type: String,
-		enum: ['admin', 'leader', 'user'],
+		// enum: ['admin', 'leader', 'user'],
 		default: 'user'
 	},
 	isActive: {
@@ -157,7 +157,26 @@ const userSchema = new Schema<UserDocument>({
 		type: String,
 		enum: ['male', 'female', 'other', 'undefined'],
 		default: 'undefined'
+	},
+
+	otherPermissions : {
+		isVendor: Boolean,
+		isCustomer: Boolean,
+		isCategories: Boolean,
+		isProducts: Boolean,
+		isOrders: Boolean,
+		isReviews: Boolean,
+		isVouchers: Boolean,
+		isAdManager: Boolean,
+		isRoleManager: Boolean,
+		isMessageCenter: Boolean,
+		isFinance: Boolean,
+		isShipment: Boolean,
+		isSupport: Boolean,
+		isEventManager: Boolean,
+		isMessage: Boolean,
 	}
+
 
 }, {
 	timestamps: true
