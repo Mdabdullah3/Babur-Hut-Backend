@@ -24,7 +24,8 @@ import { product } from '../data/product'
 		"/upload/images/photo-1.jpg",
 		"/upload/images/photo-2.jpg",
 		"/upload/images/photo-3.jpg",
-	]
+	],
+	"isLiked": true,
 }
 */
 
@@ -32,7 +33,7 @@ import { product } from '../data/product'
 const productSchema = new Schema<ProductDocument>({
 	vendorId: {
 		type: String,
-		// required: true,
+		required: true,
 		unique: true,
 	},
 
@@ -176,8 +177,12 @@ const productSchema = new Schema<ProductDocument>({
 		material: String,
 		color: String,
 		gender: String
-	}
+	},
 
+	isLiked: {
+		type: Boolean,
+		default: false
+	}
 
 }, {
 	timestamps: true

@@ -44,6 +44,7 @@ export type ProductDocument = {
 	ratings: number
 
 	specifications: Specifications
+	isLiked: boolean
 }
 
 export type CreateProduct = {
@@ -62,6 +63,7 @@ export type CreateProduct = {
 	video: Image
 
 	specifications: Specifications
+	isLiked: boolean
 }
 
 export type UpdateProduct = {
@@ -79,34 +81,6 @@ export type UpdateProduct = {
 	video: Image
 
 	specifications: Specifications
+	isLiked: boolean
 }
 
-
-// export type GetProductsArgs = {
-// 	_page: number,
-// 	_limit: number,
-// 	_search: [Search, string],
-// 	_sort: string
-// }
-// export type GetProductArgs = {
-// 	slug: string
-// }
-
-
-// export type UpdateProduct = {
-// 	// user: Types.ObjectId
-// 	name: string
-// 	price: number
-// 	summary: string
-// 	description: string
-// 	category: string
-// 	brand: string
-// 	size: string
-// 	quantity: number,
-// 	coverPhoto: string
-// 	images: string[]
-// }
-
-// export type DeleteProduct = {
-// 	id: string
-// }

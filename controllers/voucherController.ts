@@ -67,7 +67,7 @@ export const updateVoucher:RequestHandler = catchAsync(async (req, res, next) =>
 		'endDate',
 	]
 
-	console.log(filteredBody)
+	// console.log(filteredBody)
 
 	const voucher = await Voucher.findByIdAndUpdate(voucherId, filteredBody, { new: true })
 	if(!voucher) return next(appError(`voucher update failed, allowedFields:${allowedFields.join(',')} `))

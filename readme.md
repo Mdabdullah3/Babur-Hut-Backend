@@ -510,14 +510,21 @@ body: {
 		"data:jpg/images;fflkjdfajd...=",
 	]
 
-	# to upload raw video
-	"video" : "data:image/jpeg;base64,/9j/4A...",
-	"videoType": "file"
+      # "video" : "data:image/jpeg;base64,/9j/4A...",           # to upload raw video
+	"video" : "http://your-video-lingk-',                   # to upload video link
+	specifications: {
+		screenSize: "...",
+		batteryLife: "",
+		cameraResolution: "",
+		storageCapacity: "",
+		os: "",
+		size: "",
+		material: "",
+		color: "",
+		gender: ""
+	},
 
-	# to upload video link
-	"video" : "http://your-video-lingk-',
-	"videoType": "url"
-	
+	isLiked: true,
 }
 
 - POST {{origin}}/api/products
@@ -543,7 +550,23 @@ body: {
 		"data:jpg/images;alkjdfajd...=",
 		"data:jpg/images;rraksdjfasdkjf...=",
 		"data:jpg/images;fflkjdfajd...=",
-	]
+	],
+
+      # "video" : "data:image/jpeg;base64,/9j/4A...",           # to upload raw video
+	"video" : "http://your-video-lingk-',                   # to upload video link
+	specifications: {
+		screenSize: "...",
+		batteryLife: "",
+		cameraResolution: "",
+		storageCapacity: "",
+		os: "",
+		size: "",
+		material: "",
+		color: "",
+		gender: ""
+	},
+
+	isLiked: true,
 }
 
 - PATCH {{origin}}/api/products/6649ebc8dabbe03d553861f9

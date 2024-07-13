@@ -3,7 +3,7 @@ import type { ProductDocument, Image} from '../types/product'
 import Product from '../models/productModel'
 // import crypto from 'crypto'
 import { appError, catchAsync } from './errorController'
-import { apiFeatures, getDataUrlSize } from '../utils'
+import { apiFeatures, generateSequentialCustomId, getDataUrlSize } from '../utils'
 import { isValidObjectId } from 'mongoose'
 import * as productDto from '../dtos/productDto'
 import * as fileService from '../services/fileService'
@@ -71,21 +71,22 @@ req.body = {
 */
 export const addProduct:RequestHandler = catchAsync(async (req, res, next) => {
 
-	//--- For vendorId
-	// const { category } = req.body
-	// if(!category) return next(appError('category must needed'))
-
-	// const currentDocuments = await Product.countDocuments()
-	// const vendorId = generateRandomVendorId('babur hat', category, currentDocuments)
-	// req.body.vendorId = vendorId
-
 	try {
+		//--- For vendorId
+		const currentDocuments = await Product.countDocuments()
+		const	customId = generateSequentialCustomId({ 
+			categoryName: 'product', 
+			countDocuments: currentDocuments
+		})
+		req.body.vendorId = customId
+
+
+		//--- handle body
 		if(!req.body.coverPhoto) return next(appError('coverPhoto field required'))
 		if(!req.body.images?.length) return next(appError('you must pass images of array'))
 		if(req.body.images.length > 3 ) return next(appError('only allow upto 3 images'))
 
 
-		console.log({ video: typeof req.body.video })
 		// handle video upload
 		if(req.body.video) {
 			if(typeof req.body.video !== 'string') return next(appError('video must be url or base64 dataUrl'))

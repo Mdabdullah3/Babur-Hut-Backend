@@ -50,6 +50,9 @@ export const filterBodyForUpdateProduct = (body: UpdateProduct) => {
 		'quantity',
 		'coverPhoto',
 		'images',
+		'video',
+		'specifications',
+		'isLiked',
 	]
 
 	return filterObjectByArray(body, allowedFields)
