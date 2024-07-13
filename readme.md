@@ -600,7 +600,9 @@ GET /api/reviews/?_fields='review,product,user'         // Only got 3 fields (+ 
 #### Add Review / Comment
 ```
 body: {
+  # "userId": "will comes from logedIn User",
   "product": "6649ebc8dabbe03d553861f9",
+  "image" : "data:image/jpeg;base64,/9j/4AAQSkZJRgA..."
 
   # for Review
   "review" : "I'm using too (delete me)",

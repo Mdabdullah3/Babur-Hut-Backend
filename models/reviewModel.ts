@@ -37,6 +37,17 @@ const reviewSchema = new Schema<ReviewDocument>({
 		maxLength: 200,
 		minLength: 5
 	},
+	image: {
+		public_id: {
+			type: String,
+			// required: true,
+		},
+		secure_url: {
+			type: String,
+			// required: true,
+		}
+
+	},
 
 	// reviewRatings: { 					// product.ratings == avarage([reviewRatings, ... ])
 	// 	type: Number,

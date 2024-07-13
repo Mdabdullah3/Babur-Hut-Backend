@@ -153,7 +153,7 @@ export const addProduct:RequestHandler = catchAsync(async (req, res, next) => {
 		})
 
 	} catch (err) {
-		console.log(err)
+		// console.log(err)
 		setTimeout(() => {
 			promisify(fileService.removeFile)(req.body.coverPhoto.secure_url)
 			req.body.images.forEach( (image: Image) => {

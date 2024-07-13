@@ -1,4 +1,5 @@
-import { Types } from 'mongoose'
+import type { Types } from 'mongoose'
+import type { Image } from './product'
 
 // export type ReviewDocument = {
 // 	id: string
@@ -18,8 +19,10 @@ export type ReviewDocument = {
 	comment: string, 			// comment field
 	likes: Types.ObjectId[],
 	dislikes: Types.ObjectId[],
-	createdAt: string,
-	updatedAt: string
+	image: Image
+
+	createdAt: Date,
+	updatedAt: Date
 }
 
 export type CreateReview = {

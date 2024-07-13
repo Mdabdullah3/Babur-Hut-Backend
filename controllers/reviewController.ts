@@ -5,6 +5,8 @@ import Review from '../models/reviewModel'
 import { appError, catchAsync } from './errorController'
 import { apiFeatures } from '../utils'
 import * as reviewDto from '../dtos/reviewDto'
+import * as fileService from '../services/fileService'
+import { promisify } from 'util'
 
 /*
 {
@@ -41,30 +43,44 @@ export const getAllReviews:RequestHandler = catchAsync( async (req, res, _next) 
 
 // POST /api/reviews
 // POST /api/products/:productId/reviews 	+ protect
-export const addReview:RequestHandler = catchAsync(async (req, res, next) => {
-	const logedInUser = req.user as LogedInUser
+export const addReview:RequestHandler = async (req, res, next) => {
+	try {
+		const logedInUser = req.user as LogedInUser
 
+		const productId = req.params.productId || req.body.product
+		if(!productId?.trim()) return next(appError('productId required fields'))
 
-	const productId = req.params.productId || req.body.product
-	if(!productId?.trim()) return next(appError('productId required fields'))
+		if(!req.body.review && !req.body.comment) return next(appError('must have review or comment field'))
+		if(req.body.review && req.body.comment) return next(appError('must have only review or comment field, not both'))
 
-	if(!req.body.review && !req.body.comment) return next(appError('must have review or comment field'))
-	if(req.body.review && req.body.comment) return next(appError('must have only review or comment field, not both'))
+		req.body.product = productId
+		req.body.user = logedInUser._id
 
-	const body = { 
-		...req.body, 
-		user: logedInUser._id,
-		product: productId,
+		if(req.body.image) {
+			const { error, image } = await fileService.handleBase64File(req.body.image, '/reviews')
+			if(error || !image) return next(appError('review image upload failed '))
+			req.body.image = image
+		}
+
+		const review = req.body
+		// const review = await Review.create(body)
+		if(!review) return next(appError('product not found'))
+		
+		res.json({
+			status: 'success',
+			data: review
+		})
+
+	} catch (err: unknown) {
+
+		setTimeout(() => {
+			promisify(fileService.removeFile)(req.body.image.secure_url)
+		}, 1000)
+
+		if(err instanceof Error) next(appError(err.message))
+		if(typeof err === 'string') next(appError(err))
 	}
-
-	const review = await Review.create(body)
-	// if(!review) return next(appError('product not found'))
-	
-	res.json({
-		status: 'success',
-		data: review
-	})
-})
+}
 
 
 // GET /api/reviews/:reviewId
