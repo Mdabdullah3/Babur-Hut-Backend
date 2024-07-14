@@ -185,7 +185,10 @@ const productSchema = new Schema<ProductDocument>({
 	}
 
 }, {
-	timestamps: true
+	timestamps: true,
+	toJSON: {
+		virtuals: true 	// Step-1: required for virtual field 'reviews'
+	}
 })
 
 // productSchema.pre('save', function(this) {
@@ -200,15 +203,23 @@ productSchema.pre('save', function(next) {
 })
 
 // // Step-2: Generate virtual field: 'reviews' from Review model where Review.product === product._id
-// productSchema.virtual('reviews', {
-// 	ref: 'Review',
-// 	foreignField: 'product',
-// 	localField: '_id'
-// })
+productSchema.virtual('reviews', {
+	ref: 'Review',
+	foreignField: 'product',
+	localField: '_id'
+})
 
-// // Step-3: GET or visiable reviews fieild 			: globally or on perticular review
-// // productSchema.pre(/find*/, async function( next ) {
-// productSchema.pre(/findOne/, async function( next ) {
+productSchema.pre('find', function (this: ProductDocument, next) {
+
+	this.populate('reviews')
+	this.populate('user')
+
+	next()
+})
+
+// Step-3: GET or visiable reviews fieild 			: globally or on perticular review
+// productSchema.pre(/find*/, async function( next ) {
+// // productSchema.pre(/findOne/, async function( next ) {
 
 // 	// this.populate('reviews', '-createdAt -updatedAt -__v', Review)
 // 	this.populate({

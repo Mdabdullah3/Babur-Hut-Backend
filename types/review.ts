@@ -11,6 +11,7 @@ import type { Image } from './product'
 // }
 
 export type ReviewDocument = {
+	populate(arg0: string): unknown
 	_id: Types.ObjectId,
 	id: string,
 	user: Types.ObjectId, 				

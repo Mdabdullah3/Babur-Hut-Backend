@@ -2,7 +2,7 @@ import type { RequestHandler } from 'express'
 import { appError, catchAsync } from './errorController'
 import SubCategory from '../models/subCategoryModel'
 import { filterBodyForUpdateSubCategory } from '../dtos/categoryDto'
-import Category from '../models/categoryModel'
+// import Category from '../models/categoryModel'
 
 // GET 	/api/sub-categories
 export const getAllSubCagegories:RequestHandler = catchAsync(async (_req, res, _next) => {
@@ -32,11 +32,12 @@ export const addSubCategory:RequestHandler = catchAsync(async (req, res, next) =
 	const subCategory = await SubCategory.create(req.body)
 	if(!subCategory) return next(appError('subCategory create failed'))
 
-	// Add subCagegory as child of Category
-	const updatedCategory = await Category.findByIdAndUpdate( categoryId, {
-		"$addToSet": { subCategories: subCategory._id }
-	}, { new: true })
-	if(!updatedCategory) return next(appError('update cagegory failed'))
+	// -----[ Create virtual fields instead, super easy to manage ]
+	// // Add subCagegory as child of Category
+	// const updatedCategory = await Category.findByIdAndUpdate( categoryId, {
+	// 	"$addToSet": { subCategories: subCategory._id }
+	// }, { new: true })
+	// if(!updatedCategory) return next(appError('update cagegory failed'))
 
 
 	res.status(201).json({
@@ -80,18 +81,6 @@ export const updateSubCategoryById:RequestHandler = catchAsync(async (req, res, 
 	const subCategory = await SubCategory.findByIdAndUpdate(subCategoryId, filteredBody, { new: true })
 	if(!subCategory) return next(appError(`subCagegory update failed, allowedFields:${allowedFields.join(',')} `))
 
-	const categoryId = subCategory.category
-
-	// Update subCagegory of child of Category
-	const updatedCategory = await Category.updateOne( 
-		{ _id: categoryId.toString(), subCategories: subCategory._id.toString() }, 
-		{
-			"$set": { "subCategories.$": subCategory._id }
-		}, 
-		{ new: true })
-
-	if(!updatedCategory) return next(appError('update cagegory failed'))
-
 	res.status(201).json({
 		status: 'success',
 		data: subCategory,
@@ -105,11 +94,11 @@ export const deleteSubCategoryById:RequestHandler = catchAsync(async (req, res, 
 	const subCategory = await SubCategory.findByIdAndDelete(subCategoryId)
 	if(!subCategory) return next(appError('category deletation failed'))
 
-	// Remove subCagegory from child of Category
-	const updatedCategory = await Category.findByIdAndUpdate( subCategory.category, {
-		"$pull": { subCategories: subCategory._id }
-	}, { new: true })
-	if(!updatedCategory) return next(appError('update cagegory failed'))
+	// // Remove subCagegory from child of Category
+	// const updatedCategory = await Category.findByIdAndUpdate( subCategory.category, {
+	// 	"$pull": { subCategories: subCategory._id }
+	// }, { new: true })
+	// if(!updatedCategory) return next(appError('update cagegory failed'))
 
 
 	res.status(204).json({

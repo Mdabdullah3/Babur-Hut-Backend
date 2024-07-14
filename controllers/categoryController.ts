@@ -5,8 +5,7 @@ import { filterBodyForUpdateCategory } from '../dtos/categoryDto'
 
 // GET 	/api/categories
 export const getAllCagegories:RequestHandler = catchAsync(async (_req, res, _next) => {
-	const categories = await Category.find()
-	.populate('subCategories')
+	const categories = await Category.find().populate('subCategories')
 
 	res.status(200).json({
 		status: 'success',

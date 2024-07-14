@@ -13,7 +13,7 @@ export type CategoryDocument = {
 	status: string,
 	commission: string,
 
-	subCategories: Types.ObjectId[]
+	// subCategories: Types.ObjectId[] 		// use virtual fields instead
 }
 
 export type UpdateCagetory = {

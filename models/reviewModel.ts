@@ -85,6 +85,11 @@ reviewSchema.pre(/^find/, function(next) {
 })
 
 
+reviewSchema.pre('find', function (this: ReviewDocument, next) {
+	this.populate('user')
+
+	next()
+})
 
 
 export const Review: Model<ReviewDocument> = models.Review || model<ReviewDocument>('Review', reviewSchema)

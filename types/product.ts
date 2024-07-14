@@ -17,6 +17,7 @@ type Specifications = {
 	gender: string
 }
 export type ProductDocument = {
+	populate(arg0: string): unknown
 	_id: Types.ObjectId
 	id: string
 	vendorId: string
