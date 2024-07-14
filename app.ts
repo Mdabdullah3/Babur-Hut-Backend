@@ -15,7 +15,8 @@ import { dbConnect } from './models/dbConnect'
 dbConnect() 		// also add dotenv.config()
 errorController.exceptionErrorHandler() // put it very top
 
-const { SESSION_SECRET,  MONGO_HOST, CLIENT_ORIGIN, NODE_ENV } = process.env || {}
+// const { SESSION_SECRET,  MONGO_HOST, CLIENT_ORIGIN, NODE_ENV } = process.env || {}
+const { SESSION_SECRET,  MONGO_HOST, NODE_ENV } = process.env || {}
 const publicDirectory = path.join(process.cwd(), 'public')
 
 // MONGO_HOST required into session({ store })
@@ -34,7 +35,8 @@ app.use((_req, res, next) => {
 
 
 app.use(cors({ 
-	origin: CLIENT_ORIGIN || "*",
+	// origin: NODE_ENV === 'production' ? CLIENT_ORIGIN : "http://localhost:3000",
+	origin: "http://localhost:3000",
 	credentials: true,
 }))
 app.use(express.static( publicDirectory ))
@@ -53,7 +55,8 @@ app.use(session({
 	cookie: {
 		httpOnly: true,
 		secure: NODE_ENV === 'production',
-		sameSite: 'strict',
+		sameSite: 'none',
+    // maxAge: 30 * 24 * 60 * 60 * 1000 // 30 day
 	}
 }))
 

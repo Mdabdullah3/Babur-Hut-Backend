@@ -42,7 +42,7 @@ export const restrictTo = (...roles: string[]) => (req:Request, _res:Response, n
 }
 
 
-/* POST /api/users/register 		: add user (register by form)
+/* POST /api/auth/register 		: add user (register by form)
 {
   "name" : "delete me",
 	"email" : "delete@gmail.com",
@@ -54,17 +54,18 @@ export const restrictTo = (...roles: string[]) => (req:Request, _res:Response, n
 */
 export const register:RequestHandler = async (req, res, next) => {
 	try {
-		if(!req.body.avatar) return next(appError('avatar is missing'))
+		if(req.body.avatar) {
+			// return next(appError('avatar is missing'))
+			const imageSize = getDataUrlSize(req.body.avatar)
+			const maxImageSize = 1024 * 1024 * 2 			// => 2 MB
+			if(imageSize > maxImageSize) return next(appError('You cross the max image size: 2MB(max)'))
 
-		const imageSize = getDataUrlSize(req.body.avatar)
-		const maxImageSize = 1024 * 1024 * 2 			// => 2 MB
-		if(imageSize > maxImageSize) return next(appError('You cross the max image size: 2MB(max)'))
+			const { error, image } = await fileService.handleBase64File(req.body.avatar)
+			if(error || !image) return next(appError(error))
 
-		const { error, image } = await fileService.handleBase64File(req.body.avatar)
-		if(error || !image) return next(appError(error))
-
-		// store into body before other operation, so if any of them failed, error handler geto image
-		req.body.avatar = image
+			// store into body before other operation, so if any of them failed, error handler geto image
+			req.body.avatar = image
+		}
 
 		const filteredBody = userDto.filterBodyForCreateUser(req.body)
 
@@ -81,11 +82,11 @@ export const register:RequestHandler = async (req, res, next) => {
 		})
 
 	} catch (err: unknown) {
-		if(!req.body.avatar?.secure_url)  return next(appError('avatar?.secure_url is empty'))
-
-		setTimeout(() => {
-			promisify(fileService.removeFile)(req.body.avatar.secure_url)
-		}, 1000)
+		if(req.body.avatar?.secure_url)  {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(req.body.avatar.secure_url)
+			}, 1000)
+		}
 
 		if( err instanceof Error) next(appError(err.message))
 		if( typeof err === 'string') next(appError(err))
@@ -93,7 +94,7 @@ export const register:RequestHandler = async (req, res, next) => {
 }
 
 
-/* POST /api/users/login
+/* POST /api/auth/login
 {
   "email": "riajul@gmail.com",
   "password": "{{pass}}"
@@ -101,6 +102,7 @@ export const register:RequestHandler = async (req, res, next) => {
 */
 export const login:RequestHandler = catchAsync( async (req, res, next) => {
 	// console.log(req.body)
+	if(!req.body.email || !req.body.password) return next(appError('please pass email and password'))
 	
 	passport.authenticate('local', (err: unknown, user: Express.User) => {
 		if(err) return next(err)
@@ -122,7 +124,7 @@ export const login:RequestHandler = catchAsync( async (req, res, next) => {
 })
 
 
-// => POST /api/users/logout 		: // use POST, DELETE request, so that accedently not logout by refreshing page or something
+// => POST /api/auth/logout 		: // use POST, DELETE request, so that accedently not logout by refreshing page or something
 export const logout:RequestHandler = (req, res, next) => {
 	req.logout((err) => {
 		if(err) return next(err)

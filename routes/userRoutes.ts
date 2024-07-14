@@ -16,7 +16,7 @@ router.use('/:userId/reviews', reviewRouter)
 
 router.route('/')
 	.get(
-		// authController.protect,
+		authController.protect,
 		// authController.restrictTo('admin'), 
 		userController.getAllUsers
 	)
