@@ -22,6 +22,11 @@ const categorySchema = new Schema<CategoryDocument>({
 	vat: String,
 	status: String,
 	commission: String,
+
+	subCategories: [{ 													
+		type: Schema.Types.ObjectId, 			// categoryId
+		ref: 'SubCategory',
+	}],
 }, {
 	timestamps: true,
 })

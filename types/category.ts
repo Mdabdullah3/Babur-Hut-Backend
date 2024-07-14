@@ -12,6 +12,8 @@ export type CategoryDocument = {
 	vat: string
 	status: string,
 	commission: string,
+
+	subCategories: Types.ObjectId[]
 }
 
 export type UpdateCagetory = {
