@@ -986,3 +986,42 @@ PATCH {{origin}}/api/sub-categories/:subCategoryId
 ```
 
 
+
+## Packages
+- GET {{origin}}/api/packages 		        
+- GET {{origin}}/api/packages/:packageId       
+
+- POST {{origin}}/api/packages                
+- PATCH {{origin}}/api/packages/:packageId   
+- DELETE {{origin}}/api/packages/:packageId 
+
+
+#### Add Package
+```
+body {
+	"name": "package name 2",
+	"user": "667ff88eb5dfd416e36015ad",
+	"status": "active",
+	"duration": 5,
+	"price": 300,
+	"maxProduct": 10
+}
+
+POST {{origin}}/api/packages
+```
+
+
+
+
+#### Update Package
+```
+body {
+	"name": "package name 2",
+	"status": "active",
+	"duration": 5,
+	"price": 300,
+	"maxProduct": 10
+}
+PATCH {{origin}}/api/packages/:packageId
+```
+

@@ -1,16 +1,16 @@
 /* DTO = Data Transfer Object */
 import { filterObjectByArray } from '../utils'
-import type { UpdateVoucher } from '../types/voucher'
+import type { UpdatePackage } from '../types/package'
 
 
 // => PATCH /api/reviews/:id
-export const filterBodyForUpdateVoucher = (body: UpdateVoucher) => {
+export const filterBodyForUpdatePackage = (body: UpdatePackage) => {
 	const allowedFields = [
-		'voucherId',
+		'name',
 		'status',
-		'discount',
-		'startDate',
-		'endDate',
+		'duration',
+		'price',
+		'maxProduct',
 	]
 
 	return filterObjectByArray(body, allowedFields)
