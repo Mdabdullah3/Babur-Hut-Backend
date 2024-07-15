@@ -179,10 +179,10 @@ const productSchema = new Schema<ProductDocument>({
 		gender: String
 	},
 
-	isLiked: {
-		type: Boolean,
-		default: false
-	}
+	likes: [{ 													
+		type: Schema.Types.ObjectId,
+		ref: 'User',
+	}],
 
 }, {
 	timestamps: true,

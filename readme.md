@@ -523,8 +523,6 @@ body: {
 		color: "",
 		gender: ""
 	},
-
-	isLiked: true,
 }
 
 - POST {{origin}}/api/products
@@ -587,6 +585,10 @@ body: {
 ```
 
 
+#### Toggle Like Product
+```
+- GET {{origin}}/api/products/:productId/like
+```
 
 
 

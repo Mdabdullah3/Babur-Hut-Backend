@@ -88,6 +88,8 @@ export type UserDocument = Document & {
 		isEventManager: boolean,
 		isMessage: boolean,
 	}
+
+	likes: Types.ObjectId[]
 }
 // export type UserDocument = {
 // 	_id: Types.ObjectId

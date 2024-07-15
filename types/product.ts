@@ -45,8 +45,7 @@ export type ProductDocument = {
 	ratings: number
 
 	specifications: Specifications
-	isLiked: boolean
-
+	likes: Types.ObjectId[]
 }
 
 export type CreateProduct = {

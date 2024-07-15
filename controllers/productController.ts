@@ -1,6 +1,8 @@
 import type { RequestHandler } from 'express'
 import type { ProductDocument, Image} from '../types/product'
+// import type { LogedInUser } from '../types/user'
 import Product from '../models/productModel'
+import User from '../models/userModel'
 // import crypto from 'crypto'
 import { appError, catchAsync } from './errorController'
 import { apiFeatures, generateSequentialCustomId, getDataUrlSize } from '../utils'
@@ -321,3 +323,45 @@ export const deleteProductByIdOrSlug:RequestHandler = catchAsync(async (req, res
 		data: product
 	})
 })
+
+
+
+
+// GET /api/products/:productId/like
+export const updateProductLike = catchAsync(async (req, res, next) => {
+	const productId = req.params.productId
+	// const user = req.user as LogedInUser & { likes: string[]}
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const user = req.user as any
+	const userId = user._id
+
+	if(!productId) return next(appError('productId is required'))
+
+
+
+	const isLiked = user.likes?.includes(productId)
+
+	const operator = isLiked ? '$pull' : '$addToSet'
+	const updatedUser = await User.findByIdAndUpdate(userId, { [operator]: { likes: productId }}, { new: true, }) 	
+	const updatedProduct = await Product.findByIdAndUpdate(productId, { [operator]: { likes: userId }}, { new: true, }) 	
+
+	if(updatedUser) req.user = updatedUser
+
+	// if( !isLiked ) { 														// Show notification only when liked, skip unlike senerio
+	// 	const notification = await Notification.insertNotification({
+	// 		entityId: updatedTweet._id, 						// on which notification user liked ?
+	// 		userFrom: userId, 											// Who liked it ?
+	// 		userTo: updatedTweet.user._id, 					// which user create this tweet ?
+	// 		type: 'like', 													// ['like', 'retweet', 'replyTo', 'follow']
+	// 		kind: 'tweet', 													// ['tweet', 'message' ]
+	// 	})
+
+	// 	if(!notification) return next(appError('Notification failed'))
+	// }
+
+	res.status(201).json({
+		status: 'success',
+		data: updatedProduct
+	})
+})
+

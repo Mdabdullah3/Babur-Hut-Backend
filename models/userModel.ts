@@ -82,7 +82,7 @@ const userSchema = new Schema<UserDocument>({
 	role: {
 		type: String,
 		enum: ['admin', 'vendor', 'user'],
-		default: 'user'
+		default: 'user '
 	},
 	isActive: {
 		type: Boolean,
@@ -175,8 +175,12 @@ const userSchema = new Schema<UserDocument>({
 		isSupport: Boolean,
 		isEventManager: Boolean,
 		isMessage: Boolean,
-	}
+	},
 
+	likes: [{ 													
+		type: Schema.Types.ObjectId,
+		ref: 'Product',
+	}],
 
 }, {
 	timestamps: true

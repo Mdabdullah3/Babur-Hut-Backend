@@ -7,7 +7,7 @@ import * as authController from '../controllers/authController'
 export const router = Router()
 
 router.use('/:productId/reviews', reviewRouter)
-
+router.get('/get-random-products', productController.gerRandomProducts)
 router.get('/get-random-products', productController.gerRandomProducts)
 
 router.route('/')
@@ -21,3 +21,8 @@ router.route('/:productId')
 	.get(productController.getProductByIdOrSlug)
 	.patch(productController.updateProductByIdOrSlug)
 	.delete(productController.deleteProductByIdOrSlug)
+
+
+router.get('/:productId/like', authController.protect, productController.updateProductLike)
+
+// GET /api/products/:productId/like
