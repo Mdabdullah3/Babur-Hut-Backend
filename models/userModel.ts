@@ -95,6 +95,12 @@ const userSchema = new Schema<UserDocument>({
 		default: false
 	},
 
+	coverPhoto: {
+		public_id: String,
+		secure_url: String,
+		alt: String,
+		size: String
+	},
 	avatar: {
 		public_id: String,
 		secure_url: String,

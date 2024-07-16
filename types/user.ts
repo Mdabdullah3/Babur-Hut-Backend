@@ -57,6 +57,7 @@ export type UserDocument = Document & {
 	email: string
 	password: string
 	confirmPassword?: string
+	coverPhoto: Image
 	avatar: Image
 	clientId: string 							// social media login 
 	role: string
@@ -91,25 +92,6 @@ export type UserDocument = Document & {
 
 	likes: Types.ObjectId[]
 }
-// export type UserDocument = {
-// 	_id: Types.ObjectId
-// 	createdAt: Date
-// 	updatedAt: Date
-
-// 	name: string
-// 	email: string
-// 	password: string
-// 	confirmPassword?: string
-// 	avatar: Image
-// 	clientId: string 							// social media login 
-// 	role: string
-
-// 	// title: string
-// 	// about: string
-// 	// skills: string[]
-// 	// infoItems: Info[],
-// 	// experiences: Experience[]
-// }
 
 export type CreateUser = {
 	name: string
@@ -117,6 +99,7 @@ export type CreateUser = {
 	username: string
 	password: string
 	confirmPassword: string
+	coverPhoto: string
 	avatar: string
 	role: string
 	otherPermissions : {
@@ -141,6 +124,7 @@ export type CreateUser = {
 export type UpdateUser = {
 	name: string
 	email: string
+	coverPhoto: string
 	avatar: string
 	otherPermissions : {
 		isVendor: boolean,

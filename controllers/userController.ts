@@ -88,6 +88,17 @@ export const updateUserById:RequestHandler = async (req, res, next) => {
 			if(!isAdmin) return next(appError('only self or admin user can update others user'))
 		}
 
+		if(req.body.coverPhoto) {
+			const imageSize = getDataUrlSize(req.body.coverPhoto)
+			const maxImageSize = 1024 * 1024 * 2 			// => 2 MB
+			if(imageSize > maxImageSize) return next(appError('You cross the max image size: 2MB(max)'))
+
+			const { error: _message, image } = await fileService.handleBase64File(req.body.coverPhoto)
+			// if(message || !image) return next(appError(message))
+
+			if(image) req.body.coverPhoto = image
+		}
+
 		if(req.body.avatar) {
 			const imageSize = getDataUrlSize(req.body.avatar)
 			const maxImageSize = 1024 * 1024 * 2 			// => 2 MB
@@ -111,6 +122,9 @@ export const updateUserById:RequestHandler = async (req, res, next) => {
 		if(!updatedUser) return next(appError('review not found'))
 		
 		// remove old image
+		if(user.coverPhoto) {
+			promisify(fileService.removeFile)(user.coverPhoto.secure_url)
+		}
 		if(user.avatar) {
 			promisify(fileService.removeFile)(user.avatar.secure_url)
 		}
@@ -122,6 +136,9 @@ export const updateUserById:RequestHandler = async (req, res, next) => {
 		})
 
 	} catch (error) {
+		if(req.body.coverPhoto?.secure_url) {
+			promisify(fileService.removeFile)(req.body.coverPhoto.secure_url)
+		}
 		if(req.body.avatar?.secure_url) {
 			promisify(fileService.removeFile)(req.body.avatar.secure_url)
 		}
@@ -158,6 +175,9 @@ export const deleteUserById:RequestHandler = catchAsync(async (req, res, next) =
 	const user = await User.findByIdAndDelete(userId)
 	if(!user) return next(appError('review not found'))
 	
+	if(user.coverPhoto) {
+		promisify(fileService.removeFile)(user.coverPhoto.secure_url)
+	}
 	if(user.avatar) {
 		promisify(fileService.removeFile)(user.avatar.secure_url)
 	}

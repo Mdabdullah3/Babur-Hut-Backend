@@ -23,10 +23,12 @@ const categorySchema = new Schema<CategoryDocument>({
 	status: String,
 	commission: String,
 
-	// subCategories: [{ 													
-	// 	type: Schema.Types.ObjectId, 			// categoryId
-	// 	ref: 'SubCategory',
-	// }],
+	image: {
+		public_id: String,
+		secure_url: String,
+		alt: String,
+		size: String
+	},
 }, {
 	timestamps: true,
 	toJSON: {

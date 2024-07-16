@@ -1,5 +1,9 @@
 import { Types } from 'mongoose'
 
+type Image = {
+	public_id: string
+	secure_url: string
+}
 
 export type CategoryDocument = {
 	_id: Types.ObjectId,
@@ -12,6 +16,7 @@ export type CategoryDocument = {
 	vat: string
 	status: string,
 	commission: string,
+	image: Image
 
 	// subCategories: Types.ObjectId[] 		// use virtual fields instead
 }
@@ -22,6 +27,7 @@ export type UpdateCagetory = {
 	vat: string
 	status: string,
 	commission: Date,
+	image: Image
 }
 
 
