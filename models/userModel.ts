@@ -82,7 +82,9 @@ const userSchema = new Schema<UserDocument>({
 	role: {
 		type: String,
 		enum: ['admin', 'vendor', 'user'],
-		default: 'user '
+		default: 'user',
+		trim: true,
+		lowercase: true,
 	},
 	isActive: {
 		type: Boolean,

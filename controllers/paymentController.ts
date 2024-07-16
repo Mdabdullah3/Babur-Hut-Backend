@@ -116,51 +116,51 @@ export const createPaymentRequest:RequestHandler = catchAsync( async (req, res, 
 
 
 
-	// const apiResponse = await sslcz.init(data)
+	// const data = await sslcz.init(data)
 	// Insert order details into the database
 	// const order = { ...planDetails, tran_id, status: 'pending'};
 	// const result = ordersCollection.insertOne(order);
 
-	res.status(200).json({
-		status: 'success',
-		data: { 
-			// data,
-			gatewayPageUrl: '/yours-payment-route',
-			// gatewayPageUrl: apiResponse.GatewayPageURL
-		}
-	})
+	// const putput = { GatewayPageURL : 'http://localhost:5000' }
+	// res.redirect(putput.GatewayPageURL)
 
+	res.redirect('http://localhost:5000')
 
 	// res.status(200).json({
 	// 	status: 'success',
-	// 	body: req.body,
-	// 	data: {
-	// 		// gatewayPageUrl: payment.GatewayPageURL
-	// 		...data
+	// 	data: { 
+	// 		// data,
+	// 		gatewayPageUrl: '/yours-payment-route',
+	// 		// gatewayPageUrl: data.GatewayPageURL
 	// 	}
 	// })
-
 })
 
 
 
-// // POST 	/api/payments/success/:transactionId
-// export const paymentSuccessHandler: RequestHandler = catchAsync( async (req, res, next) => {
-// 	const { transitionId } = req.params
+// POST 	/api/payments/success/:transactionId
+export const paymentSuccessHandler: RequestHandler = catchAsync( async (req, res, next) => {
+	const { transactionId } = req.params
+	if( !transactionId ) return next(appError(`payment can't find by transitionId: ${transactionId}`))
 
-// 	const payment = await Payment.findByOneAndUpdate({ transitionId }, { isPaid: true })
-// 	if( !payment ) return next(appError(`payment can't find by transitionId: ${transitionId}`))
+	// const payment = await Payment.findByOneAndUpdate({ transitionId }, { isPaid: true })
+	// if( !payment ) return next(appError(`payment can't find by transitionId: ${transitionId}`))
 
-// 	// we will redirect to another frontend page to serve
-// 	// res.redirect(`http://localhost:3000/payment-success/${transactionId`) 		
-// 	// if need transaction Id
+	// we will redirect to another frontend page to serve
 
-// 	res.status(200).json({
-// 		status: 'success',
-// 		data: payment
-// 	})
+	// res.redirect(`http://localhost:3000/payment-success/${transactionId}`) 		
+	res.redirect(`http://localhost:5000/`) 		
 
-// })
+	// if need transaction Id
+
+	// res.redirect('/api/users')
+
+	// res.status(200).json({
+	// 	status: 'success',
+	// 	// data: payment
+	// })
+
+})
 
 
 // POST 	/api/payments/failed/:transactionId

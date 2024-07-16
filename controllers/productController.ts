@@ -305,6 +305,9 @@ export const deleteProductByIdOrSlug:RequestHandler = catchAsync(async (req, res
 			promisify(fileService.removeFile)(image.secure_url)
 		})
 	}
+	if(product.video && !product.video.secure_url.startsWith('http')) {
+		promisify(fileService.removeFile)(product.video.secure_url)
+	}
 	// // delete old images
 	// setTimeout(() => {
 	// 	if(product.coverPhoto?.secure_url) {
@@ -317,7 +320,11 @@ export const deleteProductByIdOrSlug:RequestHandler = catchAsync(async (req, res
 	// 		})
 	// 	}
 	// }, 1000)
-	
+
+
+	// deleting productId from user.likes = [ ...productIds ]
+	await User.findByIdAndUpdate(product.user, { "$pull": { likes: productId }}, { new: true, }) 	
+
 	res.status(204).json({
 		status: 'success',
 		data: product

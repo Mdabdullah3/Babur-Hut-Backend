@@ -8,9 +8,12 @@ export const router = Router()
 
 
 router
-	.post('/payment-request', 
+	.post('/request', 
 		authController.protect,
 		paymentController.createPaymentRequest
+	)
+	.post('/success/:transactionId', 
+		paymentController.paymentSuccessHandler
 	)
 
 

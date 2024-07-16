@@ -6,6 +6,7 @@ import { apiFeatures, getDataUrlSize } from '../utils'
 import * as userDto from '../dtos/userDto'
 import * as fileService from '../services/fileService'
 import { promisify } from 'node:util'
+// import Product from '../models/productModel'
 // import { isValidObjectId } from 'mongoose'
 
 /*
@@ -160,6 +161,11 @@ export const deleteUserById:RequestHandler = catchAsync(async (req, res, next) =
 	if(user.avatar) {
 		promisify(fileService.removeFile)(user.avatar.secure_url)
 	}
+	
+	/* deleting userIds from products .likes 
+			- if user has 3 product Ids in likes array, then find product by that ids and delete
+	*/
+	// await User.findByIdAndUpdate(product.user, { "$pull": { likes: productId }}, { new: true, }) 	
 	
 	res.status(204).json({
 		status: 'success',
