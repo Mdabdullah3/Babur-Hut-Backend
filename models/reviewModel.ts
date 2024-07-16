@@ -7,6 +7,8 @@ import { Schema, models, model } from 'mongoose'
 	"user": "user-asdfasdjfa",
 	"product": "product-asdfalksdjfasjj",
 	"review": "this is my review 1",
+	"comment": "this is my comment 1",
+	"image": "data:...",
 }
 */
 

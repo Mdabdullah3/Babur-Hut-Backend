@@ -179,21 +179,20 @@ export const paymentCheckoutPage:RequestHandler = (_req, res, _next) => {
 }
 
 
-// => POST /payment-handler 		(for demo only)
-export const paymentHandlerPage:RequestHandler = (req, res, next) => {
+// => GET /sslcommerz-lts 		(for demo only)
+export const sslcommerzLTSHandler:RequestHandler = (req, res, next) => {
+	const { price, transactionId, ...data } = req.query
+	if(!price || !transactionId) return next(appError('price and transactionId is required fields'))
 
-	const { price, transactionId, ...data } = req.body
-
-	if(!price || transactionId) return next(appError('price and transactionId is required fields'))
-
+	// console.log(req.query)
 
 	const payload = {
-		title: 'payment handler page',
+		title: '(my-version) SSL Payment Gateway',
 		data,
 		dataJs: JSON.stringify(data),
 	}
 
-	res.render('payment/handler', payload)
+	res.render('payment/sslcommerzLts', payload)
 }
 
 

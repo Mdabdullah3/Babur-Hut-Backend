@@ -1,0 +1,20 @@
+doctype html
+html(lang="en")
+	head
+		meta(charset="UTF-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		title #{title}
+		link(rel='icon' type='image/png' href='/favicon.ico')
+		script(type="module", src="/js/pages/payment/mySSL.js") 
+	body 
+
+		br
+		div
+			button(name='payment-succeed' style='color: blue;') Payment Succeed
+			br
+			button(name='payment-cancel' style='color: gran;') Payment cancel
+			br
+			button(name='payment-failed' style='color: red;') Payment failed
+		
+
+

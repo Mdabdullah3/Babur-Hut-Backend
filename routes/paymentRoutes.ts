@@ -15,5 +15,8 @@ router
 	.post('/success/:transactionId', 
 		paymentController.paymentSuccessHandler
 	)
+	.post('/cancel/:transactionId', 
+		paymentController.paymentCancelHandler
+	)
 
 

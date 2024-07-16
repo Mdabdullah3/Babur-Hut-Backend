@@ -30,6 +30,6 @@ export const router = Router()
 
 
 		// just for testing
-		.get('/payment-checkout', pageController.paymentCheckoutPage)
-		.post('/payment-handler', pageController.paymentHandlerPage)
+		.get('/payment', pageController.paymentCheckoutPage)
+		.get('/sslcommerz-lts', pageController.sslcommerzLTSHandler)
 

@@ -3,6 +3,7 @@ import type { LogedInUser } from '../types/user'
 import { Types } from 'mongoose'
 import { appError, catchAsync } from './errorController'
 import Product from '../models/productModel'
+import Payment from '../models/paymentModel'
 
 // // eslint-disable-next-line @typescript-eslint/no-var-requires
 // const SSLCommerzPayment = require('sslcommerz-lts')
@@ -53,7 +54,8 @@ body {
 }
 */
 
-// POST 	/api/payments/payment-request + authController.protect
+
+// POST 	/api/payments/request + authController.protect
 export const createPaymentRequest:RequestHandler = catchAsync( async (req, res, next) => {
 	const productId = req.body.product
 
@@ -115,25 +117,32 @@ export const createPaymentRequest:RequestHandler = catchAsync( async (req, res, 
 	data
 
 
-
-	// const data = await sslcz.init(data)
+	// const api = await sslcz.init(data)
 	// Insert order details into the database
 	// const order = { ...planDetails, tran_id, status: 'pending'};
 	// const result = ordersCollection.insertOne(order);
 
-	// const putput = { GatewayPageURL : 'http://localhost:5000' }
-	// res.redirect(putput.GatewayPageURL)
 
-	res.redirect('http://localhost:5000')
+	// only admin or payment success can change the status  
+	req.body.status = user.role === 'admin' ? req.body.status : undefined 		
 
-	// res.status(200).json({
-	// 	status: 'success',
-	// 	data: { 
-	// 		// data,
-	// 		gatewayPageUrl: '/yours-payment-route',
-	// 		// gatewayPageUrl: data.GatewayPageURL
-	// 	}
-	// })
+	let payment = await Payment.findOne({ transactionId: req.body.transactionId })
+	if(!payment) {
+		req.body.transactionId = transactionId
+		payment = await Payment.create(req.body)
+
+		if(!payment) return next(appError('creating payment into database failed'))
+	}
+
+	const gatewayPageUrl = `/sslcommerz-lts/?price=${product.price}&transactionId=${transactionId}`
+
+	res.status(200).json({
+		status: 'success',
+		data: { 
+			gatewayPageUrl
+			// gatewayPageUrl: data.GatewayPageURL
+		}
+	})
 })
 
 
@@ -143,41 +152,48 @@ export const paymentSuccessHandler: RequestHandler = catchAsync( async (req, res
 	const { transactionId } = req.params
 	if( !transactionId ) return next(appError(`payment can't find by transitionId: ${transactionId}`))
 
-	// const payment = await Payment.findByOneAndUpdate({ transitionId }, { isPaid: true })
-	// if( !payment ) return next(appError(`payment can't find by transitionId: ${transitionId}`))
+	// only admin or payment success can change the status  
+	// req.body.status = user.role === 'admin' ? req.body.status : undefined 		
+
+	const payment = await Payment.findOneAndUpdate({ transactionId }, { status: 'completed' })
+	if( !payment ) return next(appError(`payment can't find by transitionId: ${transactionId}`))
 
 	// we will redirect to another frontend page to serve
 
 	// res.redirect(`http://localhost:3000/payment-success/${transactionId}`) 		
-	res.redirect(`http://localhost:5000/`) 		
-
-	// if need transaction Id
+	// res.redirect(`http://localhost:5000/`) 		
 
 	// res.redirect('/api/users')
 
-	// res.status(200).json({
-	// 	status: 'success',
-	// 	// data: payment
-	// })
+	res.status(200).json({
+		status: 'success',
+		// data: payment
+		data: {
+			successUrl: '/api/users',
+			cancelUrl: '/',
+			failed: '/',
+		}
+	})
 
 })
 
 
-// POST 	/api/payments/failed/:transactionId
+// POST 	/api/payments/cancel/:transactionId
+export const paymentCancelHandler:RequestHandler = catchAsync( async (req, res, next) => {
+	const { transactionId } = req.params
+	if( !transactionId ) return next(appError(`must required transitionId: ${transactionId}`))
 
+	const transaction = await Payment.findOne({ transactionId })
+	if( transaction?.status === 'completed') return next(appError("you can't cancel completed transaction"))
 
-// export const createPaymentRequest:RequestHandler = catchAsync( async (req, res, next) => {
-// 	if(!req.body) return next(appError('no body found'))
+	const payment = await Payment.findOneAndDelete({ transactionId })
+	if( !payment ) return next(appError(`payment can't deleted on cancelled transitionId: ${transactionId}`))
 
-// 	const currentDocuments = await Product.countDocuments()
-// 	const vendorId = generateRandomVendorId('babur hat', 'electronics', currentDocuments)
-// 	console.log({ vendorId })
-
-// 	res.json({
-// 		status: 'success',
-// 		data: req.body
-// 	})
-// })
+	res.json({
+		status: 'success',
+		data: payment
+	})
+})
 
 
 // const SSLCommerzPayment = require('sslcommerz-lts')
