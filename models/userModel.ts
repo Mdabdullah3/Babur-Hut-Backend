@@ -38,12 +38,40 @@ export type UserDocument = Document & {
 /*
 {
 
-"clientId" : "", 		// for social media login
 "name" : "Riajul Islam",
 "email" : "riajul@gmail.com",
 "password" : "asdfasdf",
 "confirmPassword?" : "asdfasdf",
+"coverPhoto" : "",
 "avatar" : "",
+"phone" : "",
+"gender" : "",
+"location: {
+	address1: string
+	address2: string
+	city: string
+	state: string
+	postcode: number,
+	country: string
+},
+
+otherPermissions : {
+	isVendor: boolean,
+	isCustomer: boolean,
+	isCategories: boolean,
+	isProducts: boolean,
+	isOrders: boolean,
+	isReviews: boolean,
+	isVouchers: boolean,
+	isAdManager: boolean,
+	isRoleManager: boolean,
+	isMessageCenter: boolean,
+	isFinance: boolean,
+	isShipment: boolean,
+	isSupport: boolean,
+	isEventManager: boolean,
+	isMessage: boolean,
+}
 
 }
 */

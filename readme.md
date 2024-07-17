@@ -760,8 +760,35 @@ body: {
   "name": "riajul islam",
   "address": "gulshan, badda, dhaka-1212",
   "gender" : "male",
-	"avatar" : "data:image/jpeg;base64,/9j/4AAQSkZJRgA..."
-
+	"coverPhoto" : "data:image/jpeg;base64,/9j/4AAQSkZJRgA...",
+	"avatar" : "data:image/jpeg;base64,/9j/4AAQSkZJRgA...",
+	"phone" : "",
+	"gender" : "",
+	"location: {
+		address1: string
+		address2: string
+		city: string
+		state: string
+		postcode: number,
+		country: string
+	},
+	otherPermissions : {
+		isVendor: boolean,
+		isCustomer: boolean,
+		isCategories: boolean,
+		isProducts: boolean,
+		isOrders: boolean,
+		isReviews: boolean,
+		isVouchers: boolean,
+		isAdManager: boolean,
+		isRoleManager: boolean,
+		isMessageCenter: boolean,
+		isFinance: boolean,
+		isShipment: boolean,
+		isSupport: boolean,
+		isEventManager: boolean,
+		isMessage: boolean,
+	}
 }
 
 - PATCH {{origin}}/api/users/6649ebc8dabbe03d553861f9
@@ -935,7 +962,8 @@ PATCH {{origin}}/api/vouchers/:voucherId
   "shippingCharge": "200",
   "vat": "2",
   "status": "active",
-  "commission": "0"
+  "commission": "0",
+	"image: "data:image/jpg;a3wwra...",
 }
 
 POST {{origin}}/api/categories
