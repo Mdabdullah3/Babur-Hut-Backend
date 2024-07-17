@@ -34,11 +34,34 @@ app.use((_req, res, next) => {
 })
 
 
-app.use(cors({ 
-	// origin: NODE_ENV === 'production' ? CLIENT_ORIGIN : "http://localhost:3000",
-	origin: "http://localhost:3000",
-	credentials: true,
-}))
+
+
+// List of allowed origins
+const allowedOrigins = ['http://localhost:3000', 'http://103.148.15.24:3000', 'http://babur-hat.local:3000' ]
+
+// CORS configuration
+const corsOptions = {
+  origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+};
+app.use(cors(corsOptions));
+
+
+
+// app.use(cors({ 
+// 	origin: NODE_ENV === 'production' ? CLIENT_ORIGIN : "*",
+// 	// origin: ["http://localhost:3000", "http://103.148.15.24:3000", "http://103.148.15.24:5000", "*"],
+// 	// origin: "*",
+// 	credentials: true,
+// }))
 app.use(express.static( publicDirectory ))
 app.use(express.urlencoded({ extended: false })) 						// required for passport login formData
 app.use(express.json({ limit: '10mb' }))
