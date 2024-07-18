@@ -31,7 +31,7 @@ import { product } from '../data/product'
 
 
 const productSchema = new Schema<ProductDocument>({
-	vendorId: {
+	customId: {
 		type: String,
 		required: true,
 		unique: true,

@@ -78,6 +78,7 @@ otherPermissions : {
 
 const userSchema = new Schema<UserDocument>({
 	clientId: String, 		// for social media login
+	customId: String, 		// a formated user id for UI
 	name: {
 		type: String,
 		required: true,

@@ -32,6 +32,7 @@ import { filterObjectByArray } from '../utils'
 // POST : to create user
 export const filterBodyForCreateUser = (body: CreateUser) => {
 	const allowedFields = [
+		'customId',
 		'name',
 		'email',
 		'username',
@@ -52,6 +53,7 @@ export const filterBodyForCreateUser = (body: CreateUser) => {
 // user => user._doc
 export const filterUserDocument = (user: UserDocument) => {
 	const allowedFields = [
+		'customId',
 		'name',
 		'email',
 		// 'password',

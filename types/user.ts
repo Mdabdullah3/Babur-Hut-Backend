@@ -52,6 +52,7 @@ export type UserDocument = Document & {
 	createdAt: Date
 	updatedAt: Date
 
+	customId: string
 	name: string
 	slug: string
 	email: string
@@ -94,6 +95,7 @@ export type UserDocument = Document & {
 }
 
 export type CreateUser = {
+	customId: string
 	name: string
 	email: string
 	username: string
@@ -122,6 +124,7 @@ export type CreateUser = {
 }
 
 export type UpdateUser = {
+	customId: string
 	name: string
 	email: string
 	coverPhoto: string
@@ -144,37 +147,3 @@ export type UpdateUser = {
 		isMessage: boolean,
 	}
 }
-// type SignUpInput = {
-// 	name: string
-// 	email: string
-// 	password: string
-// 	confirmPassword: string
-// }
-
-// type LoginInput = {
-// 	email: string
-// 	password: string
-// }
-
-// type UpdateMeInput = {
-// 	userId: String
-// 	name: string
-// }
-
-
-// export type GetUserArgs = {
-// 	userId: string
-// }
-// export type SignUpArgs = {
-// 	input: SignUpInput
-// }
-// export type LoginArgs = {
-// 	input: LoginInput
-// }
-
-// export type UpdateMeArgs = {
-// 	input: UpdateMeInput
-// }
-// export type DeleteMeArgs = {
-// 	userId: string
-// }

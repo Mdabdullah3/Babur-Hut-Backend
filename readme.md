@@ -495,7 +495,7 @@ GET /api/products/?_fields='name,slug,price' 						: Only got 3 fields (+ _id, p
 #### Add Product
 ```
 body: {
-	"vendorId": 'unique-id',
+	"customId": 'unique-id',
 	"user": logedInUser.id,
 	"name": "it is my sample product",
 	"slug": "it-is-my-sample-product-unitque",
@@ -537,6 +537,7 @@ body: {
 #### Update Product
 ```
 body: {
+	"customId": 'unique-id',
 	"name": "it is my sample product",
 	"slug": "it-is-my-sample-product-unitque",
 	"price": 500,
@@ -762,6 +763,7 @@ body: {
 #### Update User  
 ```
 body: {
+	"customId": 'unique-id',
   "name": "riajul islam",
   "address": "gulshan, badda, dhaka-1212",
   "gender" : "male",

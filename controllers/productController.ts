@@ -80,13 +80,13 @@ req.body = {
 export const addProduct:RequestHandler = catchAsync(async (req, res, next) => {
 
 	try {
-		//--- For vendorId
+		//--- Custom product Id
 		const currentDocuments = await Product.countDocuments()
 		const	customId = generateSequentialCustomId({ 
 			categoryName: 'product', 
 			countDocuments: currentDocuments
 		})
-		req.body.vendorId = customId
+		req.body.customId = customId
 
 
 		//--- handle body

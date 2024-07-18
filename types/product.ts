@@ -20,10 +20,10 @@ export type ProductDocument = {
 	populate(arg0: string): unknown
 	_id: Types.ObjectId
 	id: string
-	vendorId: string
 	createdAt: Date
 	updatedAt: Date
 
+	customId: string
 	user: Types.ObjectId
 	name: string
 	price: number
@@ -49,6 +49,7 @@ export type ProductDocument = {
 }
 
 export type CreateProduct = {
+	customId: string
 	user: Types.ObjectId
 	name: string
 	slug: string
@@ -68,6 +69,7 @@ export type CreateProduct = {
 }
 
 export type UpdateProduct = {
+	customId: string
 	name: string
 	slug: string
 	price: number
