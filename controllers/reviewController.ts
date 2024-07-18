@@ -65,8 +65,7 @@ export const addReview:RequestHandler = async (req, res, next) => {
 			req.body.image = image
 		}
 
-		const review = req.body
-		// const review = await Review.create(body)
+		const review = await Review.create(req.body)
 		if(!review) return next(appError('product not found'))
 		
 		res.json({
@@ -76,9 +75,11 @@ export const addReview:RequestHandler = async (req, res, next) => {
 
 	} catch (err: unknown) {
 
-		setTimeout(() => {
-			promisify(fileService.removeFile)(req.body.image.secure_url)
-		}, 1000)
+		if(req.body.image) {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(req.body.image.secure_url)
+			}, 1000)
+		}
 
 		if(err instanceof Error) next(appError(err.message))
 		if(typeof err === 'string') next(appError(err))

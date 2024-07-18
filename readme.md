@@ -487,6 +487,11 @@ GET /api/products/?_fields='name,slug,price' 						: Only got 3 fields (+ _id, p
 - GET {{origin}}/api/products/get-random-products
 ```
 
+#### Get all Products of single user
+```
+- GET {{origin}}/api/users/:userId/products
+```
+
 #### Add Product
 ```
 body: {

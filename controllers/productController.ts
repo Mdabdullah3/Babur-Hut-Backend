@@ -30,7 +30,13 @@ export const gerRandomProducts:RequestHandler = catchAsync(async (_req, res, _ne
 // => GET /api/products
 export const getAllProducts:RequestHandler = catchAsync( async (req, res, _next) => {
 	// const products = await Product.find<ProductDocument>()
-	const filter = {}
+	const userId = req.params.userId
+	// const productId = req.params.productId
+
+	let filter = {}
+	// if(productId) filter = { product: productId.toString() } 
+	if(userId) filter = { user: userId.toString() } 
+
 	const products:ProductDocument[] = await apiFeatures(Product, req.query, filter)
 
 	res.json({
@@ -158,9 +164,9 @@ export const addProduct:RequestHandler = catchAsync(async (req, res, next) => {
 	} catch (err) {
 		// console.log(err)
 		setTimeout(() => {
-			promisify(fileService.removeFile)(req.body.coverPhoto.secure_url)
+			promisify(fileService.removeFile)(req.body?.coverPhoto.secure_url)
 			req.body.images.forEach( (image: Image) => {
-				promisify(fileService.removeFile)(image.secure_url)
+				promisify(fileService.removeFile)(image?.secure_url)
 			})
 
 			if( !req.body?.video?.secure_url.startsWith('http') ) {

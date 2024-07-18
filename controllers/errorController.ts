@@ -89,16 +89,28 @@ export const routeNotFound:RequestHandler = (req, _res, next) => {
 // => Test synchronous error handler
 throw 'Test synchronous error handler'
 throw new Error('Test synchronous error handler') */
+// export const exceptionErrorHandler = () => {
+// 	process.on('uncaughtException', (err: unknown) => {
+
+// 		if(err instanceof Error) {
+// 			console.log(`Blocking: Global Error Handler: ${err.message}`)
+// 			process.exit(1)
+// 			return
+// 		}
+
+// 		console.log(`Blocking: Error Handler: ${err}`)
+// 		process.exit(1)
+
+// 	})
+// }
+
 export const exceptionErrorHandler = () => {
 	process.on('uncaughtException', (err: unknown) => {
 
-		if(err instanceof Error) {
-			console.log(`Blocking: Global Error Handler: ${err.message}`)
-			process.exit(1)
-			return
-		}
+		let errorMessage = 'Blocking: Global Error Handler: '
+				errorMessage += err instanceof Error ? err.message : err
 
-		console.log(`Blocking: Error Handler: ${err}`)
+		console.log(errorMessage)
 		process.exit(1)
 
 	})

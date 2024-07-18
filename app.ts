@@ -12,8 +12,10 @@ import * as errorController from './controllers/errorController'
 import { passportConfig } from './controllers/passportConfig'
 import { dbConnect } from './models/dbConnect'
 
+
 dbConnect() 		// also add dotenv.config()
 errorController.exceptionErrorHandler() // put it very top
+
 
 // const { SESSION_SECRET,  MONGO_HOST, CLIENT_ORIGIN, NODE_ENV } = process.env || {}
 const { SESSION_SECRET,  MONGO_HOST, NODE_ENV } = process.env || {}
@@ -26,6 +28,8 @@ if(!SESSION_SECRET) throw new Error(`Error: => SESSION_SECRET=${SESSION_SECRET}`
 
 
 const app: Express = express()
+
+
 
 // any pug file got cspNonce variable as global built-in has
 app.use((_req, res, next) => {
@@ -64,7 +68,7 @@ app.use(cors(corsOptions));
 // }))
 app.use(express.static( publicDirectory ))
 app.use(express.urlencoded({ extended: false })) 						// required for passport login formData
-app.use(express.json({ limit: '10mb' }))
+app.use(express.json({ }))
 app.set('view engine', 'pug')
 
 
