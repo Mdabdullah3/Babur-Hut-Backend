@@ -10,6 +10,7 @@ import { router as voucherRouter } from './voucherRoutes'
 import { router as categoryRouter } from './cagegoryRouter'
 import { router as subCategoryRouter } from './subCagegoryRouter'
 import { router as packageRouter } from './packageRoutes'
+import { router as notificationRouter } from './notificationRoutes'
 
 
 // => / 	(root)
@@ -22,6 +23,7 @@ router.use('/api/users', userRouter)
 router.use('/api/products', productRouter)
 router.use('/api/reviews', reviewRouter)
 router.use('/api/payments', paymentRouter)
+router.use('/api/notifications', notificationRouter)
 
 router.use('/api/vouchers', voucherRouter)
 router.use('/api/categories', categoryRouter)
