@@ -1,6 +1,6 @@
 import { Types } from 'mongoose'
 
-
+// check order.ts if need extra info
 export type PaymentDocument = {
 	_id: Types.ObjectId
 	id: string

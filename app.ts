@@ -41,7 +41,14 @@ app.use((_req, res, next) => {
 
 
 // List of allowed origins
-const allowedOrigins = ['http://localhost:3000', 'http://103.148.15.24:3000', 'http://babur-hat.local:3000' ]
+const allowedOrigins = [
+	'http://localhost:5000', 
+
+	'http://localhost:3000', 
+	'http://103.148.15.24:3000', 
+	'http://babur-hat.local:3000',
+	'https://baburhaat.com',
+]
 
 // CORS configuration
 const corsOptions = {

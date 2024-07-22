@@ -52,7 +52,9 @@ export const getCategoryById:RequestHandler = catchAsync(async (req, res, next) 
 	const categoryId = req.params.categoryId
 
 	const category = await Category.findById(categoryId)
-	if(!categoryId) return next(appError(`category not found by id: ${categoryId}`))
+	if(!category) return next(appError(`category not found by id: ${categoryId}`))
+
+	category.id
 
 	res.status(200).json({
 		status: 'success',

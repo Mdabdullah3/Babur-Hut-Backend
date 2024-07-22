@@ -1,24 +1,17 @@
-import { Types } from 'mongoose'
+import { Types, Document } from 'mongoose'
 
 type Image = {
 	public_id: string
 	secure_url: string
 }
 
-export type CategoryDocument = {
-	_id: Types.ObjectId,
-	id: string,
-	createdAt: string,
-	updatedAt: string
-
+export type CategoryDocument = Document & {
 	name: string
 	shippingCharge: string
 	vat: string
 	status: string,
 	commission: string,
 	image: Image
-
-	// subCategories: Types.ObjectId[] 		// use virtual fields instead
 }
 
 export type UpdateCagetory = {

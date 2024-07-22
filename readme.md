@@ -1060,3 +1060,40 @@ body {
 PATCH {{origin}}/api/packages/:packageId
 ```
 
+
+
+## Payments
+- GET /api/payments                     : Get All Payments
+- GET /api/users/:userId/payments       : Get payments of Single User
+- GET /api/payments/:paymentId          : Get Single Payment
+- DELETE /api/payments/:paymentId 	: Only Admin (role='admin') can delete payment
+
+- POST  '/api/payments/request'                 : Get Payment Gateway to Pay
+- POST  '/api/payments/success/:transactionId'  : Handled Success
+- POST  '/api/payments/cancel/:transactionId'   : Handled Cancel
+
+
+#### Get Payment Gateway Link to pay
+```
+body {
+	"product": "667ea9b1df5d6c0e864f1841",
+	"price": 300,
+	"currency": "BDT",
+
+	"shippingInfo" : {
+	  "name": "user another name for shipping",
+		"method": "Courier",
+		"address1": "shipping address",
+		"address2": "",
+		"city": "Dhaka",
+		"state": "Dhaka",
+		"postcode": 1000,
+		"country": "Bangladesh"
+	}
+}
+
+POST {{origin}}/api/payments/request
+```
+
+
+

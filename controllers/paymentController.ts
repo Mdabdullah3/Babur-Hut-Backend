@@ -4,6 +4,7 @@ import { Types } from 'mongoose'
 import { appError, catchAsync } from './errorController'
 import Product from '../models/productModel'
 import Payment from '../models/paymentModel'
+import { apiFeatures } from '../utils'
 
 // // eslint-disable-next-line @typescript-eslint/no-var-requires
 // const SSLCommerzPayment = require('sslcommerz-lts')
@@ -32,6 +33,49 @@ import Payment from '../models/paymentModel'
 
 
 
+// GET 	/api/payments/ + authController.protect
+export const getAllPayments:RequestHandler = catchAsync( async (req, res, _next) => {
+	const userId = req.params.userId
+
+	const filter = userId ? { user: userId } : {}
+	const payments = await apiFeatures(Payment, req.query, filter)
+
+	res.status(200).json({
+		status: 'success',
+		total: payments.length,
+		data: payments
+	})
+})
+
+// GET 	/api/payments/:paymentId + authController.protect
+export const getPaymentById:RequestHandler = catchAsync( async (req, res, _next) => {
+	const paymentId = req.params.paymentId
+
+	// const filter = userId ? { user: userId } : {}
+	const payment = await Payment.findById(paymentId)
+		// .populate('user')
+		.populate({
+			path: 'user',
+			select: 'name email avatar'
+		})
+
+	res.status(200).json({
+		status: 'success',
+		data: payment
+	})
+})
+
+// DELETE 	/api/payments/:paymentId + authController.protect
+export const deletePaymentById:RequestHandler = catchAsync( async (req, res, _next) => {
+	const paymentId = req.params.paymentId
+
+	const payment = await Payment.findByIdAndDelete(paymentId)
+
+	res.status(204).json({
+		status: 'success',
+		data: payment
+	})
+})
 
 
 
@@ -149,7 +193,7 @@ export const createPaymentRequest:RequestHandler = catchAsync( async (req, res, 
 
 // POST 	/api/payments/success/:transactionId
 export const paymentSuccessHandler: RequestHandler = catchAsync( async (req, res, next) => {
-	const { transactionId } = req.params
+	const { transactionId='' } = req.params
 	if( !transactionId ) return next(appError(`payment can't find by transitionId: ${transactionId}`))
 
 	// only admin or payment success can change the status  
@@ -180,7 +224,7 @@ export const paymentSuccessHandler: RequestHandler = catchAsync( async (req, res
 
 // POST 	/api/payments/cancel/:transactionId
 export const paymentCancelHandler:RequestHandler = catchAsync( async (req, res, next) => {
-	const { transactionId } = req.params
+	const { transactionId='' } = req.params
 	if( !transactionId ) return next(appError(`must required transitionId: ${transactionId}`))
 
 	const transaction = await Payment.findOne({ transactionId })
