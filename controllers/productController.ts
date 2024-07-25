@@ -164,12 +164,13 @@ export const addProduct:RequestHandler = catchAsync(async (req, res, next) => {
 	} catch (err) {
 		// console.log(err)
 		setTimeout(() => {
-			promisify(fileService.removeFile)(req.body?.coverPhoto.secure_url)
+			promisify(fileService.removeFile)(req.body.coverPhoto?.secure_url)
+
 			req.body.images.forEach( (image: Image) => {
 				promisify(fileService.removeFile)(image?.secure_url)
 			})
 
-			if( !req.body?.video?.secure_url.startsWith('http') ) {
+			if( !req.body.video?.secure_url.startsWith('http') ) {
 				promisify(fileService.removeFile)(req.body.video.secure_url)
 			}
 		}, 1000)

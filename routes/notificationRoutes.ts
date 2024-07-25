@@ -9,3 +9,4 @@ router.route('/')
 
 router.route('/:notificationId')
 	.get(notificationController.getNotificationById)
+	.delete(notificationController.deleteNotificationById)

@@ -23,6 +23,7 @@
     "passport-session": "^1.0.2",
     "pug": "^3.0.2",
     "slugify": "^1.6.6",
+    "socket.io": "^4.7.5",
     "sslcommerz-lts": "^1.1.0",
     "ts-node": "^10.9.2",
     "validator": "^13.12.0"

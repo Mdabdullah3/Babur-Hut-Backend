@@ -1,6 +1,6 @@
 import type { CreateNotification, NotificationDocument } from '../types/notification'
 import type { Model } from 'mongoose'
-import { Schema, models, model } from 'mongoose'
+import { Schema, model } from 'mongoose'
 
 /*
 {
@@ -10,13 +10,19 @@ import { Schema, models, model } from 'mongoose'
 }
 */
 
+
+
+type NotificationModel =  Model<NotificationDocument> & {
+  createNotification(payload: CreateNotification): Promise<NotificationDocument>;
+}
+
 const notificationSchema = new Schema<NotificationDocument>({
 	type: { 													// set how many type of notification can be allowed by enum value
 		type: String,
 		trim: true,
 		lowercase: true,
 		required: true,
-		// enum: [''],
+		// enum: ['new-review', 'new-comment', 'payment-request']
 	},
 	entryId: { 												// To identify each notification, it is belongs to which type of allowed 'type'
 		type: Schema.Types.ObjectId, 		// 		for example: if type='new-review', then entryId=review._id
@@ -47,8 +53,8 @@ const notificationSchema = new Schema<NotificationDocument>({
 	...
 	if(!deletedTweet) {
 		await Notification.createNotification({
-			type: 'new-message', 										// ['new-message', 'follow', 'call']
-			entryId: messageId, 										// Who which message this notification belongs to
+			type: 'new-message', 										// ['new-review', 'new-comment', 'payment-request']
+			entryId: messageId, 										// if type ='new-review' then entryId=review._id
 			userFrom: logedInUserId, 								// Who liked it ?
 			userTo: activeUserId, 									// which user create this tweet ?
 		})
@@ -66,5 +72,6 @@ notificationSchema.pre(/^find/, function(this: NotificationDocument, next) {
 })
 
 
-export const Notification: Model<NotificationDocument> = models.Notification || model<NotificationDocument>('Notification', notificationSchema)
+// const Notification: Model<NotificationDocument> = models.Notification || model<NotificationDocument, NotificationModel>('Notification', notificationSchema)
+const Notification: NotificationModel = model<NotificationDocument, NotificationModel>('Notification', notificationSchema)
 export default Notification
