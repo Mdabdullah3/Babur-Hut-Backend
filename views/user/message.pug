@@ -1,0 +1,31 @@
+doctype html
+html(lang="en")
+	head
+		meta(charset="UTF-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		title Profile | #{logedInUser.name}
+		script( defer src='/socket.io/socket.io.js') 
+		script(type="module", src="/js/pages/user/message.js") 
+
+	body 
+
+		h1 Messaging Page: #{logedInUser.name}
+
+		form(name='message-form')
+			input(type='text' name='message' placeholder='your message')
+			button(type='submit' name='send-message') Send Message
+
+		br
+		br
+		ul(name='message-container')
+
+		br
+		br
+		br
+		pre= JSON.stringify(logedInUser, null, 2)
+
+		script(nonce=cspNonce).
+			const logedInUser = !{logedInUserJs} 	
+
+
+

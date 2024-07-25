@@ -167,6 +167,23 @@ export const profilePage:RequestHandler = (req, res, next) => {
 	res.render('user/profile', payload)
 }
 
+// => GET /message
+export const messagePage:RequestHandler = (req, res, next) => {
+	if(!req.user) return next(appError('req.user is not found'))
+
+
+	const payload = {
+		title: 'Message',
+		logedInUser: req.user,
+		logedInUserJs: JSON.stringify(req.user),
+	}
+
+	res.render('user/message', payload)
+}
+
+
+
+
 
 // => GET /payment-checkout 		(for demo only)
 export const paymentCheckoutPage:RequestHandler = (_req, res, _next) => {

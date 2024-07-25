@@ -15,6 +15,7 @@ export const router = Router()
 		.get('/error', pageController.error)
 
 		.use('/profile', authController.protect, pageController.profilePage)
+		.use('/message', authController.protect, pageController.messagePage)
 
 		.use('/dashboard', authController.protect, dashboardRouter)
 		.get('/product', pageController.productPage)

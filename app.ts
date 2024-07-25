@@ -68,9 +68,8 @@ app.use(cors(corsOptions));
 
 
 // app.use(cors({ 
-// 	origin: NODE_ENV === 'production' ? CLIENT_ORIGIN : "*",
-// 	// origin: ["http://localhost:3000", "http://103.148.15.24:3000", "http://103.148.15.24:5000", "*"],
-// 	// origin: "*",
+// 	// origin: NODE_ENV === 'production' ? CLIENT_ORIGIN : "*",
+// 	origin: "https://baburhaat.com",
 // 	credentials: true,
 // }))
 app.use(express.static( publicDirectory ))

@@ -1097,3 +1097,23 @@ POST {{origin}}/api/payments/request
 
 
 
+
+
+## Messaging
+I used ***socket.io*** for messaging, if need socket.io client in `frontend`
+so you have 2 ways to do so
+
+1. you can get eighter by `socket.io-client` npm package or 
+2. you can add add bellow link on your page 
+
+```
+		<script defer src='{{origin}}/socket.io/socket.io.js'> </script>
+```
+
+
+#### Example of sending messages
+```
+See the Messaging Example: `{{origin}}/message`
+See the Messaging Example: `/public/js/pages/user/message.js`
+```
+
