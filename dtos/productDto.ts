@@ -32,6 +32,11 @@ export const filterBodyForCreateProduct = (body: CreateProduct) => {
 		'quantity',
 		'coverPhoto',
 		'images',
+
+		'discount',
+		'subCategory',
+		'warranty',
+		'packaging',
 	]
 
 	return filterObjectByArray(body, allowedFields)
@@ -54,7 +59,11 @@ export const filterBodyForUpdateProduct = (body: UpdateProduct) => {
 		'images',
 		'video',
 		'specifications',
-		'isLiked',
+
+		'discount',
+		'subCategory',
+		'warranty',
+		'packaging',
 	]
 
 	return filterObjectByArray(body, allowedFields)

@@ -39,12 +39,23 @@ export const filterBodyForCreateUser = (body: CreateUser) => {
 		'password',
 		'confirmPassword',
 		'avatar',
+		'coverPhoto',
 		'phone',
 		'gender',
-		'address',
+		'location',
+		'otherPermissions',
 		// 'role',
 		// 'isActive',
 		// 'isVerified',
+		'idCardFrontPageImage',
+		'idCardBackPageImage',
+		'idCardNumber',
+		'bankStatementImage',
+		'accountHolderName',
+		'accountNumber',
+		'routingNumber',
+		'bankName',
+		'bankBranch',
 	]
 
 	return filterObjectByArray(body, allowedFields)
@@ -81,6 +92,24 @@ export const filterBodyForUpdate = (body: UpdateUser) => {
 		'gender',
 		// 'email', 							// update seperate route to verify email
 		// 'phone', 							// update seperate route to verify otp
+		'username',
+		'password',
+		'confirmPassword',
+		'avatar',
+		'coverPhoto',
+		'gender',
+		'location',
+		'otherPermissions',
+
+		'idCardFrontPageImage',
+		'idCardBackPageImage',
+		'idCardNumber',
+		'bankStatementImage',
+		'accountHolderName',
+		'accountNumber',
+		'routingNumber',
+		'bankName',
+		'bankBranch',
 	]
 	return filterObjectByArray(body, allowedFields)
 }

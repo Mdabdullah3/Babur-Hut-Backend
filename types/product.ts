@@ -16,6 +16,14 @@ type Specifications = {
 	color: string,
 	gender: string
 }
+
+type Packaging = {
+	weight: string
+	height: string
+	width: string
+	dimension: string
+}
+
 export type ProductDocument = {
 	populate(arg0: string): unknown
 	_id: Types.ObjectId
@@ -46,6 +54,11 @@ export type ProductDocument = {
 
 	specifications: Specifications
 	likes: Types.ObjectId[]
+
+	discount: string
+	subCategory: Types.ObjectId
+	warranty: string
+	packaging: Packaging
 }
 
 export type CreateProduct = {
@@ -65,7 +78,11 @@ export type CreateProduct = {
 	video: Image
 
 	specifications: Specifications
-	isLiked: boolean
+	
+	discount: string
+	subCategory: Types.ObjectId
+	warranty: string
+	packaging: Packaging
 }
 
 export type UpdateProduct = {
@@ -84,6 +101,10 @@ export type UpdateProduct = {
 	video: Image
 
 	specifications: Specifications
-	isLiked: boolean
+
+	discount: string
+	subCategory: Types.ObjectId
+	warranty: string
+	packaging: Packaging
 }
 

@@ -66,6 +66,54 @@ export const register:RequestHandler = async (req, res, next) => {
 			// store into body before other operation, so if any of them failed, error handler geto image
 			req.body.avatar = image
 		}
+		if(req.body.coverPhoto) {
+			// return next(appError('coverPhoto is missing'))
+			const imageSize = getDataUrlSize(req.body.coverPhoto)
+			const maxImageSize = 1024 * 1024 * 2 			// => 2 MB
+			if(imageSize > maxImageSize) return next(appError('You cross the max image size: 2MB(max)'))
+
+			const { error, image } = await fileService.handleBase64File(req.body.coverPhoto)
+			if(error || !image) return next(appError(error))
+
+			// store into body before other operation, so if any of them failed, error handler geto image
+			req.body.coverPhoto = image
+		}
+		if(req.body.idCardFrontPageImage) {
+			// return next(appError('coverPhoto is missing'))
+			const imageSize = getDataUrlSize(req.body.idCardFrontPageImage)
+			const maxImageSize = 1024 * 1024 * 2 			// => 2 MB
+			if(imageSize > maxImageSize) return next(appError('You cross the max image size: 2MB(max)'))
+
+			const { error, image } = await fileService.handleBase64File(req.body.idCardFrontPageImage)
+			if(error || !image) return next(appError(error))
+
+			// store into body before other operation, so if any of them failed, error handler geto image
+			req.body.idCardFrontPageImage = image
+		}
+		if(req.body.idCardBackPageImage) {
+			// return next(appError('coverPhoto is missing'))
+			const imageSize = getDataUrlSize(req.body.idCardBackPageImage)
+			const maxImageSize = 1024 * 1024 * 2 			// => 2 MB
+			if(imageSize > maxImageSize) return next(appError('You cross the max image size: 2MB(max)'))
+
+			const { error, image } = await fileService.handleBase64File(req.body.idCardBackPageImage)
+			if(error || !image) return next(appError(error))
+
+			// store into body before other operation, so if any of them failed, error handler geto image
+			req.body.idCardBackPageImage = image
+		}
+		if(req.body.bankStatementImage) {
+			// return next(appError('coverPhoto is missing'))
+			const imageSize = getDataUrlSize(req.body.bankStatementImage)
+			const maxImageSize = 1024 * 1024 * 2 			// => 2 MB
+			if(imageSize > maxImageSize) return next(appError('You cross the max image size: 2MB(max)'))
+
+			const { error, image } = await fileService.handleBase64File(req.body.bankStatementImage)
+			if(error || !image) return next(appError(error))
+
+			// store into body before other operation, so if any of them failed, error handler geto image
+			req.body.bankStatementImage = image
+		}
 
 		const filteredBody = userDto.filterBodyForCreateUser(req.body)
 
@@ -85,6 +133,26 @@ export const register:RequestHandler = async (req, res, next) => {
 		if(req.body.avatar?.secure_url)  {
 			setTimeout(() => {
 				promisify(fileService.removeFile)(req.body.avatar.secure_url)
+			}, 1000)
+		}
+		if(req.body.coverPhoto?.secure_url)  {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(req.body.coverPhoto.secure_url)
+			}, 1000)
+		}
+		if(req.body.idCardFrontPageImage?.secure_url)  {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(req.body.idCardFrontPageImage.secure_url)
+			}, 1000)
+		}
+		if(req.body.idCardBackPageImage?.secure_url)  {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(req.body.idCardBackPageImage.secure_url)
+			}, 1000)
+		}
+		if(req.body.bankStatementImage?.secure_url)  {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(req.body.bankStatementImage.secure_url)
 			}, 1000)
 		}
 

@@ -81,6 +81,8 @@ export const updateUserById:RequestHandler = async (req, res, next) => {
 	try {
 		// if not self nor admin then don't allow to update
 		const logedInUser = req.user as LogedInUser
+		// const logedInUser = req.user as UserDocument
+
 		const isSelf = logedInUser._id.toString() === userId
 		const isAdmin = logedInUser.role === 'admin'
 
@@ -110,6 +112,43 @@ export const updateUserById:RequestHandler = async (req, res, next) => {
 			if(image) req.body.avatar = image
 		}
 
+		if(req.body.idCardFrontPageImage) {
+			// return next(appError('coverPhoto is missing'))
+			const imageSize = getDataUrlSize(req.body.idCardFrontPageImage)
+			const maxImageSize = 1024 * 1024 * 2 			// => 2 MB
+			if(imageSize > maxImageSize) return next(appError('You cross the max image size: 2MB(max)'))
+
+			const { error, image } = await fileService.handleBase64File(req.body.idCardFrontPageImage)
+			if(error || !image) return next(appError(error))
+
+			// store into body before other operation, so if any of them failed, error handler geto image
+			req.body.idCardFrontPageImage = image
+		}
+		if(req.body.idCardBackPageImage) {
+			// return next(appError('coverPhoto is missing'))
+			const imageSize = getDataUrlSize(req.body.idCardBackPageImage)
+			const maxImageSize = 1024 * 1024 * 2 			// => 2 MB
+			if(imageSize > maxImageSize) return next(appError('You cross the max image size: 2MB(max)'))
+
+			const { error, image } = await fileService.handleBase64File(req.body.idCardBackPageImage)
+			if(error || !image) return next(appError(error))
+
+			// store into body before other operation, so if any of them failed, error handler geto image
+			req.body.idCardBackPageImage = image
+		}
+		if(req.body.bankStatementImage) {
+			// return next(appError('coverPhoto is missing'))
+			const imageSize = getDataUrlSize(req.body.bankStatementImage)
+			const maxImageSize = 1024 * 1024 * 2 			// => 2 MB
+			if(imageSize > maxImageSize) return next(appError('You cross the max image size: 2MB(max)'))
+
+			const { error, image } = await fileService.handleBase64File(req.body.bankStatementImage)
+			if(error || !image) return next(appError(error))
+
+			// store into body before other operation, so if any of them failed, error handler geto image
+			req.body.bankStatementImage = image
+		}
+
 		const filteredBody = userDto.filterBodyForUpdate(req.body)
 
 		const user = await User.findById(userId)
@@ -123,10 +162,29 @@ export const updateUserById:RequestHandler = async (req, res, next) => {
 		
 		// remove old image
 		if(user.coverPhoto) {
-			promisify(fileService.removeFile)(user.coverPhoto.secure_url)
+			setTimeout(() => {
+				promisify(fileService.removeFile)(user.coverPhoto.secure_url)
+			}, 1000)
 		}
 		if(user.avatar) {
-			promisify(fileService.removeFile)(user.avatar.secure_url)
+			setTimeout(() => {
+				promisify(fileService.removeFile)(user.avatar.secure_url)
+			}, 1000)
+		}
+		if(user.idCardFrontPageImage) {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(user.idCardFrontPageImage.secure_url)
+			}, 1000)
+		}
+		if(user.idCardBackPageImage) {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(user.idCardBackPageImage.secure_url)
+			}, 1000)
+		}
+		if(user.bankStatementImage) {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(user.bankStatementImage.secure_url)
+			}, 1000)
 		}
 
 
@@ -136,12 +194,32 @@ export const updateUserById:RequestHandler = async (req, res, next) => {
 		})
 
 	} catch (error) {
-		if(req.body.coverPhoto?.secure_url) {
-			promisify(fileService.removeFile)(req.body.coverPhoto.secure_url)
+		if(req.body.avatar?.secure_url)  {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(req.body.avatar.secure_url)
+			}, 1000)
 		}
-		if(req.body.avatar?.secure_url) {
-			promisify(fileService.removeFile)(req.body.avatar.secure_url)
+		if(req.body.coverPhoto?.secure_url)  {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(req.body.coverPhoto.secure_url)
+			}, 1000)
 		}
+		if(req.body.idCardFrontPageImage?.secure_url)  {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(req.body.idCardFrontPageImage.secure_url)
+			}, 1000)
+		}
+		if(req.body.idCardBackPageImage?.secure_url)  {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(req.body.idCardBackPageImage.secure_url)
+			}, 1000)
+		}
+		if(req.body.bankStatementImage?.secure_url)  {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(req.body.bankStatementImage.secure_url)
+			}, 1000)
+		}
+
 		if(error instanceof Error) next(appError(error.message))
 		if(typeof error === 'string') next(appError(error))
 	}
@@ -176,11 +254,31 @@ export const deleteUserById:RequestHandler = catchAsync(async (req, res, next) =
 	if(!user) return next(appError('review not found'))
 	
 	if(user.coverPhoto) {
-		promisify(fileService.removeFile)(user.coverPhoto.secure_url)
+		setTimeout(() => {
+			promisify(fileService.removeFile)(user.coverPhoto.secure_url)
+		}, 1000)
 	}
 	if(user.avatar) {
-		promisify(fileService.removeFile)(user.avatar.secure_url)
+		setTimeout(() => {
+			promisify(fileService.removeFile)(user.avatar.secure_url)
+		}, 1000)
 	}
+	if(user.idCardFrontPageImage) {
+		setTimeout(() => {
+			promisify(fileService.removeFile)(user.idCardFrontPageImage.secure_url)
+		}, 1000)
+	}
+	if(user.idCardBackPageImage) {
+		setTimeout(() => {
+			promisify(fileService.removeFile)(user.idCardBackPageImage.secure_url)
+		}, 1000)
+	}
+	if(user.bankStatementImage) {
+		setTimeout(() => {
+			promisify(fileService.removeFile)(user.bankStatementImage.secure_url)
+		}, 1000)
+	}
+
 	
 	/* deleting userIds from products .likes 
 			- if user has 3 product Ids in likes array, then find product by that ids and delete

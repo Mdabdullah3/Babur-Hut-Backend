@@ -71,7 +71,17 @@ otherPermissions : {
 	isSupport: boolean,
 	isEventManager: boolean,
 	isMessage: boolean,
-}
+},
+
+idCardFrontPageImage: "image.png",
+idCardBackPageImage: "image.png",
+idCardNumber: "2434212412",
+bankStatementImage: "image.png",
+accountHolderName: "John Doe",
+accountNumber: "2434212412",
+routingNumber: "2434212412",
+bankName: "Bank Name",
+bankBranch: "Bank Branch", 
 
 }
 */
@@ -219,6 +229,57 @@ const userSchema = new Schema<UserDocument>({
 		ref: 'Product',
 	}],
 
+	// Bank Info
+	idCardFrontPageImage: {
+		public_id: String,
+		secure_url: String,
+		alt: String,
+		size: String
+	},
+	idCardBackPageImage: {
+		public_id: String,
+		secure_url: String,
+		alt: String,
+		size: String
+	},
+	bankStatementImage: {
+		public_id: String,
+		secure_url: String,
+		alt: String,
+		size: String
+	},
+	idCardNumber: {
+		type: String,
+		lowercase: true,
+		trim: true,
+	},
+	accountHolderName: {
+		type: String,
+		lowercase: true,
+		trim: true,
+	},
+	accountNumber: {
+		type: String,
+		lowercase: true,
+		trim: true,
+	},
+	routingNumber: {
+		type: String,
+		lowercase: true,
+		trim: true,
+	},
+	bankName: {
+		type: String,
+		lowercase: true,
+		trim: true,
+	},
+	bankBranch: {
+		type: String,
+		lowercase: true,
+		trim: true,
+	},
+
+
 }, {
 	timestamps: true
 })
@@ -308,3 +369,5 @@ userSchema.methods.getPasswordResetToken = async function (this: UserDocument) {
 
 export const User: Model<UserDocument>  = models.User|| model<UserDocument>('User', userSchema)
 export default User
+
+

@@ -25,7 +25,17 @@ import { product } from '../data/product'
 		"/upload/images/photo-2.jpg",
 		"/upload/images/photo-3.jpg",
 	],
-	"isLiked": true,
+	
+	discount: "1243",
+	subCategory: "subcategory.id"
+	warranty: "12 Months",
+	packaging: {
+		weight: "12kg",
+		height: "12cm",
+		width: "12cm",
+		dimension: "12x12x12",
+	}
+
 }
 */
 
@@ -183,6 +193,22 @@ const productSchema = new Schema<ProductDocument>({
 		type: Schema.Types.ObjectId,
 		ref: 'User',
 	}],
+
+	discount: {
+		type: String,
+	},
+	subCategory: {
+		type: Schema.Types.ObjectId,
+		ref: 'SubCategory',
+	},
+	warranty: String,
+	packaging: {
+		weight: String,
+		height: String,
+		width: String,
+		dimension: String,
+	}
+
 
 }, {
 	timestamps: true,

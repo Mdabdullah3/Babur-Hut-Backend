@@ -42,12 +42,15 @@ app.use((_req, res, next) => {
 
 // List of allowed origins
 const allowedOrigins = [
-	'http://localhost:5000', 
-
-	'http://localhost:3000', 
-	'http://103.148.15.24:3000', 
-	'http://babur-hat.local:3000',
 	'https://baburhaat.com',
+	'https://baburhaat.com:5000',
+	'https://baburhaat.com:3000',
+	'http://103.148.15.24:5000', 
+	'http://103.148.15.24:3000', 
+	'http://localhost:5000', 
+	'http://localhost:3000', 
+	'http://babur-hat.local:5000',
+	'http://babur-hat.local:3000',
 ]
 
 // CORS configuration
@@ -74,7 +77,7 @@ app.use(cors(corsOptions));
 // }))
 app.use(express.static( publicDirectory ))
 app.use(express.urlencoded({ extended: false })) 						// required for passport login formData
-app.use(express.json({ }))
+app.use(express.json({ limit: '200M' }))
 app.set('view engine', 'pug')
 
 

@@ -165,11 +165,15 @@ export const addProduct:RequestHandler = catchAsync(async (req, res, next) => {
 		// console.log(err)
 		setTimeout(() => {
 			promisify(fileService.removeFile)(req.body.coverPhoto?.secure_url)
+		}, 1000)
 
+		setTimeout(() => {
 			req.body.images.forEach( (image: Image) => {
 				promisify(fileService.removeFile)(image?.secure_url)
 			})
+		}, 1000)
 
+		setTimeout(() => {
 			if( !req.body.video?.secure_url.startsWith('http') ) {
 				promisify(fileService.removeFile)(req.body.video.secure_url)
 			}
@@ -261,12 +265,16 @@ export const updateProductByIdOrSlug:RequestHandler = async (req, res, next) => 
 		// delete old images
 		setTimeout(() => {
 			if(req.body.coverPhoto && product.coverPhoto?.secure_url) {
-				promisify(fileService.removeFile)(product.coverPhoto.secure_url)
+				setTimeout(() => {
+					promisify(fileService.removeFile)(product.coverPhoto.secure_url)
+				}, 1000);
 			}
 
 			if(req.body.images && product.images?.length) {
 				product.images.forEach( (image: Image) => {
-					promisify(fileService.removeFile)(image.secure_url)
+					setTimeout(() => {
+						promisify(fileService.removeFile)(image.secure_url)
+					}, 1000);
 				})
 			}
 		}, 1000)
@@ -280,12 +288,16 @@ export const updateProductByIdOrSlug:RequestHandler = async (req, res, next) => 
 	} catch (error) {
 		setTimeout(() => {
 			if(req.body.coverPhoto?.secure_url) {
-				promisify(fileService.removeFile)(req.body.coverPhoto.secure_url)
+				setTimeout(() => {
+					promisify(fileService.removeFile)(req.body.coverPhoto.secure_url)
+				}, 1000);
 			}
 
 			if(req.body.images?.length) {
 				req.body.images.forEach( (image: Image) => {
-					promisify(fileService.removeFile)(image.secure_url)
+					setTimeout(() => {
+						promisify(fileService.removeFile)(image.secure_url)
+					}, 1000);
 				})
 			}
 		}, 1000);
