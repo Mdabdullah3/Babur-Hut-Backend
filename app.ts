@@ -40,17 +40,27 @@ app.use((_req, res, next) => {
 
 
 
+// http://baburhaatbd.com:5000/register
+
 // List of allowed origins
 const allowedOrigins = [
-	'https://baburhaat.com',
-	'https://baburhaat.com:5000',
-	'https://baburhaat.com:3000',
+	'https://baburhaatbd.com',
+	'http://baburhaatbd.com',
+
+	'https://baburhaatbd.com:5000',
+	'http://baburhaatbd.com:5000',
+
+	'https://baburhaatbd.com:3000',
+	'http://baburhaatbd.com:3000',
+
+	'https://103.148.15.24:5000', 
 	'http://103.148.15.24:5000', 
+
+	'https://103.148.15.24:3000', 
 	'http://103.148.15.24:3000', 
+
 	'http://localhost:5000', 
 	'http://localhost:3000', 
-	'http://babur-hat.local:5000',
-	'http://babur-hat.local:3000',
 ]
 
 // CORS configuration
