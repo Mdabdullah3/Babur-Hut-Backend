@@ -87,7 +87,7 @@ app.use(cors(corsOptions));
 // }))
 app.use(express.static( publicDirectory ))
 app.use(express.urlencoded({ extended: false })) 						// required for passport login formData
-app.use(express.json({ limit: '200M' }))
+app.use(express.json({ limit: '400mb' }))
 app.set('view engine', 'pug')
 
 
