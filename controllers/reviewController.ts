@@ -115,6 +115,8 @@ export const updateReviewById:RequestHandler = catchAsync(async (req, res, next)
 	const review = await Review.findByIdAndUpdate(reviewId, filteredBody, { new: true })
 	if(!review) return next(appError('review not found'))
 	
+	// handle image update
+	
 	res.status(200).json({
 		status: 'success',
 		data: review
@@ -123,13 +125,33 @@ export const updateReviewById:RequestHandler = catchAsync(async (req, res, next)
 
 // DELETE /api/reviews/:reviewId
 export const deleteReviewById:RequestHandler = catchAsync(async (req, res, next) => {
-	const reviewId = req.params.reviewId
+	try {
+		const reviewId = req.params.reviewId
 
-	const review = await Review.findByIdAndDelete(reviewId)
-	if(!review) return next(appError('review not found'))
+		const review = await Review.findByIdAndDelete(reviewId)
+		if(!review) return next(appError('review not found'))
 	
-	res.status(204).json({
-		status: 'success',
-		data: review
-	})
+		// delete old image
+		if(review.image?.secure_url) {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(review.image.secure_url)
+			}, 1000);
+		}
+
+		res.status(204).json({
+			status: 'success',
+			data: review
+		})
+
+	} catch (err: unknown) {
+		setTimeout(() => {
+			if( req.body.image ) {
+				promisify(fileService.removeFile)(req.body.image.secure_url)
+			}
+		}, 1000)
+
+		if(err instanceof Error) next(appError(err.message))
+		if(typeof err === 'string') next(appError(err))
+		
+	}
 })

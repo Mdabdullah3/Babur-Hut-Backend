@@ -61,6 +61,7 @@ export const updateVoucher:RequestHandler = catchAsync(async (req, res, next) =>
 
 	const allowedFields = [
 		'voucherId',
+		'redeemCode',
 		'status',
 		'discount',
 		'startDate',

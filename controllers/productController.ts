@@ -259,7 +259,7 @@ export const updateProductByIdOrSlug:RequestHandler = async (req, res, next) => 
 		const product = await Product.findOne(filter )
 		if(!product) return next(appError('product not found'))
 		
-		const updatedProduct = await Product.findOne(filter, filteredBody, { new: true })
+		const updatedProduct = await Product.findOneAndUpdate(filter, filteredBody, { new: true })
 		if(!updatedProduct) return next(appError('product not found'))
 		
 		// delete old images
@@ -317,29 +317,22 @@ export const deleteProductByIdOrSlug:RequestHandler = catchAsync(async (req, res
 	
 
 	if(product.coverPhoto) {
-		promisify(fileService.removeFile)(product.coverPhoto.secure_url)
+		setTimeout(() => {
+			promisify(fileService.removeFile)(product.coverPhoto.secure_url)
+		}, 1000);
 	}
 	if(product.images.length) {
 		product.images.forEach( image => {
-			promisify(fileService.removeFile)(image.secure_url)
+			setTimeout(() => {
+				promisify(fileService.removeFile)(image.secure_url)
+			}, 1000);
 		})
 	}
 	if(product.video && !product.video.secure_url.startsWith('http')) {
-		promisify(fileService.removeFile)(product.video.secure_url)
+		setTimeout(() => {
+			promisify(fileService.removeFile)(product.video.secure_url)
+		}, 1000);
 	}
-	// // delete old images
-	// setTimeout(() => {
-	// 	if(product.coverPhoto?.secure_url) {
-	// 		promisify(fileService.removeFile)(product.coverPhoto.secure_url)
-	// 	}
-
-	// 	if(product.images?.length) {
-	// 		product.images.forEach( (image: Image) => {
-	// 			promisify(fileService.removeFile)(image.secure_url)
-	// 		})
-	// 	}
-	// }, 1000)
-
 
 	// deleting productId from user.likes = [ ...productIds ]
 	await User.findByIdAndUpdate(product.user, { "$pull": { likes: productId }}, { new: true, }) 	

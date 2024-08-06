@@ -7,6 +7,7 @@ import type { UpdateVoucher } from '../types/voucher'
 export const filterBodyForUpdateVoucher = (body: UpdateVoucher) => {
 	const allowedFields = [
 		'voucherId',
+		'redeemCode',
 		'status',
 		'discount',
 		'startDate',

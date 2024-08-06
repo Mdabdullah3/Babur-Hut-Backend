@@ -9,6 +9,7 @@ export type VoucherDocument = {
 	customId: string
 	voucherId: string
 	status: string
+	redeemCode: string
 	discount: number,
 	startDate: Date,
 	endDate: Date,
@@ -23,6 +24,7 @@ export type VoucherDocument = {
 export type UpdateVoucher = {
 	voucherId: string
 	status: string
+	redeemCode: string
 	discount: number,
 	startDate: Date,
 	endDate: Date,

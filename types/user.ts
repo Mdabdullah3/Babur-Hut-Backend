@@ -102,6 +102,8 @@ export type UserDocument = Document & {
 	routingNumber: string
 	bankName: string
 	bankBranch: string
+
+	status: string
 }
 
 export type CreateUser = {
@@ -141,6 +143,7 @@ export type CreateUser = {
 	routingNumber: string
 	bankName: string
 	bankBranch: string
+	status: string
 }
 
 export type UpdateUser = {
@@ -176,4 +179,5 @@ export type UpdateUser = {
 	routingNumber: string
 	bankName: string
 	bankBranch: string
+	status: string
 }

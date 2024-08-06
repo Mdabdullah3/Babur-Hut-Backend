@@ -11,6 +11,7 @@ import { router as categoryRouter } from './cagegoryRouter'
 import { router as subCategoryRouter } from './subCagegoryRouter'
 import { router as packageRouter } from './packageRoutes'
 import { router as notificationRouter } from './notificationRoutes'
+import { router as otherRouter } from './otherRoutes'
 
 
 // => / 	(root)
@@ -29,5 +30,6 @@ router.use('/api/vouchers', voucherRouter)
 router.use('/api/categories', categoryRouter)
 router.use('/api/sub-categories', subCategoryRouter)
 router.use('/api/packages', packageRouter)
+router.use('/api/others', otherRouter)
 
 export default router

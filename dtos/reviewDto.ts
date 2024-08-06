@@ -22,8 +22,8 @@ export const filterBodyForCreateReview = (body: CreateReview) => {
 		'user', 				// user._id
 		'product', 			// product._id
 		'review',
-		// 'type',
-		// 'chat', 				// chatId
+		'comment',
+		'image',
 	]
 
 	return filterObjectByArray(body, allowedFields)
@@ -33,6 +33,8 @@ export const filterBodyForCreateReview = (body: CreateReview) => {
 export const filterBodyForUpdateReview = (body: UpdateReview) => {
 	const allowedFields = [
 		'review',
+		'comment',
+		'image',
 	]
 
 	return filterObjectByArray(body, allowedFields)

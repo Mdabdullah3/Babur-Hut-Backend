@@ -26,6 +26,7 @@ export const filterBodyForUpdateSubCategory = (body: UpdateSubCagetory) => {
 		'vat',
 		'status',
 		'commission',
+		'image',
 	]
 
 	return filterObjectByArray(body, allowedFields)

@@ -28,6 +28,11 @@ const voucherSchema = new Schema<VoucherDocument>({
 		lowercase: true,
 		trim: true,
 	},
+	redeemCode: { 								
+		type: String,
+		lowercase: true,
+		trim: true,
+	},
 	discount: { 								// Review message
 		type: Number,
 		// required: true,

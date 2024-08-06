@@ -732,7 +732,19 @@ body {
 		isSupport: false,
 		isEventManager: false,
 		isMessage: false,
-	}
+	},
+
+        idCardFrontPageImage: "image.png",
+        idCardBackPageImage: "image.png",
+        idCardNumber: "2434212412",
+        bankStatementImage: "image.png",
+        accountHolderName: "John Doe",
+        accountNumber: "2434212412",
+        routingNumber: "2434212412",
+        bankName: "Bank Name",
+        bankBranch: "Bank Branch", 
+
+        status: "pending", 
 }
 
 
@@ -795,7 +807,19 @@ body: {
 		isSupport: boolean,
 		isEventManager: boolean,
 		isMessage: boolean,
-	}
+	},
+
+        idCardFrontPageImage: "image.png",
+        idCardBackPageImage: "image.png",
+        idCardNumber: "2434212412",
+        bankStatementImage: "image.png",
+        accountHolderName: "John Doe",
+        accountNumber: "2434212412",
+        routingNumber: "2434212412",
+        bankName: "Bank Name",
+        bankBranch: "Bank Branch", 
+
+        status: "pending", 
 }
 
 - PATCH {{origin}}/api/users/6649ebc8dabbe03d553861f9
@@ -925,6 +949,7 @@ DELETE /api/users 	: Only user himself or admin can delete other users
 body {
   "voucherId": "random-voucher-id",
   "discount": 40,
+  "redeemCode": "ATC20",
   "startDate": "2024-07-12T13:45:49.432Z",
   "endDate": "2024-07-12T13:45:49.432Z",
   "status" : "active"
@@ -941,6 +966,7 @@ POST {{origin}}/api/vouchers
 body {
   "voucherId": "random-voucher-id",
   "discount": 40,
+  "redeemCode": "ATC30",
   "startDate": "2024-07-12T13:45:49.432Z",
   "endDate": "2024-07-12T13:45:49.432Z",
   "status" : "active"
@@ -970,7 +996,7 @@ PATCH {{origin}}/api/vouchers/:voucherId
   "vat": "2",
   "status": "active",
   "commission": "0",
-	"image: "data:image/jpg;a3wwra...",
+  "image: "data:image/jpg;a3wwra...",
 }
 
 POST {{origin}}/api/categories
@@ -981,6 +1007,10 @@ POST {{origin}}/api/categories
 ```
 body {
   "name": "category-new-name",
+  "shippingCharge": "200",
+  "vat": "2",
+  "status": "active",
+  "commission": "0",
 }
 PATCH {{origin}}/api/categories/:categoryId
 ```
@@ -1116,4 +1146,37 @@ so you have 2 ways to do so
 See the Messaging Example: `{{origin}}/message`
 See the Messaging Example: `/public/js/pages/user/message.js`
 ```
+
+
+## Others | Banner, ...othes non-related fields
+- GET {{origin}}/api/others 		    // get all 
+- GET {{origin}}/api/others/:otherId        // Get Single 
+
+- POST {{origin}}/api/others                // To create 
+- PATCH {{origin}}/api/others/:otherId      // To Update 
+- DELETE {{origin}}/api/others/:otherId     // To Delete
+
+
+#### Add Other  / banner
+```
+body {
+  "user": "user._id",
+  "image" : "data:image/jpg,aksdjadjf"
+}
+
+POST {{origin}}/api/vouchers
+```
+
+#### Update Other / Banner Image
+```
+body {
+  "user": "user._id",
+  "image" : "data:image/jpg,aksdjadjf"
+}
+PATCH {{origin}}/api/other/:otherId
+```
+
+
+
+
 

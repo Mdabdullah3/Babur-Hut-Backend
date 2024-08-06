@@ -83,6 +83,7 @@ routingNumber: "2434212412",
 bankName: "Bank Name",
 bankBranch: "Bank Branch", 
 
+status: "pending", 
 }
 */
 
@@ -203,6 +204,7 @@ const userSchema = new Schema<UserDocument>({
 	gender: {
 		type: String,
 		enum: ['male', 'female', 'other', 'undefined'],
+		lowercase: true,
 		default: 'undefined'
 	},
 
@@ -277,6 +279,13 @@ const userSchema = new Schema<UserDocument>({
 		type: String,
 		lowercase: true,
 		trim: true,
+	},
+
+	status: {
+		type: String,
+		lowercase: true,
+		trim: true,
+		default: 'unknown'
 	},
 
 

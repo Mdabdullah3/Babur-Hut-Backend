@@ -90,17 +90,32 @@ export const updateCategoryById:RequestHandler = catchAsync(async (req, res, nex
 
 // DELETE 	/api/categories/:categoryId
 export const deleteCategoryById:RequestHandler = catchAsync(async (req, res, next) => {
-	const categoryId = req.params.categoryId
+	try {
+		const categoryId = req.params.categoryId
 
-	const category = await Category.findByIdAndDelete(categoryId)
-	if(!category) return next(appError('category deletation failed'))
+		const category = await Category.findByIdAndDelete(categoryId)
+		if(!category) return next(appError('category deletation failed'))
 
-	if(category.image) {
-		promisify(fileService.removeFile)(category.image.secure_url)
+		if(category.image) {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(category.image.secure_url)
+			}, 1000);
+		}
+
+		res.status(204).json({
+			status: 'success',
+			data: category,
+		})
+
+	} catch (err: unknown) {
+		setTimeout(() => {
+			if( req.body.image ) {
+				promisify(fileService.removeFile)(req.body.image.secure_url)
+			}
+		}, 1000)
+
+		if(err instanceof Error) next(appError(err.message))
+		if(typeof err === 'string') next(appError(err))
 	}
-
-	res.status(204).json({
-		status: 'success',
-		data: category,
-	})
+	
 })
