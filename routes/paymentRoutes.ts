@@ -10,17 +10,22 @@ router.use(authController.protect)
 
 router.route('/')
 	.get(paymentController.getAllPayments)
+	.post(paymentController.createCashOnPayment)
+
+router
+	.get('/request', paymentController.createPaymentRequest)
+	.post('/success/:transactionId', paymentController.paymentSuccessHandler)
+	.post('/cancel/:transactionId', paymentController.paymentCancelHandler)
 
 router.route('/:paymentId')
 	.get(paymentController.getPaymentById)
+	.patch(
+		authController.restrictTo('admin'),
+		paymentController.updatePaymentById
+	)
 	.delete(
 		authController.restrictTo('admin'),
 		paymentController.deletePaymentById
 	)
-
-router
-	.post('/request', paymentController.createPaymentRequest)
-	.post('/success/:transactionId', paymentController.paymentSuccessHandler)
-	.post('/cancel/:transactionId', paymentController.paymentCancelHandler)
 
 

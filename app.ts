@@ -85,6 +85,9 @@ app.use(cors(corsOptions));
 // 	origin: "https://baburhaat.com",
 // 	credentials: true,
 // }))
+
+app.set('query parser', 'simple') 													// To prevent default query query [] parser
+
 app.use(express.static( publicDirectory ))
 app.use(express.urlencoded({ extended: false })) 						// required for passport login formData
 app.use(express.json({ limit: '400mb' }))
@@ -120,6 +123,12 @@ passportConfig()
 
 
 app.use('/', routers)
+
+app.get('/api/test', (req, res) => {
+	console.log(req.query)
+
+	res.redirect('/api/users')
+})
 
 app.all('*', errorController.routeNotFound)
 app.use(errorController.globalErrorHandler)

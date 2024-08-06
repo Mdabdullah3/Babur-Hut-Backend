@@ -1093,26 +1093,34 @@ PATCH {{origin}}/api/packages/:packageId
 
 
 ## Payments
-- GET /api/payments                     : Get All Payments
-- GET /api/users/:userId/payments       : Get payments of Single User
-- GET /api/payments/:paymentId          : Get Single Payment
-- DELETE /api/payments/:paymentId 	: Only Admin (role='admin') can delete payment
+- GET /api/payments                             : Get All Payments
 
-- POST  '/api/payments/request'                 : Get Payment Gateway to Pay
-- POST  '/api/payments/success/:transactionId'  : Handled Success
-- POST  '/api/payments/cancel/:transactionId'   : Handled Cancel
+- GET /api/users/:userId/payments               : Get payments of Single User
+- GET /api/payments/:paymentId                  : Get Single Payment
+- PATCH /api/payments/:paymentId 	        : Only Admin (role='admin') can update payment status
+- DELETE /api/payments/:paymentId 	        : Only Admin (role='admin') can delete payment
+
+- POST  /api/payments                           : To Create Cash Payment
+
+--- incomplete ---
+- GET   /api/payments/request                   : Get Online Payment Gateway to Pay
+- POST  /api/payments/success/:transactionId    : Online Handled Success
+- POST  /api/payments/cancel/:transactionId     : Online Handled Cancel
 
 
-#### Get Payment Gateway Link to pay
+#### Cash On Payment
 ```
 body {
 	"product": "667ea9b1df5d6c0e864f1841",
-	"price": 300,
+//	"price": 300,                                   # get from product
 	"currency": "BDT",
+	"paymentType" : "cash",
 
 	"shippingInfo" : {
-	  "name": "user another name for shipping",
-		"method": "Courier",
+	        "name": "Riajul Islam",
+	        "email" : "riajul@gmail.com",
+	        "phone" : "01957500605",
+	        "method": "Courier",
 		"address1": "shipping address",
 		"address2": "",
 		"city": "Dhaka",
@@ -1122,7 +1130,16 @@ body {
 	}
 }
 
-POST {{origin}}/api/payments/request
+POST {{origin}}/api/payments
+```
+
+
+#### To update Cash On PaymentStatus
+```
+body {
+	"status": "completed",                          : completed | pending (default)
+}
+PATCH {{origin}}/api/payments/:paymentId
 ```
 
 

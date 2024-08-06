@@ -5,6 +5,7 @@ import { appError, catchAsync } from './errorController'
 import Product from '../models/productModel'
 import Payment from '../models/paymentModel'
 import { apiFeatures } from '../utils'
+import * as paymentDto from '../dtos/paymentDto'
 
 // // eslint-disable-next-line @typescript-eslint/no-var-requires
 // const SSLCommerzPayment = require('sslcommerz-lts')
@@ -47,6 +48,58 @@ export const getAllPayments:RequestHandler = catchAsync( async (req, res, _next)
 	})
 })
 
+
+/*
+body {
+	"product": "667ea9b1df5d6c0e864f1841",
+	"price": 300,
+	"currency": "BDT",
+	"paymentType": "cash", 		// cash | online
+
+	"shippingInfo" : {
+	  "name": "user another name for shipping",
+		"phone": "01957500605",
+		"email" : "riajul@gmail.com",
+		"method": "Courier",
+		"address1": "shipping address",
+		"address2": "",
+		"city": "Dhaka",
+		"state": "Dhaka",
+		"postcode": 1000,
+		"country": "Bangladesh"
+	}
+}
+*/
+// POST 	/api/payments/ + authController.protect
+export const createCashOnPayment:RequestHandler = catchAsync( async (req, res, next) => {
+	// const body = req.query as typeof req.body
+
+	if(req.body.paymentType !== 'cash') return next(appError('this route only for cash on delivery'))
+
+	const productId = req.body.product
+	req.body.product = productId
+
+	const user = req.user as LogedInUser
+	req.body.user = user._id
+
+	if( !req.body.shippingInfo?.name ) return next(appError('please provide shippingInfo details'))
+
+	const product = await Product.findById(productId)
+	if(!product) return next(appError(`no product found by productId: ${productId}`))
+
+	req.body.price = product.price 		// override user value with real product value, no way to modify from client
+
+	const transactionId = new Types.ObjectId()
+	req.body.transactionId = transactionId
+
+	const payment = await Payment.create(req.body)
+
+	res.status(201).json({
+		status: 'success',
+		data: payment
+	})
+})
+
 // GET 	/api/payments/:paymentId + authController.protect
 export const getPaymentById:RequestHandler = catchAsync( async (req, res, _next) => {
 	const paymentId = req.params.paymentId
@@ -65,11 +118,28 @@ export const getPaymentById:RequestHandler = catchAsync( async (req, res, _next)
 	})
 })
 
-// DELETE 	/api/payments/:paymentId + authController.protect
-export const deletePaymentById:RequestHandler = catchAsync( async (req, res, _next) => {
+// DELETE 	/api/payments/:paymentId + authController.protect + RestrictTo('admin')
+export const updatePaymentById:RequestHandler = catchAsync( async (req, res, next) => {
+	const paymentId = req.params.paymentId
+
+	const filteredBody = paymentDto.filterBodyForUpdatePayment(req.body)
+	console.log(filteredBody, paymentId)
+
+	const payment = await Payment.findByIdAndUpdate(paymentId, filteredBody, { new: true })
+	if(!payment) return next(appError('payment update failed'))
+
+	res.status(201).json({
+		status: 'success',
+		data: payment
+	})
+})
+
+// DELETE 	/api/payments/:paymentId + authController.protect + RestrictTo('admin')
+export const deletePaymentById:RequestHandler = catchAsync( async (req, res, next) => {
 	const paymentId = req.params.paymentId
 
 	const payment = await Payment.findByIdAndDelete(paymentId)
+	if(!payment) return next(appError('payment deletation failed'))
 
 	res.status(204).json({
 		status: 'success',
@@ -99,29 +169,32 @@ body {
 */
 
 
-// POST 	/api/payments/request + authController.protect
+// GET 	/api/payments/request + authController.protect
 export const createPaymentRequest:RequestHandler = catchAsync( async (req, res, next) => {
-	const productId = req.body.product
+	const productId = req.query.product
 
 	const user = req.user as LogedInUser
 	const userId = user._id
 
-	// console.log(user)
+	// console.log('query', req.query)
+	// console.log('body', req.body)
 
 	const product = await Product.findById(productId)
 	if(!product) return next(appError(`no product found by productId: ${productId}`))
 
-	req.body.user = userId 						// make sure user is logend in
-	req.body.price = product.price 		// override user value with real product value, no way to modify from client
+	const body = req.query as typeof req.body
+	body.user = userId 						// make sure user is logend in
+	body.price = product.price 		// override user value with real product value, no way to modify from client
 
 	const transactionId = new Types.ObjectId()
+	body.transaction = transactionId
 	const successUrl = `${req.protocol}://${req.get('host')}/api/payments/success/${transactionId}`
 	const failedUrl = `${req.protocol}://${req.get('host')}/api/payments/failed/${transactionId}`
 
 
 	const data = {
 		total_amount: product.price,
-		currency: req.body.currency,
+		currency: body.currency,
 		tran_id: transactionId, // use unique tran_id for each api call
 
 		success_url: successUrl,
@@ -129,7 +202,7 @@ export const createPaymentRequest:RequestHandler = catchAsync( async (req, res, 
 		cancel_url: `${process.env.CLIENT_ORIGIN}/cancel`,
 		// ipn_url: 'http://localhost:3030/ipn',
 
-		shipping_method: req.body.shippingInfo?.method,
+		shipping_method: body.shippingInfo?.method,
 		product_name: product.name,
 		product_category: product.category,
 		product_profile: 'general',
@@ -144,14 +217,14 @@ export const createPaymentRequest:RequestHandler = catchAsync( async (req, res, 
 		cus_country: user.location.country,
 		cus_phone: user.phone,
 		cus_fax: user.phone,
-		ship_name: req.body.shippingInfo?.name || user.name,
+		ship_name: body.shippingInfo?.name || user.name,
 
-		ship_add1: req.body.shippingInfo?.address1,
-		ship_add2: req.body.shippingInfo?.address2,
-		ship_city: req.body.shippingInfo?.city,
-		ship_state: req.body.shippingInfo?.state,
-		ship_postcode: req.body.shippingInfo?.postcode,
-		ship_country: req.body.shippingInfo?.country,
+		ship_add1: body.shippingInfo?.address1,
+		ship_add2: body.shippingInfo?.address2,
+		ship_city: body.shippingInfo?.city,
+		ship_state: body.shippingInfo?.state,
+		ship_postcode: body.shippingInfo?.postcode,
+		ship_country: body.shippingInfo?.country,
 
 		store_id: '', 
 		store_passwd: '', 
@@ -167,26 +240,29 @@ export const createPaymentRequest:RequestHandler = catchAsync( async (req, res, 
 	// const result = ordersCollection.insertOne(order);
 
 
-	// only admin or payment success can change the status  
-	req.body.status = user.role === 'admin' ? req.body.status : undefined 		
+	// // only admin or payment success can change the status  
+	// req.body.status = user.role === 'admin' ? req.body.status : undefined 		
 
-	let payment = await Payment.findOne({ transactionId: req.body.transactionId })
+	let payment = await Payment.findOne({ transactionId: body.transactionId })
 	if(!payment) {
-		req.body.transactionId = transactionId
-		payment = await Payment.create(req.body)
+		body.transactionId = transactionId
+		// payment = await Payment.create(body)
+		payment = await Payment.findOne(body)
+		console.log('created')
 
 		if(!payment) return next(appError('creating payment into database failed'))
 	}
 
-	const gatewayPageUrl = `/sslcommerz-lts/?price=${product.price}&transactionId=${transactionId}`
+	res.redirect('/api/users')
 
-	res.status(200).json({
-		status: 'success',
-		data: { 
-			gatewayPageUrl
-			// gatewayPageUrl: data.GatewayPageURL
-		}
-	})
+	// const gatewayPageUrl = `/sslcommerz-lts/?price=${product.price}&transactionId=${transactionId}`
+	// res.status(200).json({
+	// 	status: 'success',
+	// 	data: { 
+	// 		gatewayPageUrl
+	// 		// gatewayPageUrl: data.GatewayPageURL
+	// 	}
+	// })
 })
 
 
