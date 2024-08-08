@@ -109,18 +109,44 @@ export const getReviewById:RequestHandler = catchAsync(async (req, res, next) =>
 
 // PATCH /api/reviews/:reviewId
 export const updateReviewById:RequestHandler = catchAsync(async (req, res, next) => {
-	const reviewId = req.params.reviewId
+	try {
+		const reviewId = req.params.reviewId
 
-	const filteredBody = reviewDto.filterBodyForUpdateReview(req.body)
-	const review = await Review.findByIdAndUpdate(reviewId, filteredBody, { new: true })
-	if(!review) return next(appError('review not found'))
-	
-	// handle image update
-	
-	res.status(200).json({
-		status: 'success',
-		data: review
-	})
+		const filteredBody = reviewDto.filterBodyForUpdateReview(req.body)
+		const review = await Review.findByIdAndUpdate(reviewId, filteredBody, { new: true })
+		if(!review) return next(appError('review not found'))
+		
+		// handle image update
+		if(req.body.image) {
+			const { error, image } = await fileService.handleBase64File(req.body.image, '/reviews')
+			if(error || !image) return next(appError('review image upload failed '))
+			req.body.image = image
+		}
+		
+		// delete old images
+		if(req.body.image && review.image?.secure_url) {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(review.image.secure_url)
+			}, 1000);
+		}
+
+
+		res.status(200).json({
+			status: 'success',
+			data: review
+		})
+
+	} catch (err: unknown) {
+
+		if(req.body.image) {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(req.body.image.secure_url)
+			}, 1000)
+		}
+
+		if(err instanceof Error) next(appError(err.message))
+		if(typeof err === 'string') next(appError(err))
+	}
 })
 
 // DELETE /api/reviews/:reviewId
