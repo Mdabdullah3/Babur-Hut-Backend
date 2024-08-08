@@ -73,6 +73,8 @@ Database has common 4 type of errors
 
 - GET /api/auth/google 			: Google Login
 - GET /api/auth/google/callback 	: Google Login success redirect to
+- GET /api/auth/google/success 	        : Get authToken on google success login
+
 
 - GET /api/auth/register 		: Local Register
 - GET /api/auth/login 			: Local Login
