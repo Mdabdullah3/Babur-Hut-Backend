@@ -1,4 +1,4 @@
-import passport from 'passport'
+// import passport from 'passport'
 import { Router } from 'express'
 import * as pageController from '../controllers/pageController'
 import * as authController from '../controllers/authController'
@@ -27,9 +27,13 @@ export const router = Router()
 		// 	failureRedirect: '/login'
 		// }))
 
-		// // handled inside /api/auth/google, instead of /auth/google
-		.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
+		// (old) handled inside /api/auth/google, instead of /auth/google
+		// .get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
+		// .get('/auth/google/callback', authController.googleCallbackHandler)
+
+		.get('/auth/google', authController.googleLoginRequest)
 		.get('/auth/google/callback', authController.googleCallbackHandler)
+		.get('/auth/google/success/', authController.googleSuccessHandler)
 
 
 		// just for testing

@@ -13,6 +13,17 @@ import * as hashService from '../services/hashService'
 import OtpModel from '../models/otpModel'
 import { sendMail } from '../utils/nodemailer'
 
+import type { Session } from 'express-session';
+import * as tokenService from '../services/tokenService'
+ 
+type CustomSession = Session & {
+  state: string;
+}
+
+
+
+
+
 
 // router.get('/api/users' protect, ...)
 export const protect:RequestHandler = (req, res, next) => {
@@ -207,27 +218,110 @@ export const logout:RequestHandler = (req, res, next) => {
 
 
 
-// GET /auth/google/callback 		: Not /api/auth/google/callback
-export const googleCallbackHandler:RequestHandler = catchAsync( async (req, res, next) => {
-	// console.log(req.body)
+type CustomUser = Express.User & {
+	_id: string
+}
+
+
+// GET /auth/google/ 		+ 	/api/auth/google 	(For API)
+export const googleLoginRequest:RequestHandler = catchAsync( async (req, res, next) => {
 	
-	passport.authenticate('google', (err: unknown, user: Express.User) => {
-		if(err) return next(err)
-		if(!user) return next(appError('user not found'))
 
-		req.login(user, (logError) => {
-			if(logError) return next(logError)
+  // const state = generateRandomState(); 				// Generate a unique state parameter
+  const state = crypto.randomUUID(); 							// Semi-clone required because next line type casting
+  (req.session as CustomSession).state = state; 	// Store the state in the session
 
-			// res.redirect('/')
-
-			res.json({
-				status: 'success',
-				data: user
-			})
-		})
-	})(req, res, next)
+  passport.authenticate('google', {
+    scope: ['profile', 'email'],
+    state: state 																	// Include the state in the request to Google
+  })(req, res, next);
 
 })
+
+
+// GET /auth/google/callback 		+ 	/api/auth/google/callback 	(For API)
+export const googleCallbackHandler:RequestHandler = catchAsync( async (req, res, next) => {
+
+	 passport.authenticate('google', (err: unknown, user: CustomUser ) => {
+    if (err) { return next(err); }
+    if (!user) { return res.redirect('/auth/failure'); }
+
+    // Validate the state parameter to prevent CSRF attacks
+    if (req.query.state !== (req.session as CustomSession).state) {
+      return res.status(403).send('Invalid state parameter');
+    }
+
+    // Validate the ID token (optional but recommended for added security)
+    // Implement ID token validation here if needed
+
+    // After successful authentication, generate a session token or JWT
+    req.logIn(user, async (err) => {
+      if (err) { return next(err); }
+
+      // Determine if the request comes from a web or mobile client
+      const isMobile = req.headers['user-agent']?.includes('Android') || req.query.mobile;
+
+      if (isMobile) {
+        // Respond with a JSON containing the token for mobile apps
+        const token = await tokenService.generateTokenForUser(user._id); // Implement your token generation logic
+        res.json({ token });
+      } else {
+        // Redirect to the success route for web clients
+        const authToken = await tokenService.generateTokenForUser(user._id); // Implement your token generation logic
+        res.redirect(`/api/auth/google/success/?authToken=${authToken}`);
+      }
+    });
+  })(req, res, next);
+
+})
+
+
+// GET /api/auth/google/success/?authToken={authToken} 
+export const googleSuccessHandler: RequestHandler = catchAsync( async (req, res, next) => {
+  const authToken = req.query.authToken;
+	if(!authToken) return next(appError('No authToken: authentication failed'))
+
+	if(typeof authToken === 'string') {
+		const isVerifiedToken = await tokenService.verifyUserAuthToken(authToken) 
+		if(!isVerifiedToken) return next(appError('authenticate validation failed'))
+
+	} else throw next(appError(`authToken: ${authToken}`))
+
+	res.json({
+		status: 'success',
+		data: {
+			authToken
+		}
+	})
+})
+
+
+
+
+// // Previous
+// // GET /auth/google/callback 		+ 	/api/auth/google/callback 	(For API)
+// export const googleCallbackHandler:RequestHandler = catchAsync( async (req, res, next) => {
+// 	// console.log(req.body)
+	
+// 	passport.authenticate('google', (err: unknown, user: Express.User) => {
+// 		if(err) return next(err)
+// 		if(!user) return next(appError('user not found'))
+
+// 		req.login(user, (logError) => {
+// 			if(logError) return next(logError)
+
+// 			// res.redirect('/')
+// 			// res.redirect('https://baburhaatbd.com') instead of json
+
+
+// 			res.json({
+// 				status: 'success',
+// 				data: user
+// 			})
+// 		})
+// 	})(req, res, next)
+
+// })
 
 
 /* PATCH /auth/update-password

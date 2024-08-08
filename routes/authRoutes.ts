@@ -1,4 +1,4 @@
-import passport from 'passport'
+// import passport from 'passport'
 import { Router } from 'express'
 import * as authController from '../controllers/authController'
 
@@ -18,6 +18,10 @@ router
 	.post('/send-otp', authController.sendOTP)
 	.post('/verify-otp', authController.verifyOTP)
 
-	.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
+	// .get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
+	// .get('/google/callback', authController.googleCallbackHandler)
+
+	.get('/google', authController.googleLoginRequest)
 	.get('/google/callback', authController.googleCallbackHandler)
+	.get('/google/success/', authController.googleSuccessHandler)
 
