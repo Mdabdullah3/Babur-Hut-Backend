@@ -65,16 +65,18 @@ Database has common 4 type of errors
 
 
 ### Routes
-- GET / 							(just for testing)
+- GET / 				(just for testing)
 - GET /register 			(just for testing)
-- GET /login 		 			(just for testing)
+- GET /login 		 		(just for testing)
+- GET /error 		 		(just for testing) 
 - GET /logout 		 		: logout from local, google, ... 
-- GET /error 		 			(just for testing) 
 
-- GET /auth/google 					: Google Login
+- GET /api/auth/google 			: Google Login
+- GET /api/auth/google/callback 	: Google Login success redirect to
+
 - GET /api/auth/register 		: Local Register
 - GET /api/auth/login 			: Local Login
-- GET /api/auth/out 				: logout (local + google)
+- GET /api/auth/out 			: logout (local + google)
 		
 
 - GET /api/users

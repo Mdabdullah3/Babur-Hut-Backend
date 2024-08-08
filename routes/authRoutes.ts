@@ -1,3 +1,4 @@
+import passport from 'passport'
 import { Router } from 'express'
 import * as authController from '../controllers/authController'
 
@@ -14,9 +15,9 @@ router
 	.patch('/reset-password', authController.resetPassword)
 	.patch('/update-password', authController.protect, authController.updatePassword)
 
-
 	.post('/send-otp', authController.sendOTP)
 	.post('/verify-otp', authController.verifyOTP)
 
-
+	.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
+	.get('/google/callback', authController.googleCallbackHandler)
 
