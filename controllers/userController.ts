@@ -95,7 +95,7 @@ export const updateUserById:RequestHandler = async (req, res, next) => {
 			const maxImageSize = 1024 * 1024 * 2 			// => 2 MB
 			if(imageSize > maxImageSize) return next(appError('You cross the max image size: 2MB(max)'))
 
-			const { error: _message, image } = await fileService.handleBase64File(req.body.coverPhoto)
+			const { error: _message, image } = await fileService.handleBase64File(req.body.coverPhoto, '/users')
 			// if(message || !image) return next(appError(message))
 
 			if(image) req.body.coverPhoto = image
@@ -106,7 +106,7 @@ export const updateUserById:RequestHandler = async (req, res, next) => {
 			const maxImageSize = 1024 * 1024 * 2 			// => 2 MB
 			if(imageSize > maxImageSize) return next(appError('You cross the max image size: 2MB(max)'))
 
-			const { error: _message, image } = await fileService.handleBase64File(req.body.avatar)
+			const { error: _message, image } = await fileService.handleBase64File(req.body.avatar, '/users')
 			// if(message || !image) return next(appError(message))
 
 			if(image) req.body.avatar = image
@@ -118,7 +118,7 @@ export const updateUserById:RequestHandler = async (req, res, next) => {
 			const maxImageSize = 1024 * 1024 * 2 			// => 2 MB
 			if(imageSize > maxImageSize) return next(appError('You cross the max image size: 2MB(max)'))
 
-			const { error, image } = await fileService.handleBase64File(req.body.idCardFrontPageImage)
+			const { error, image } = await fileService.handleBase64File(req.body.idCardFrontPageImage, '/users')
 			if(error || !image) return next(appError(error))
 
 			// store into body before other operation, so if any of them failed, error handler geto image
@@ -130,7 +130,7 @@ export const updateUserById:RequestHandler = async (req, res, next) => {
 			const maxImageSize = 1024 * 1024 * 2 			// => 2 MB
 			if(imageSize > maxImageSize) return next(appError('You cross the max image size: 2MB(max)'))
 
-			const { error, image } = await fileService.handleBase64File(req.body.idCardBackPageImage)
+			const { error, image } = await fileService.handleBase64File(req.body.idCardBackPageImage, '/users')
 			if(error || !image) return next(appError(error))
 
 			// store into body before other operation, so if any of them failed, error handler geto image
@@ -142,7 +142,7 @@ export const updateUserById:RequestHandler = async (req, res, next) => {
 			const maxImageSize = 1024 * 1024 * 2 			// => 2 MB
 			if(imageSize > maxImageSize) return next(appError('You cross the max image size: 2MB(max)'))
 
-			const { error, image } = await fileService.handleBase64File(req.body.bankStatementImage)
+			const { error, image } = await fileService.handleBase64File(req.body.bankStatementImage, '/users')
 			if(error || !image) return next(appError(error))
 
 			// store into body before other operation, so if any of them failed, error handler geto image
@@ -161,27 +161,27 @@ export const updateUserById:RequestHandler = async (req, res, next) => {
 		if(!updatedUser) return next(appError('review not found'))
 		
 		// remove old image
-		if(user.coverPhoto) {
+		if(req.body.coverPhoto && user.coverPhoto) {
 			setTimeout(() => {
 				promisify(fileService.removeFile)(user.coverPhoto.secure_url)
 			}, 1000)
 		}
-		if(user.avatar) {
+		if(req.body.avatar && user.avatar) {
 			setTimeout(() => {
 				promisify(fileService.removeFile)(user.avatar.secure_url)
 			}, 1000)
 		}
-		if(user.idCardFrontPageImage) {
+		if(req.body.idCardFrontPageImage && user.idCardFrontPageImage) {
 			setTimeout(() => {
 				promisify(fileService.removeFile)(user.idCardFrontPageImage.secure_url)
 			}, 1000)
 		}
-		if(user.idCardBackPageImage) {
+		if(req.body.idCardBackPageImage && user.idCardBackPageImage) {
 			setTimeout(() => {
 				promisify(fileService.removeFile)(user.idCardBackPageImage.secure_url)
 			}, 1000)
 		}
-		if(user.bankStatementImage) {
+		if(req.body.bankStatementImage && user.bankStatementImage) {
 			setTimeout(() => {
 				promisify(fileService.removeFile)(user.bankStatementImage.secure_url)
 			}, 1000)

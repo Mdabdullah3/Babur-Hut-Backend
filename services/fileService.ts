@@ -44,6 +44,8 @@ export const handleBase64File = async (dataUrl: string, subDir='/users', _fileTy
 		const mimetype = metadata.split(':').pop()!
 		const [ _type, ext] = mimetype.split('/')
 
+		if( !ext ) return { error: `please upload image as base64 bit data url`, image: null  }
+
 		// // Step-2: allow file: image(default), pdf, ...
 		// if(type !== fileType) return { error: `file type: ${fileType} not valid file type` }
 

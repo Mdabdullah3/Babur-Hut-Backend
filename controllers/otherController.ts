@@ -87,11 +87,14 @@ export const updateOther: RequestHandler = catchAsync( async (req, res, next) =>
 			if(image) req.body.image = image
 		}
 
-		const other = await Other.findByIdAndUpdate(otherId, req.body, { new: true })
-		if(!other) return next(appError('no other document update failed'))
+		const other = await Other.findById(otherId )
+		if(!other) return next(appError('product not found'))
+
+		const updatedOther = await Other.findByIdAndUpdate(otherId, req.body, { new: true })
+		if(!updatedOther) return next(appError('no other document update failed'))
 
 		// delete old image
-		if(req.body.image && other.image?.secure_url) {
+		if(updatedOther.image && other.image?.secure_url) {
 			setTimeout(() => {
 				promisify(fileService.removeFile)(other.image.secure_url)
 			}, 1000);
@@ -100,7 +103,7 @@ export const updateOther: RequestHandler = catchAsync( async (req, res, next) =>
 
 		res.status(201).json({
 			status: 'success',
-			data: other
+			data: updatedOther
 		})
 
 	} catch (err: unknown) {

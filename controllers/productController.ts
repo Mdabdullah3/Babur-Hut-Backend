@@ -263,21 +263,19 @@ export const updateProductByIdOrSlug:RequestHandler = async (req, res, next) => 
 		if(!updatedProduct) return next(appError('product not found'))
 		
 		// delete old images
-		setTimeout(() => {
-			if(req.body.coverPhoto && product.coverPhoto?.secure_url) {
-				setTimeout(() => {
-					promisify(fileService.removeFile)(product.coverPhoto.secure_url)
-				}, 1000);
-			}
+		if(req.body.coverPhoto && product.coverPhoto?.secure_url) {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(product.coverPhoto.secure_url)
+			}, 1000);
+		}
 
-			if(req.body.images && product.images?.length) {
-				product.images.forEach( (image: Image) => {
-					setTimeout(() => {
-						promisify(fileService.removeFile)(image.secure_url)
-					}, 1000);
-				})
-			}
-		}, 1000)
+		if(req.body.images && product.images?.length) {
+			product.images.forEach( (image: Image) => {
+				setTimeout(() => {
+					promisify(fileService.removeFile)(image.secure_url)
+				}, 1000);
+			})
+		}
 
 
 		res.status(201).json({

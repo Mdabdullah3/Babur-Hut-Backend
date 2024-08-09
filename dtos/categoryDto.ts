@@ -1,6 +1,20 @@
 import { filterObjectByArray } from '../utils'
-import type { UpdateCagetory, UpdateSubCagetory } from '../types/category'
+import type { CreateCagetory, UpdateCagetory, UpdateSubCagetory } from '../types/category'
 
+
+// => POST /api/categories/
+export const filterBodyForAddCategory = (body: CreateCagetory) => {
+	const allowedFields = [
+		'name',
+		'shippingCharge',
+		'vat',
+		'status',
+		'commission',
+		'image',
+	]
+
+	return filterObjectByArray(body, allowedFields)
+}
 
 // => PATCH /api/categories/:id
 export const filterBodyForUpdateCategory = (body: UpdateCagetory) => {

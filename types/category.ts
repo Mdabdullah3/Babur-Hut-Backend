@@ -14,6 +14,14 @@ export type CategoryDocument = Document & {
 	image: Image
 }
 
+export type CreateCagetory = {
+	name: string
+	shippingCharge: string
+	vat: string
+	status: string,
+	commission: Date,
+	image: Image
+}
 export type UpdateCagetory = {
 	name: string
 	shippingCharge: string
