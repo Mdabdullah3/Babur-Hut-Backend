@@ -151,3 +151,6 @@ export const deleteOther: RequestHandler = catchAsync( async (req, res, next) =>
 		if(typeof err === 'string') next(appError(err))
 	}
 })
+
+
+

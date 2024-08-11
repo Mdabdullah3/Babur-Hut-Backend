@@ -223,7 +223,7 @@ type CustomUser = Express.User & {
 }
 
 
-// GET /auth/google/ 		+ 	/api/auth/google 	(For API)
+// GET /auth/google/ 		=> 	/api/auth/google 	(Proxy Reverse For API)
 export const googleLoginRequest:RequestHandler = catchAsync( async (req, res, next) => {
 	
 
@@ -239,7 +239,7 @@ export const googleLoginRequest:RequestHandler = catchAsync( async (req, res, ne
 })
 
 
-// GET /auth/google/callback 		+ 	/api/auth/google/callback 	(For API)
+// GET /auth/google/callback 		=> 	/api/auth/google/callback 	(Proxy Reverse For API)
 export const googleCallbackHandler:RequestHandler = catchAsync( async (req, res, next) => {
 
 	 passport.authenticate('google', (err: unknown, user: CustomUser ) => {
@@ -248,7 +248,8 @@ export const googleCallbackHandler:RequestHandler = catchAsync( async (req, res,
 
     // Validate the state parameter to prevent CSRF attacks
     if (req.query.state !== (req.session as CustomSession).state) {
-      return res.status(403).send('Invalid state parameter');
+      return next(appError('invalid state parameter', 403, 'GoogleError'))
+      // return res.status(403).send('Invalid state parameter');
     }
 
     // Validate the ID token (optional but recommended for added security)
@@ -261,10 +262,11 @@ export const googleCallbackHandler:RequestHandler = catchAsync( async (req, res,
       // Determine if the request comes from a web or mobile client
       const isMobile = req.headers['user-agent']?.includes('Android') || req.query.mobile;
 
+       // Respond with a JSON containing the token for mobile apps
       if (isMobile) {
-        // Respond with a JSON containing the token for mobile apps
         const token = await tokenService.generateTokenForUser(user._id); // Implement your token generation logic
-        res.json({ token });
+        res.json({ status: 'success', data: { token } });
+
       } else {
         // Redirect to the success route for web clients
         const authToken = await tokenService.generateTokenForUser(user._id); // Implement your token generation logic
@@ -276,7 +278,7 @@ export const googleCallbackHandler:RequestHandler = catchAsync( async (req, res,
 })
 
 
-// GET /api/auth/google/success/?authToken={authToken} 
+// GET /auth/google/ 		=> /api/auth/google/success/?authToken={authToken} 
 export const googleSuccessHandler: RequestHandler = catchAsync( async (req, res, next) => {
   const authToken = req.query.authToken;
 	if(!authToken) return next(appError('No authToken: authentication failed'))
@@ -287,15 +289,26 @@ export const googleSuccessHandler: RequestHandler = catchAsync( async (req, res,
 
 	} else throw next(appError(`authToken: ${authToken}`))
 
+	const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN
+	if(CLIENT_ORIGIN) {
+	 	res.redirect(CLIENT_ORIGIN)
+	 	return
+	}
+
 	res.json({
 		status: 'success',
 		data: {
 			authToken
 		}
 	})
+
 })
 
 
+// GET  /auth/failure 		=>	/api/auth/failure 	(Proxy Reverse For API)
+export const googleAuthFailure:RequestHandler = catchAsync( async (_req, _res, next) => {
+	next(appError('google authentication failed', 401, 'GoogleAuthFailed'))
+})
 
 
 // // Previous

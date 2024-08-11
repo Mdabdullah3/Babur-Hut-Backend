@@ -10,6 +10,8 @@ import { Schema, models, model } from 'mongoose'
 */
 
 const otherSchema = new Schema<OtherDocument>({
+	name: String,
+	banner: String,
 	user: {
 		type: Schema.Types.ObjectId,
 		ref: 'User',

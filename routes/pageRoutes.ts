@@ -31,9 +31,12 @@ export const router = Router()
 		// .get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
 		// .get('/auth/google/callback', authController.googleCallbackHandler)
 
+		/* This only work from self frontend, not other origin, in that case
+				redirect (Reverse Proxy) to /api/auth/google via nginx */ 
 		.get('/auth/google', authController.googleLoginRequest)
 		.get('/auth/google/callback', authController.googleCallbackHandler)
 		.get('/auth/google/success/', authController.googleSuccessHandler)
+		.get('/auth/google/failure/', authController.googleAuthFailure)
 
 
 		// just for testing

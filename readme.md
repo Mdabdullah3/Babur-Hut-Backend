@@ -1181,6 +1181,8 @@ See the Messaging Example: `/public/js/pages/user/message.js`
 #### Add Other  / banner
 ```
 body {
+  "name": "any name",
+  "banner": "any tag name",
   "user": "user._id",
   "image" : "data:image/jpg,aksdjadjf"
 }
@@ -1191,6 +1193,8 @@ POST {{origin}}/api/vouchers
 #### Update Other / Banner Image
 ```
 body {
+  "name": "any name",
+  "banner": "any tag name",
   "user": "user._id",
   "image" : "data:image/jpg,aksdjadjf"
 }

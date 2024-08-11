@@ -24,4 +24,5 @@ router
 	.get('/google', authController.googleLoginRequest)
 	.get('/google/callback', authController.googleCallbackHandler)
 	.get('/google/success/', authController.googleSuccessHandler)
+	.get('/google/failure/', authController.googleAuthFailure)
 

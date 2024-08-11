@@ -6,11 +6,15 @@ type Image = {
 }
 
 export type OtherDocument = Document & {
+	name: string
+	banner: string
 	user: Types.ObjectId,
 	image: Image
 }
 
 export type UpdateOther = {
+	name: string
+	banner: string
 	user: Types.ObjectId,
 	image: Image
 }
