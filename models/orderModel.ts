@@ -28,7 +28,7 @@ import { model, models, Schema } from 'mongoose'
 
 const orderModel = new Schema<OrderDocument>({
 
-	user: {
+	user: { 																	// customer
 		type: Schema.Types.ObjectId,
 		ref: 'User',
 		required: true,
@@ -40,6 +40,12 @@ const orderModel = new Schema<OrderDocument>({
 		required: true,
 		unique: true,
 	},
+
+	customers: [{ 													
+		type: Schema.Types.ObjectId,
+		ref: 'User',
+	}],
+
 	transactionId: {
 		type: Schema.Types.ObjectId,
 		required: true,

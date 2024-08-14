@@ -532,6 +532,17 @@ body: {
 		color: "",
 		gender: ""
 	},
+
+	discount: "232",
+	subCategory: "subCategory._id",
+	warranty: "...",
+  discountPrice: "...",
+	packaging: {
+		weight: string
+		height: string
+		width: string
+		dimension: string
+	}
 }
 
 - POST {{origin}}/api/products
@@ -574,7 +585,16 @@ body: {
 		gender: ""
 	},
 
-	isLiked: true,
+	discount: "232",
+	subCategory: "subCategory._id",
+	warranty: "...",
+  discountPrice: "...",
+	packaging: {
+		weight: string
+		height: string
+		width: string
+		dimension: string
+	}
 }
 
 - PATCH {{origin}}/api/products/6649ebc8dabbe03d553861f9
@@ -635,7 +655,7 @@ GET /api/reviews/?_fields='review,product,user'         // Only got 3 fields (+ 
 #### Add Review / Comment
 ```
 body: {
-  # "userId": "will comes from logedIn User",
+  # "user": "will comes from logedIn User",
   "product": "6649ebc8dabbe03d553861f9",
   "image" : "data:image/jpeg;base64,/9j/4AAQSkZJRgA..."
 
@@ -647,6 +667,22 @@ body: {
 }
 
 - POST {{origin}}/api/reviews
+```
+
+#### Update Review / Comment
+```
+body: {
+  "product": "6649ebc8dabbe03d553861f9",
+  "image" : "data:image/jpeg;base64,/9j/4AAQSkZJRgA..."
+
+  # for Review
+  "review" : "I'm using too (delete me)",
+
+  # or for comment
+  "comment": "this is comments on product"
+}
+
+- PATCH {{origin}}/api/reviews/reviewId
 ```
 
 
@@ -738,22 +774,68 @@ body {
 		isMessage: false,
 	},
 
-        idCardFrontPageImage: "image.png",
-        idCardBackPageImage: "image.png",
-        idCardNumber: "2434212412",
-        bankStatementImage: "image.png",
-        accountHolderName: "John Doe",
-        accountNumber: "2434212412",
-        routingNumber: "2434212412",
-        bankName: "Bank Name",
-        bankBranch: "Bank Branch", 
+	idCardFrontPageImage: "image.png",
+	idCardBackPageImage: "image.png",
+	idCardNumber: "2434212412",
+	bankStatementImage: "image.png",
+	accountHolderName: "John Doe",
+	accountNumber: "2434212412",
+	routingNumber: "2434212412",
+	bankName: "Bank Name",
+	bankBranch: "Bank Branch", 
 
-        status: "pending", 
+	status: "pending", 
 }
 
 
 - POST {{origin}}/api/auth/register
 ```
+
+#### Update User 
+```
+body: {
+	customId: string
+	name: string
+	email: string
+	coverPhoto: string
+	avatar: string
+	otherPermissions : {
+		isVendor: boolean,
+		isCustomer: boolean,
+		isCategories: boolean,
+		isProducts: boolean,
+		isOrders: boolean,
+		isReviews: boolean,
+		isVouchers: boolean,
+		isAdManager: boolean,
+		isRoleManager: boolean,
+		isMessageCenter: boolean,
+		isFinance: boolean,
+		isShipment: boolean,
+		isSupport: boolean,
+		isEventManager: boolean,
+		isMessage: boolean,
+	}
+
+	idCardFrontPageImage: Image
+	idCardBackPageImage: Image
+	bankStatementImage: Image
+	idCardNumber: string
+	accountHolderName: string
+	accountNumber: string
+	routingNumber: string
+	bankName: string
+	bankBranch: string
+
+	status: string
+}
+
+
+- PATCH {{origin}}/api/users/:userId
+```
+
+
+
 
 
 #### User Login 
@@ -765,6 +847,8 @@ body: {
 
 - POST {{origin}}/api/auth/register
 ```
+
+
 
 #### User Logout 
 ```
@@ -951,6 +1035,7 @@ DELETE /api/users 	: Only user himself or admin can delete other users
 #### Add Voucher
 ```
 body {
+  "user": "user._id",
   "voucherId": "random-voucher-id",
   "discount": 40,
   "redeemCode": "ATC20",
@@ -968,6 +1053,7 @@ POST {{origin}}/api/vouchers
 #### Update Voucher
 ```
 body {
+  "user": "user._id",
   "voucherId": "random-voucher-id",
   "discount": 40,
   "redeemCode": "ATC30",

@@ -94,6 +94,13 @@ export const createCashOnPayment:RequestHandler = catchAsync( async (req, res, n
 
 	const payment = await Payment.create(req.body)
 
+	// 1. add user.id into  payments.order 	: payments.customers.push( userId )
+	// 2. add order.id into user.orders 		: users.orders.push( userId )
+	// 3. remove both when user deleted or order deleted
+
+	// const updatedUser = await User.findByIdAndUpdate(userId, { [operator]: { likes: productId }}, { new: true, }) 	
+	// const updatedProduct = await Product.findByIdAndUpdate(productId, { [operator]: { likes: userId }}, { new: true, }) 	
+
 	res.status(201).json({
 		status: 'success',
 		data: payment
@@ -168,6 +175,7 @@ body {
 }
 */
 
+/*------------------------------------[ Online Payment ]-----------------------------------------------*/ 
 
 // GET 	/api/payments/request + authController.protect
 export const createPaymentRequest:RequestHandler = catchAsync( async (req, res, next) => {

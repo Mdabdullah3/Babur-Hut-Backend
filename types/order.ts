@@ -18,6 +18,8 @@ export type OrderDocument = {
 
 	user: Types.ObjectId
 	product: Types.ObjectId
+	customers: Types.ObjectId[]
+
 	transactionId: Types.ObjectId
 
 	price: number

@@ -92,6 +92,7 @@ export type UserDocument = Document & {
 	}
 
 	likes: Types.ObjectId[]
+	orders: Types.ObjectId[]
 
 	idCardFrontPageImage: Image
 	idCardBackPageImage: Image
@@ -105,6 +106,8 @@ export type UserDocument = Document & {
 
 	status: string
 }
+
+
 
 export type CreateUser = {
 	customId: string
@@ -134,15 +137,16 @@ export type CreateUser = {
 		isMessage: boolean,
 	}
 
-	idCardFrontPageImage: string
-	idCardBackPageImage: string
-	bankStatementImage: string
+	idCardFrontPageImage: Image
+	idCardBackPageImage: Image
+	bankStatementImage: Image
 	idCardNumber: string
 	accountHolderName: string
 	accountNumber: string
 	routingNumber: string
 	bankName: string
 	bankBranch: string
+
 	status: string
 }
 
@@ -169,15 +173,16 @@ export type UpdateUser = {
 		isEventManager: boolean,
 		isMessage: boolean,
 	}
-	idCardFrontPageImage: string
-	idCardBackPageImage: string
-	bankStatementImage: string
 
+	idCardFrontPageImage: Image
+	idCardBackPageImage: Image
+	bankStatementImage: Image
 	idCardNumber: string
 	accountHolderName: string
 	accountNumber: string
 	routingNumber: string
 	bankName: string
 	bankBranch: string
+
 	status: string
 }

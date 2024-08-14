@@ -231,6 +231,12 @@ const userSchema = new Schema<UserDocument>({
 		ref: 'Product',
 	}],
 
+	orders: [{ 													
+		type: Schema.Types.ObjectId,
+		ref: 'Payment',
+	}],
+
+
 	// Bank Info
 	idCardFrontPageImage: {
 		public_id: String,

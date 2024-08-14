@@ -6,6 +6,7 @@ export type VoucherDocument = {
 	createdAt: string,
 	updatedAt: string
 
+	user: Types.ObjectId,
 	customId: string
 	voucherId: string
 	status: string
@@ -22,6 +23,7 @@ export type VoucherDocument = {
 // }
 
 export type UpdateVoucher = {
+	user: Types.ObjectId,
 	voucherId: string
 	status: string
 	redeemCode: string

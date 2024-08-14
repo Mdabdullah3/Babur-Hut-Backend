@@ -24,6 +24,8 @@ type Packaging = {
 	dimension: string
 }
 
+
+
 export type ProductDocument = {
 	populate(arg0: string): unknown
 	_id: Types.ObjectId
@@ -59,6 +61,7 @@ export type ProductDocument = {
 	subCategory: Types.ObjectId
 	warranty: string
 	packaging: Packaging
+  discountPrice: string
 }
 
 export type CreateProduct = {
@@ -74,7 +77,7 @@ export type CreateProduct = {
 	size: string
 	quantity: number,
 	coverPhoto: string
-	images: string[]
+	images: Image[]
 	video: Image
 
 	specifications: Specifications
@@ -83,6 +86,7 @@ export type CreateProduct = {
 	subCategory: Types.ObjectId
 	warranty: string
 	packaging: Packaging
+  discountPrice: string
 }
 
 export type UpdateProduct = {
@@ -106,5 +110,6 @@ export type UpdateProduct = {
 	subCategory: Types.ObjectId
 	warranty: string
 	packaging: Packaging
+  discountPrice: string
 }
 

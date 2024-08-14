@@ -108,8 +108,7 @@ const productSchema = new Schema<ProductDocument>({
 		required: true,
 		trim: true,
 		lowercase: true,
-		// enum: ['niki', 'adidas', 'ramond', 'oliver', 'zara', 'casely']
-		enum: product.brands
+		// enum: product.brands
 	},
 	size: {
 		type: String,

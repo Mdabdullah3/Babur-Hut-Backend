@@ -12,11 +12,11 @@ import { Schema, models, model } from 'mongoose'
 
 const voucherSchema = new Schema<VoucherDocument>({
 	voucherId: String,
-	// product: {
-	// 	type: Schema.Types.ObjectId,
-	// 	ref: 'Product',
-	// 	required: true
-	// },
+	user: {
+		type: Schema.Types.ObjectId,
+		ref: 'User',
+		// required: true
+	},
 	customId: {
 		type: String,
 		required: true,

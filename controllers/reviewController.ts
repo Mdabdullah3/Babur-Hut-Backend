@@ -112,16 +112,20 @@ export const updateReviewById:RequestHandler = catchAsync(async (req, res, next)
 	try {
 		const reviewId = req.params.reviewId
 
-		const filteredBody = reviewDto.filterBodyForUpdateReview(req.body)
-		const review = await Review.findByIdAndUpdate(reviewId, filteredBody, { new: true })
-		if(!review) return next(appError('review not found'))
-		
 		// handle image update
 		if(req.body.image) {
 			const { error, image } = await fileService.handleBase64File(req.body.image, '/reviews')
 			if(error || !image) return next(appError('review image upload failed '))
 			req.body.image = image
 		}
+
+		const review = await Review.findById(reviewId)
+		if(!review) return next(appError('review not found'))
+
+		const filteredBody = reviewDto.filterBodyForUpdateReview(req.body)
+		const updatedReview = await Review.findByIdAndUpdate(reviewId, filteredBody, { new: true })
+		if(!updatedReview) return next(appError('review not found'))
+		
 		
 		// delete old images
 		if(req.body.image && review.image?.secure_url) {
@@ -133,7 +137,7 @@ export const updateReviewById:RequestHandler = catchAsync(async (req, res, next)
 
 		res.status(200).json({
 			status: 'success',
-			data: review
+			data: updatedReview
 		})
 
 	} catch (err: unknown) {

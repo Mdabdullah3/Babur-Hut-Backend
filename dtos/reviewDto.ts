@@ -8,6 +8,8 @@ export const filterReviewDocument = (review: ReviewDocument) => {
 		'user', 				// user._id
 		'product', 			// product._id
 		'review',
+		'comment',
+		'image',
 		
 		'_id',
 		'id',
