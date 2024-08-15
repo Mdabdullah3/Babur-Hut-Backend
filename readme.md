@@ -828,6 +828,8 @@ body: {
 	bankBranch: string
 
 	status: string
+	email: string
+	phone: string
 }
 
 
@@ -1087,6 +1089,7 @@ PATCH {{origin}}/api/vouchers/:voucherId
   "status": "active",
   "commission": "0",
   "image: "data:image/jpg;a3wwra...",
+  "icon": "my icon name",
 }
 
 POST {{origin}}/api/categories
@@ -1101,6 +1104,7 @@ body {
   "vat": "2",
   "status": "active",
   "commission": "0",
+  "icon": "my icon name",
 }
 PATCH {{origin}}/api/categories/:categoryId
 ```
@@ -1285,6 +1289,141 @@ body {
   "image" : "data:image/jpg,aksdjadjf"
 }
 PATCH {{origin}}/api/other/:otherId
+```
+
+
+
+
+
+
+## Events
+- GET {{origin}}/api/events 		    // get all 
+- GET {{origin}}/api/events/:eventId        // Get Single 
+
+- POST {{origin}}/api/events                // To create 
+- PATCH {{origin}}/api/events/:eventId      // To Update 
+- DELETE {{origin}}/api/events/:eventId     // To Delete
+
+
+#### Add Event 
+```
+body {
+  "name": "any name",
+  "user": "user._id",
+  "image" : "data:image/jpg,aksdjadjf"
+  "status": "status",
+  "startDate": "new Date( Date.now() )",
+  "endDate": "new Date( Date.now() + 1000 * 60 * 60 * 5)",
+}
+
+POST {{origin}}/events/:eventId
+```
+
+#### Update Event
+```
+body {
+  "name": "any name",
+  "user": "user._id",
+  "image" : "data:image/jpg,aksdjadjf"
+  "status": "status",
+  "startDate": "new Date( Date.now() )",
+  "endDate": "new Date( Date.now() + 1000 * 60 * 60 * 5)",
+}
+PATCH {{origin}}/events/:eventId
+```
+
+
+
+
+
+
+## Finance
+- GET {{origin}}/api/finances 		        // get all 
+- GET {{origin}}/api/finances/:financeId        // Get Single 
+
+- POST {{origin}}/api/finances                  // To create 
+- PATCH {{origin}}/api/finances/:financeId      // To Update 
+- DELETE {{origin}}/api/finances/:financeId     // To Delete
+
+
+#### Add Finance 
+```
+body {
+  "name": "any name",
+  "user": "user._id",
+  "order": "payment._id",
+  "brand": "brand",
+  "phone": "phone no",
+  "email": "email add",
+  "profit": 400
+  "orderCost": 400
+}
+
+POST {{origin}}/finances/:financeId
+```
+
+#### Update Finance
+```
+body {
+  "name": "any name",
+  "user": "user._id",
+  "order": "payment._id",
+  "brand": "brand",
+  "phone": "phone no",
+  "email": "email add",
+  "profit": 400
+  "orderCost": 400
+}
+PATCH {{origin}}/finances/:financeId
+```
+
+
+
+
+
+
+/api/payablePayments
+
+## Payable Payments
+- GET {{origin}}/api/payablePayments 		                // get all 
+- GET {{origin}}/api/payablePayments/:payablePaymentId          // Get Single 
+
+- POST {{origin}}/api/payablePayments                           // To create 
+- PATCH {{origin}}/api/payablePayments/:payablePaymentId        // To Update 
+- DELETE {{origin}}/api/payablePayments/:payablePaymentId       // To Delete
+
+
+#### Add PayablePayment 
+```
+body {
+  "user": "user._id",
+  "profit": 400
+  "VendorName": "any name",
+  "phone": "phone no",
+  "email": "email add",
+  "order": "payment._id",
+  "brand": "brand",
+  "totalEarning": 400
+  "totalOrder": 400
+}
+
+POST {{origin}}/payablePayments/:payablePaymentId
+```
+
+#### Update PayablePayment
+```
+body {
+  "user": "user._id",
+  "profit": 400
+  "VendorName": "any name",
+  "phone": "phone no",
+  "email": "email add",
+  "order": "payment._id",
+  "brand": "brand",
+  "totalEarning": 400
+  "totalOrder": 400
+}
+PATCH {{origin}}/payablePayments/:payablePaymentId
 ```
 
 

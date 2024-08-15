@@ -11,6 +11,7 @@ export const filterBodyForAddCategory = (body: CreateCagetory) => {
 		'status',
 		'commission',
 		'image',
+		'icon',
 	]
 
 	return filterObjectByArray(body, allowedFields)
@@ -25,6 +26,7 @@ export const filterBodyForUpdateCategory = (body: UpdateCagetory) => {
 		'status',
 		'commission',
 		'image',
+		'icon',
 	]
 
 	return filterObjectByArray(body, allowedFields)

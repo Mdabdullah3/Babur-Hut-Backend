@@ -91,8 +91,8 @@ export const filterBodyForUpdate = (body: UpdateUser) => {
 		'avatar', 								// need to delete old photo, so use seperate route
 		'address',
 		'gender',
-		// 'email', 							// update seperate route to verify email
-		// 'phone', 							// update seperate route to verify otp
+		'email', 							// update seperate route to verify email
+		'phone', 							// update seperate route to verify otp
 		'username',
 		'password',
 		'confirmPassword',

@@ -16,7 +16,9 @@ const categorySchema = new Schema<CategoryDocument>({
 	name: {
 		type: String,
 		required: true,
-		unique: true
+		unique: true,
+		trim: true,
+		lowercase: true,
 	},
 	shippingCharge: String,
 	vat: String,
@@ -28,6 +30,11 @@ const categorySchema = new Schema<CategoryDocument>({
 		secure_url: String,
 		alt: String,
 		size: String
+	},
+	icon: {
+		type: String,
+		trim: true,
+		lowercase: true,
 	},
 }, {
 	timestamps: true,

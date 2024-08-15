@@ -90,7 +90,7 @@ app.set('query parser', 'simple') 													// To prevent default query query
 
 app.use(express.static( publicDirectory ))
 app.use(express.urlencoded({ extended: false })) 						// required for passport login formData
-app.use(express.json({ limit: '400mb' }))
+app.use(express.json({ limit: '500mb' }))
 app.set('view engine', 'pug')
 
 

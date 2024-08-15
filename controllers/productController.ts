@@ -106,8 +106,8 @@ export const addProduct:RequestHandler = catchAsync(async (req, res, next) => {
 				} 
 			} else if(req.body.video.startsWith('data:')) {
 				const imageSize = getDataUrlSize(req.body.video)
-				const maxImageSize = 1024 * 1024 * 200 			// => 200 MB
-				if(imageSize > maxImageSize) return next(appError('You cross the max image size: 200MB(max)'))
+				const maxImageSize = 1024 * 1024 * 400 			// => 400 MB
+				if(imageSize > maxImageSize) return next(appError('You cross the max image size: 400MB(max)'))
 
 				const { error: avatarError, image: video } = await fileService.handleBase64File(req.body.video, '/products')
 				if(avatarError || !video) return next(appError(avatarError))
@@ -223,6 +223,39 @@ export const updateProductByIdOrSlug:RequestHandler = async (req, res, next) => 
 	const productId = req.params.productId
 
 	try {
+		// handle video upload
+		if(req.body.video) {
+			if(typeof req.body.video !== 'string') return next(appError('video must be url or base64 dataUrl'))
+
+			if(req.body.video.startsWith('http')) {
+				req.body.video = {
+					public_id: crypto.randomUUID(),
+					secure_url: req.body.video
+				} 
+			} else if(req.body.video.startsWith('data:')) {
+				const imageSize = getDataUrlSize(req.body.video)
+				const maxImageSize = 1024 * 1024 * 400 			// => 400 MB
+				if(imageSize > maxImageSize) return next(appError('You cross the max image size: 400MB(max)'))
+
+				const { error: avatarError, image: video } = await fileService.handleBase64File(req.body.video, '/products')
+				if(avatarError || !video) return next(appError(avatarError))
+				req.body.video = video
+				
+
+			} else {
+				const videoErrorMessage = 'req.body.video must have url or base64 bit dataUrl'
+				return next(appError(videoErrorMessage))
+			}
+
+
+			// if videoType not url or not file
+			// return next(appError(videoErrorMessage))
+
+		} else {
+			req.body.video = undefined 		// if video empty then just remove
+		}
+
+
 		if(req.body.coverPhoto) {
 			// check file size
 			const imageSize = getDataUrlSize(req.body.coverPhoto)

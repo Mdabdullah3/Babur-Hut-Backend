@@ -12,6 +12,7 @@ export type CategoryDocument = Document & {
 	status: string,
 	commission: string,
 	image: Image
+	icon: string
 }
 
 export type CreateCagetory = {
@@ -21,6 +22,7 @@ export type CreateCagetory = {
 	status: string,
 	commission: Date,
 	image: Image
+	icon: string
 }
 export type UpdateCagetory = {
 	name: string
@@ -29,6 +31,7 @@ export type UpdateCagetory = {
 	status: string,
 	commission: Date,
 	image: Image
+	icon: string
 }
 
 

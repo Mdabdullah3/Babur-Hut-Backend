@@ -26,6 +26,7 @@ import { model, models, Schema } from 'mongoose'
 */
 
 
+// this model is replaced by paymentModel
 const orderModel = new Schema<OrderDocument>({
 
 	user: { 																	// customer

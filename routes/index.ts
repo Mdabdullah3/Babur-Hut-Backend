@@ -12,6 +12,9 @@ import { router as subCategoryRouter } from './subCagegoryRouter'
 import { router as packageRouter } from './packageRoutes'
 import { router as notificationRouter } from './notificationRoutes'
 import { router as otherRouter } from './otherRoutes'
+import { router as financeRouter } from './financeRoutes'
+import { router as payablePaymentRouter } from './payablePaymentRoutes'
+import { router as eventRouter } from './eventRoutes'
 
 
 // => / 	(root)
@@ -31,5 +34,8 @@ router.use('/api/categories', categoryRouter)
 router.use('/api/sub-categories', subCategoryRouter)
 router.use('/api/packages', packageRouter)
 router.use('/api/others', otherRouter)
+router.use('/api/finances', financeRouter)
+router.use('/api/payablePayments', payablePaymentRouter)
+router.use('/api/events', eventRouter)
 
 export default router
