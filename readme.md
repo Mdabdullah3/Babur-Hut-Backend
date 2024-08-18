@@ -1229,6 +1229,7 @@ body {
 		"state": "Dhaka",
 		"postcode": 1000,
 		"country": "Bangladesh"
+		"deliveryFee": 50
 	}
 }
 
@@ -1515,6 +1516,47 @@ body {
 }
 PATCH {{origin}}/payablePayments/:payablePaymentId
 ```
+
+
+
+
+
+
+
+## Delivery-fees
+- GET {{origin}}/api/delivery-fees 		        // get all 
+- GET {{origin}}/api/delivery-fees/:deliveryFeeId       // Get Single 
+
+- POST {{origin}}/api/delivery-fees                     // To create 
+- PATCH {{origin}}/api/delivery-fees/:deliveryFeeId     // To Update 
+- DELETE {{origin}}/api/delivery-fees/:deliveryFeeId    // To Delete
+
+- GET {{origin}}/api/delivery-fees/reset                // Reset to default 64 entry
+- GET {{origin}}/api/delivery-fees?_limit=64 		// get 64 document only 
+
+
+#### Add EventProuct 
+```
+{
+  "district" : "rajshahi",
+  "deliveryFee" : 50
+}
+
+POST {{origin}}/delivery-fees/:deliveryFeeId
+```
+
+#### Update Event
+```
+{
+  "district" : "rajshahi",
+  "deliveryFee" : 50
+}
+
+PATCH {{origin}}/delivery-fees/:deliveryFeeId
+```
+
+
+
 
 
 

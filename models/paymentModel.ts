@@ -138,6 +138,12 @@ const paymentSchema = new Schema<PaymentDocument>({
 			maxlength: 20,
 			default: 'Bangladesh'
 		},
+	  deliveryFee: {
+			type: String,
+			trim: true,
+			maxlength: 20,
+			default: "0"
+		},
 	}
 
 

@@ -16,6 +16,7 @@ import { router as financeRouter } from './financeRoutes'
 import { router as payablePaymentRouter } from './payablePaymentRoutes'
 import { router as eventRouter } from './eventRoutes'
 import { router as eventProductRouter } from './eventProductRoutes'
+import { router as deliveryFeesRouter } from './deliveryFeeRoutes'
 
 
 // => / 	(root)
@@ -39,5 +40,6 @@ router.use('/api/finances', financeRouter)
 router.use('/api/payablePayments', payablePaymentRouter)
 router.use('/api/events', eventRouter)
 router.use('/api/event-products', eventProductRouter)
+router.use('/api/delivery-fees', deliveryFeesRouter)
 
 export default router

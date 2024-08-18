@@ -11,6 +11,7 @@ type ShippingInfo = {
 	state: string
 	postcode: string
 	country: string
+	deliveryFee: string
 }
 
 // check order.ts if need extra info
