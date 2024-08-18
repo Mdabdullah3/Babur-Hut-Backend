@@ -1214,7 +1214,7 @@ PATCH {{origin}}/api/packages/:packageId
 ```
 body {
 	"product": "667ea9b1df5d6c0e864f1841",
-//	"price": 300,                                   # get from product
+  	"price": 300,                               # get from product
 	"currency": "BDT",
 	"paymentType" : "cash",
 
@@ -1312,6 +1312,47 @@ PATCH {{origin}}/api/other/:otherId
 - PATCH {{origin}}/api/events/:eventId      // To Update 
 - DELETE {{origin}}/api/events/:eventId     // To Delete
 
+### Event Document Sample:
+```
+{
+  "status": "success",
+  "total": 2,
+  "data": [
+    {
+      "_id": "66c1f8ca97074e09b1ee95b6",
+      "user": "667e915a3204d8967daaf4a1",
+      "name": "event name one",
+      "status": "pending",
+      "createdAt": "2024-08-18T13:36:10.977Z",
+      "updatedAt": "2024-08-18T13:36:10.977Z",
+      "__v": 0,
+      "eventProducts": [                        # To add/remove/update see `/api/event-products` api
+        {
+          "_id": "66c1facf7f3326eca9bc9fbf",
+          "event": "66c1f8ca97074e09b1ee95b6",
+          "user": "667e915a3204d8967daaf4a1",
+          "product": "667ea9b1df5d6c0e864f1841",
+        },
+        {
+          "_id": "66c1fb657f3326eca9bc9fce",
+          "event": "66c1f8ca97074e09b1ee95b6",
+          "user": "667e915a3204d8967daaf4a1",
+          "product": "667ea9b1df5d6c0e864f1841",
+          "__v": 0
+        }
+      ],
+      "id": "66c1f8ca97074e09b1ee95b6"
+    },
+    {
+      "_id": "66c1f99d9c99b8974c1617ca",
+      "user": "667e915a3204d8967daaf4a1",
+      "status": "comming soon",
+      "eventProducts": [],
+      "id": "66c1f99d9c99b8974c1617ca"
+    }
+  ]
+}
+```
 
 #### Add Event 
 ```
@@ -1339,6 +1380,47 @@ body {
 }
 PATCH {{origin}}/events/:eventId
 ```
+
+
+
+
+
+
+## EventProducts      (To add selecteProduct into events.eventProducts)                         
+- GET {{origin}}/api/event-products 		        // get all 
+- GET {{origin}}/api/event-products/:eventProductId     // Get Single 
+
+- POST {{origin}}/api/event-products                    // To create 
+- PATCH {{origin}}/api/event-products/:eventProductId   // To Update 
+- DELETE {{origin}}/api/event-products/:eventProductId  // To Delete
+
+
+#### Add EventProuct 
+```
+body {
+  "user" : "667e915a3204d8967daaf4a1",
+  "product" : "667ea9b1df5d6c0e864f1841",
+  "event" : "66c1f8ca97074e09b1ee95b6",
+  "name" : "events two"                                 // (optional)
+}
+
+POST {{origin}}/event-products/:eventProductId
+```
+
+#### Update Event
+```
+body {
+  "user" : "667e915a3204d8967daaf4a1",
+  "product" : "667ea9b1df5d6c0e864f1841",
+  "event" : "66c1f8ca97074e09b1ee95b6",
+  "name" : "events two"                                 // (optional)
+}
+
+PATCH {{origin}}/event-products/:eventProductId
+```
+
+
+
 
 
 

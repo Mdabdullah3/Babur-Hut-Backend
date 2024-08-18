@@ -30,7 +30,8 @@ const eventSchema = new Schema<EventsDocument>({
 		type: String,
 		trim: true,
 		required: true,
-		lowercase: true
+		lowercase: true,
+		// unique: true,
 	},
 	status: {
 		type: String,
@@ -44,8 +45,24 @@ const eventSchema = new Schema<EventsDocument>({
 
 }, {
 	timestamps: true,
+	toJSON: {
+		virtuals: true 	// Step-1: required for virtual field 'reviews'
+	}
 })
 
+
+// // Step-2: Generate virtual field: 'reviews' from Review model where Review.product === product._id
+eventSchema.virtual('eventProducts', {
+	ref: 'EventProduct',
+	foreignField: 'event',
+	localField: '_id'
+})
+
+// Step-3: Show virtual fields on document
+eventSchema.pre('find', function (this: EventsDocument, next) {
+	this.populate('eventProducts')
+	next()
+})
 
 
 export const Event: Model<EventsDocument> = models.Event || model<EventsDocument>('Event', eventSchema)

@@ -227,13 +227,15 @@ productSchema.pre('save', function(next) {
 	next()
 })
 
-// // Step-2: Generate virtual field: 'reviews' from Review model where Review.product === product._id
+// Step-2: Generate virtual field: 'reviews' from Review model where Review.product === product._id
 productSchema.virtual('reviews', {
 	ref: 'Review',
 	foreignField: 'product',
 	localField: '_id'
 })
 
+
+// Step-3: Show virtual fields on document
 productSchema.pre('find', function (this: ProductDocument, next) {
 
 	this.populate('reviews')
