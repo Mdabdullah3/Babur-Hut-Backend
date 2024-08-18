@@ -110,7 +110,7 @@ export const updateCategoryById:RequestHandler = catchAsync(async (req, res, nex
 		})
 
 
-	} catch (error) {
+	} catch (error: unknown) {
 
 		if(req.body.image?.secure_url) {
 			setTimeout(() => {

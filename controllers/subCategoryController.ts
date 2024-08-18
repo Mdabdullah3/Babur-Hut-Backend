@@ -1,8 +1,10 @@
 import type { RequestHandler } from 'express'
+import { promisify } from 'util'
 import { appError, catchAsync } from './errorController'
-import SubCategory from '../models/subCategoryModel'
 import { filterBodyForUpdateSubCategory } from '../dtos/categoryDto'
-// import Category from '../models/categoryModel'
+import { getDataUrlSize } from '../utils'
+import * as fileService from '../services/fileService'
+import SubCategory from '../models/subCategoryModel'
 
 // GET 	/api/sub-categories
 export const getAllSubCagegories:RequestHandler = catchAsync(async (_req, res, _next) => {
@@ -18,32 +20,43 @@ export const getAllSubCagegories:RequestHandler = catchAsync(async (_req, res, _
 // POST 	/api/sub-categories
 export const addSubCategory:RequestHandler = catchAsync(async (req, res, next) => {
 
-	//--- For vendorId
-	// const currentDocuments = await Category.countDocuments()
-	// const	customId = generateSequentialCustomId({ 
-	// 	categoryName: 'Category', 
-	// 	countDocuments: currentDocuments
-	// })
-	// req.body.customId = customId
+	try {
+		if(req.body.image) {
+			const imageSize = getDataUrlSize(req.body.image)
+			const maxImageSize = 1024 * 1024 * 2 			// => 2 MB
+			if(imageSize > maxImageSize) return next(appError('You cross the max image size: 2MB(max)'))
 
-	const { category: categoryId } = req.body
-	if(!categoryId) return next(appError('you must provide category ID'))
+			const { error: _errorImage, image } = await fileService.handleBase64File(req.body.image, '/subCategories')
+			if(image) req.body.image = image
+		}
 
-	const subCategory = await SubCategory.create(req.body)
-	if(!subCategory) return next(appError('subCategory create failed'))
+		const { category: categoryId } = req.body
+		if(!categoryId) return next(appError('you must provide category ID'))
 
-	// -----[ Create virtual fields instead, super easy to manage ]
-	// // Add subCagegory as child of Category
-	// const updatedCategory = await Category.findByIdAndUpdate( categoryId, {
-	// 	"$addToSet": { subCategories: subCategory._id }
-	// }, { new: true })
-	// if(!updatedCategory) return next(appError('update cagegory failed'))
+		const subCategory = await SubCategory.create(req.body)
+		if(!subCategory) return next(appError('subCategory create failed'))
+
+		// -----[ Create virtual fields instead, super easy to manage ]
+		// // Add subCagegory as child of Category
+		// const updatedCategory = await Category.findByIdAndUpdate( categoryId, {
+		// 	"$addToSet": { subCategories: subCategory._id }
+		// }, { new: true })
+		// if(!updatedCategory) return next(appError('update cagegory failed'))
 
 
-	res.status(201).json({
-		status: 'success',
-		data: subCategory,
-	})
+		res.status(201).json({
+			status: 'success',
+			data: subCategory,
+		})
+
+	} catch (error: unknown) {
+		setTimeout(() => {
+			promisify(fileService.removeFile)(req.body.image.secure_url)
+		}, 1000);
+
+		if(error instanceof Error) next(appError(error.message))
+		if(typeof error === 'string') next(appError(error))
+	}
 })
 
 
@@ -64,27 +77,57 @@ export const getSubCategoryById:RequestHandler = catchAsync(async (req, res, nex
 
 // PATCH 	/api/sub-categories/:subCategoryId
 export const updateSubCategoryById:RequestHandler = catchAsync(async (req, res, next) => {
-	const subCategoryId = req.params.subCategoryId
+	try {
+		const subCategoryId = req.params.subCategoryId
+		const filteredBody = filterBodyForUpdateSubCategory(req.body) 
 
-	const filteredBody = filterBodyForUpdateSubCategory(req.body) 
+		const allowedFields = [
+			'name',
+			'shippingCharge',
+			'vat',
+			'status',
+			'commission',
+			'image',
+			'icon',
+		]
 
-	const allowedFields = [
-		'name',
-		'shippingCharge',
-		'vat',
-		'status',
-		'commission',
-	]
+		if(req.body.image) {
+			const imageSize = getDataUrlSize(req.body.image)
+			const maxImageSize = 1024 * 1024 * 2 			// => 2 MB
+			if(imageSize > maxImageSize) return next(appError('You cross the max image size: 2MB(max)'))
 
-	// console.log(filteredBody)
+			const { error: _errorImage, image } = await fileService.handleBase64File(req.body.image, '/subCcategories')
+			if(image) req.body.image = image
+		}
 
-	const subCategory = await SubCategory.findByIdAndUpdate(subCategoryId, filteredBody, { new: true })
-	if(!subCategory) return next(appError(`subCagegory update failed, allowedFields:${allowedFields.join(',')} `))
+		const subCategory = await SubCategory.findById(subCategoryId)
+		if(!subCategory) return next(appError(`no subCagegory found by id:${subCategoryId} `))
 
-	res.status(201).json({
-		status: 'success',
-		data: subCategory,
-	})
+		const updatedSubCategory = await SubCategory.findByIdAndUpdate(subCategoryId, filteredBody, { new: true })
+		if(!updatedSubCategory) return next(appError(`subCagegory update failed, allowedFields:${allowedFields.join(',')} `))
+
+		// delete old image
+		if(req.body.image && subCategory.image?.secure_url) {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(subCategory.image.secure_url)
+			}, 1000);
+		}
+
+		res.status(201).json({
+			status: 'success',
+			data: updatedSubCategory,
+		})
+		
+	} catch (error: unknown) {
+		if(req.body.image?.secure_url) {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(req.body.image.secure_url)
+			}, 1000);
+		}
+
+		if(error instanceof Error) next(appError(error.message))
+		if(typeof error === 'string') next(appError(error))
+	}
 })
 
 // DELETE 	/api/sub-categories/:subCategoryId

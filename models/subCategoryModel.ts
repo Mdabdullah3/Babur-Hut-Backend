@@ -27,6 +27,18 @@ const subCategorySchema = new Schema<SubCategoryDocument>({
 	vat: String,
 	status: String,
 	commission: String,
+
+	image: {
+		public_id: String,
+		secure_url: String,
+		alt: String,
+		size: String
+	},
+	icon: {
+		type: String,
+		trim: true,
+		lowercase: true,
+	},
 }, {
 	timestamps: true,
 })

@@ -47,6 +47,8 @@ export type SubCategoryDocument = {
 	vat: string
 	status: string,
 	commission: string,
+	image: Image
+	icon: string
 }
 
 export type UpdateSubCagetory = {
@@ -55,4 +57,6 @@ export type UpdateSubCagetory = {
 	vat: string
 	status: string,
 	commission: Date,
+	image: Image
+	icon: string
 }

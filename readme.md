@@ -1130,6 +1130,8 @@ PATCH {{origin}}/api/categories/:categoryId
   "vat": "2",
   "status": "active",
   "commission": "0"
+  "image: "data:image/jpg;a3wwra...",
+  "icon": "my icon name",
 }
 
 POST {{origin}}/api/sub-categories
@@ -1139,7 +1141,13 @@ POST {{origin}}/api/sub-categories
 #### Update SubCategory
 ```
 body {
-  "name": "category-new-name",
+  "name": "subCcategory-new-name",
+  "image: "data:image/jpg;a3wwra...",
+  "icon": "my icon name",
+  "shippingCharge": "200",
+  "vat": "2",
+  "status": "active",
+  "commission": "0"
 }
 PATCH {{origin}}/api/sub-categories/:subCategoryId
 ```
