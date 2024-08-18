@@ -87,7 +87,8 @@ export const createCashOnPayment:RequestHandler = catchAsync( async (req, res, n
 	const product = await Product.findById(productId)
 	if(!product) return next(appError(`no product found by productId: ${productId}`))
 
-	req.body.price = product.price 		// override user value with real product value, no way to modify from client
+	// req.body.price = product.price 		// override user value with real product value, no way to modify from client
+	// User will send calculated price handled in frontend based on discount + offer
 
 	const transactionId = new Types.ObjectId()
 	req.body.transactionId = transactionId
