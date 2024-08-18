@@ -28,15 +28,12 @@ type TempObj = {
 }
 
 export const handleBase64File = async (dataUrl: string, subDir='/users', _fileType='image', _aspectRatio='video') => {
-	const tempObj: TempObj = { error: 'dataUrl is empty', image: null }
-
-	if(!dataUrl) return tempObj
-	const baseDir = '/upload'
-	
-
-
 	try {
-		// if( !dataUrl.startsWith('data') ) throw new Error(`'${dataUrl}' is not valid dataUrl`) 
+		const tempObj: TempObj = { error: 'dataUrl is empty or not string', image: null }
+
+		if(!dataUrl || typeof dataUrl !== 'string' ) return tempObj
+		const baseDir = '/upload'
+
 		if( !dataUrl.startsWith('data') ) return { error: `'${dataUrl}' is not valid dataUrl`, image: null  }
 
 		// Step-1: seperate metadata from base64 string dataUrl 
