@@ -1,11 +1,16 @@
 import { Router } from 'express'
 import * as deliveryFeeController from '../controllers/deliveryFeeController'
+import * as authController from '../controllers/authController'
 
 // => /api/delivery-fees/
 export const router = Router({ mergeParams: true })
 
 router.route('/reset')
-	.get(deliveryFeeController.resetDeliveryFee)
+	.get(
+		authController.protect,
+		authController.restrictTo('admin'), 
+		deliveryFeeController.resetDeliveryFee
+	)
 
 
 router.route('/')
@@ -14,5 +19,13 @@ router.route('/')
 
 router.route('/:deliveryFeeId')
 	.get(deliveryFeeController.getDeliveryFeeById)
-	.patch(deliveryFeeController.updateDeliveryFee)
-	.delete(deliveryFeeController.deleteDeliveryFee)
+	.patch(
+		// authController.protect,
+		// authController.restrictTo('admin'), 
+		deliveryFeeController.updateDeliveryFee
+	)
+	.delete(
+		// authController.protect,
+		// authController.restrictTo('admin'), 
+		deliveryFeeController.deleteDeliveryFee
+	)

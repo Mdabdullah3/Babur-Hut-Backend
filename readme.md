@@ -499,50 +499,50 @@ GET /api/products/?_fields='name,slug,price' 						: Only got 3 fields (+ _id, p
 #### Add Product
 ```
 body: {
-	"customId": 'unique-id',
-	"user": logedInUser.id,
-	"name": "it is my sample product",
-	"slug": "it-is-my-sample-product-unitque",
-	"price": 500,
-	"quantity": 5,
-	"summary": "summary description between 10-150",
-	"description": "description between 10-1000",
-
-	"category": "pant",
-	"brand": "niki",
-	"size": "xs",
-
-	"coverPhoto": "data:jpg/images;alkjdfajd...=",
-	"images": [
-		"data:jpg/images;alkjdfajd...=",
-		"data:jpg/images;rraksdjfasdkjf...=",
-		"data:jpg/images;fflkjdfajd...=",
-	]
-
-      # "video" : "data:image/jpeg;base64,/9j/4A...",           # to upload raw video
-	"video" : "http://your-video-lingk-',                   # to upload video link
-	specifications: {
-		screenSize: "...",
-		batteryLife: "",
-		cameraResolution: "",
-		storageCapacity: "",
-		os: "",
-		size: "",
-		material: "",
-		color: "",
-		gender: ""
-	},
-
-	discount: "232",
-	subCategory: "subCategory._id",
-	warranty: "...",
+  "customId": 'unique-id',
+# "user": logedInUser.id,                               (*) : comes from logedIn session
+  "name": "it is my sample product",                    (*)
+  "slug": "it-is-my-sample-product-unitque",
+  "price": 500,                                         (*)
+  "quantity": 5,
+  "summary": "summary description between 10-150",      (*)
+  "description": "description between 10-1000",         (*)
+  
+  "category": "pant",                                   (*)
+  "brand": "niki",                                      (*)
+  "size": "xs",                                         (*)
+  
+  "coverPhoto": "data:jpg/images;alkjdfajd...=",        (*)
+  "images": [                                           (*) : at least one image
+     "data:jpg/images;alkjdfajd...=",
+     "data:jpg/images;rraksdjfasdkjf...=",
+     "data:jpg/images;fflkjdfajd...=",
+  ]
+  
+# "video" : "data:image/jpeg;base64,/9j/4A...",           # to upload raw video
+  "video" : "http://your-video-lingk-',                   # to upload video link
+  specifications: {
+          screenSize: "...",
+          batteryLife: "",
+          cameraResolution: "",
+          storageCapacity: "",
+          os: "",
+          size: "",
+          material: "",
+          color: "",
+          gender: ""
+  },
+  
+  discount: "232",
+  subCategory: "subCategory._id",
+  warranty: "...",
   discountPrice: "...",
-	packaging: {
-		weight: string
-		height: string
-		width: string
-		dimension: string
-	}
+  packaging: {
+ 	weight: string
+ 	height: string
+ 	width: string
+ 	dimension: string
+  }
 }
 
 - POST {{origin}}/api/products
@@ -655,8 +655,8 @@ GET /api/reviews/?_fields='review,product,user'         // Only got 3 fields (+ 
 #### Add Review / Comment
 ```
 body: {
-  # "user": "will comes from logedIn User",
-  "product": "6649ebc8dabbe03d553861f9",
+# "user": "will comes from logedIn User",
+  "product": "6649ebc8dabbe03d553861f9",                (*)
   "image" : "data:image/jpeg;base64,/9j/4AAQSkZJRgA..."
 
   # for Review
@@ -672,8 +672,10 @@ body: {
 #### Update Review / Comment
 ```
 body: {
-  "product": "6649ebc8dabbe03d553861f9",
-  "image" : "data:image/jpeg;base64,/9j/4AAQSkZJRgA..."
+//"user": "user._id",                                   (*) : comes from logedIn sesssion
+
+  "product": "6649ebc8dabbe03d553861f9",                (*)
+  "image" : "data:image/jpeg;base64,A..."              
 
   # for Review
   "review" : "I'm using too (delete me)",
@@ -726,65 +728,56 @@ GET /api/users/?_fields='review,product,user' 				: Only got 3 fields (+ _id, po
 
 #### Register User (Locally)
 ```
-body: {
-  "name" : "delete me",
-	"email" : "delete@gmail.com",
-	"password" : "asdfasdf",
-	"confirmPassword" : "asdfasdf",
-	"role" : "admin",
-	"avatar" : "data:image/jpeg;base64,/9j/4AAQSkZJRgA..."
-}
-
 body {
-	name: "",
-	email: "*@*.*",
-	password: "********",
-	confirmPassword: "********",
-	role: "", 			: handled by backend only
-	isActive: ?, 			: handled by backend only
-	isVerified: ?, 			: handled by backend only
-	gender: '', 			: ['male', 'female', 'other', 'undefined'],
+  "name" : "delete me",                                 (*)
+  "email" : "delete@gmail.com",
+  "password" : "asdfasdf",                              (*)
+  "confirmPassword" : "asdfasdf",                       (*)
+  "role" : "admin",
+  "avatar" : "data:image/jpeg;base64,/9j/4AAQSkZJRgA..."
 
-	avatar: "data:....",
-	phone: "...",
-	location: {
-		address1: '',
-		address2: '',
-		city: '',
-		state: '',
-		postcode: 0000,
-		country: '',
-	},
+  isActive: ?, 			: handled by backend only
+  isVerified: ?, 			: handled by backend only
+  gender: '', 			: ['male', 'female', 'other', 'undefined'],
+  phone: "...",
+  location: {
+        address1: '',
+	address2: '',
+	city: '',
+	state: '',
+	postcode: 0000,
+	country: '',
+  },
 
-	otherPermissions : {
-		isVendor: false, 	: boolean value: true/false
-		isCustomer: false,
-		isCategories: false,
-		isProducts: false,
-		isOrders: false,
-		isReviews: false,
-		isVouchers: false,
-		isAdManager: false,
-		isRoleManager: false,
-		isMessageCenter: false,
-		isFinance: false,
-		isShipment: false,
-		isSupport: false,
-		isEventManager: false,
-		isMessage: false,
-	},
+  otherPermissions : {
+	isVendor: false, 	: boolean value: true/false
+	isCustomer: false,
+	isCategories: false,
+	isProducts: false,
+	isOrders: false,
+	isReviews: false,
+	isVouchers: false,
+	isAdManager: false,
+	isRoleManager: false,
+	isMessageCenter: false,
+	isFinance: false,
+	isShipment: false,
+	isSupport: false,
+	isEventManager: false,
+	isMessage: false,
+  },
 
-	idCardFrontPageImage: "image.png",
-	idCardBackPageImage: "image.png",
-	idCardNumber: "2434212412",
-	bankStatementImage: "image.png",
-	accountHolderName: "John Doe",
-	accountNumber: "2434212412",
-	routingNumber: "2434212412",
-	bankName: "Bank Name",
-	bankBranch: "Bank Branch", 
-
-	status: "pending", 
+  idCardFrontPageImage: "image.png",
+  idCardBackPageImage: "image.png",
+  idCardNumber: "2434212412",
+  bankStatementImage: "image.png",
+  accountHolderName: "John Doe",
+  accountNumber: "2434212412",
+  routingNumber: "2434212412",
+  bankName: "Bank Name",
+  bankBranch: "Bank Branch", 
+  
+  status: "pending", 
 }
 
 
@@ -843,8 +836,8 @@ body: {
 #### User Login 
 ```
 body: {
-  "email": "riajul@gmail.com",
-  "password": "{{pass}}"
+  "email": "riajul@gmail.com",                          (*)
+  "password": "{{pass}}"                                (*)
 }
 
 - POST {{origin}}/api/auth/register
@@ -857,10 +850,6 @@ body: {
 - POST {{origin}}/api/auth/logout
 ```
 
-		'name',
-		'avatar', 								// need to delete old photo, so use seperate route
-		'address',
-		'gender',
 
 #### Update User  
 ```
@@ -919,9 +908,9 @@ body: {
 #### Update User password
 ```
 body: {
-  "currentPassword": "asdfasdff",
-  "password": "asdfasdf",
-  "confirmPassword": "asdfasdf"
+  "currentPassword": "asdfasdff",                       (*)
+  "password": "asdfasdf",                               (*)
+  "confirmPassword": "asdfasdf"                         (*)
 }
 
 - PATCH {{origin}}/api/auth/update-password
@@ -932,7 +921,7 @@ body: {
 #### Forgot User password
 ```
 body: {
-  "email": "riajul@gmail.com"
+  "email": "riajul@gmail.com"                           (*)
 }
 
 - POST {{origin}}/api/auth/forgot-password
@@ -943,9 +932,9 @@ body: {
 #### Reset User password
 ```
 body: {
-  "resetToken" : "8a25491050a62334fb1ec5ca4a14c43aaebcdb5f6813806e9fda66e67a0decbd",
-  "password": "{{pass}}",
-  "confirmPassword": "{{pass}}"
+  "resetToken" : "8a25491050a62334fb1ec5ca4a1ec...",    (*)
+  "password": "{{pass}}",                               (*)
+  "confirmPassword": "{{pass}}"                         (*)
 }
 
 - PATCH {{origin}}/api/auth/reset-password
@@ -1037,7 +1026,7 @@ DELETE /api/users 	: Only user himself or admin can delete other users
 #### Add Voucher
 ```
 body {
-  "user": "user._id",
+  "user": "user._id",                                   (*)
   "voucherId": "random-voucher-id",
   "discount": 40,
   "redeemCode": "ATC20",
@@ -1083,7 +1072,7 @@ PATCH {{origin}}/api/vouchers/:voucherId
 #### Add Category
 ```
 {
-  "name": "category-name",
+  "name": "category-name",                              (*)
   "shippingCharge": "200",
   "vat": "2",
   "status": "active",
@@ -1124,8 +1113,8 @@ PATCH {{origin}}/api/categories/:categoryId
 #### Add SubCategory
 ```
 {
-  "category": "category._id",
-  "name": "category-name",
+  "category": "category._id",                           (*)
+  "name": "category-name",                              (*)
   "shippingCharge": "200",
   "vat": "2",
   "status": "active",
@@ -1163,11 +1152,12 @@ PATCH {{origin}}/api/sub-categories/:subCategoryId
 - DELETE {{origin}}/api/packages/:packageId 
 
 
+
 #### Add Package
 ```
 body {
-	"name": "package name 2",
-	"user": "667ff88eb5dfd416e36015ad",
+	"name": "package name 2",                       (*)
+	"user": "667ff88eb5dfd416e36015ad",             (*)
 	"status": "active",
 	"duration": 5,
 	"price": 300,
@@ -1213,17 +1203,18 @@ PATCH {{origin}}/api/packages/:packageId
 #### Cash On Payment
 ```
 body {
-	"product": "667ea9b1df5d6c0e864f1841",
-  	"price": 300,                               # get from product
+	"product": "667ea9b1df5d6c0e864f1841",          (*)
+  	"price": 300,                                   (*) 
 	"currency": "BDT",
 	"paymentType" : "cash",
+   //   "user": "user._id",                             (*)     comes from logedIn User
 
 	"shippingInfo" : {
-	        "name": "Riajul Islam",
-	        "email" : "riajul@gmail.com",
-	        "phone" : "01957500605",
+	        "name": "Riajul Islam",                 (*)
+	        "email" : "riajul@gmail.com",           (*)
+	        "phone" : "01957500605",                (*)
 	        "method": "Courier",
-		"address1": "shipping address",
+		"address1": "shipping address",         (*)
 		"address2": "",
 		"city": "Dhaka",
 		"state": "Dhaka",
@@ -1280,9 +1271,9 @@ See the Messaging Example: `/public/js/pages/user/message.js`
 #### Add Other  / banner
 ```
 body {
+  "user": "user._id",                                   (*)
   "name": "any name",
   "banner": "any tag name",
-  "user": "user._id",
   "image" : "data:image/jpg,aksdjadjf"
 }
 
@@ -1358,10 +1349,10 @@ PATCH {{origin}}/api/other/:otherId
 #### Add Event 
 ```
 body {
-  "name": "any name",
-  "user": "user._id",
+  "user": "user._id",                                   (*)
+  "name": "any name",                                   (*)
   "image" : "data:image/jpg,aksdjadjf"
-  "status": "status",
+  "status": "status",                                   (*)
   "startDate": "new Date( Date.now() )",
   "endDate": "new Date( Date.now() + 1000 * 60 * 60 * 5)",
 }
@@ -1399,10 +1390,10 @@ PATCH {{origin}}/events/:eventId
 #### Add EventProuct 
 ```
 body {
-  "user" : "667e915a3204d8967daaf4a1",
-  "product" : "667ea9b1df5d6c0e864f1841",
-  "event" : "66c1f8ca97074e09b1ee95b6",
-  "name" : "events two"                                 // (optional)
+  "user" : "667e915a3204d8967daaf4a1",                  (*)
+  "product" : "667ea9b1df5d6c0e864f1841",               (*)
+  "event" : "66c1f8ca97074e09b1ee95b6",                 (*)
+  "name" : "events two"                                 
 }
 
 POST {{origin}}/event-products/:eventProductId
@@ -1440,14 +1431,14 @@ PATCH {{origin}}/event-products/:eventProductId
 #### Add Finance 
 ```
 body {
-  "name": "any name",
-  "user": "user._id",
-  "order": "payment._id",
-  "brand": "brand",
-  "phone": "phone no",
-  "email": "email add",
-  "profit": 400
-  "orderCost": 400
+  "user": "user._id",                                   (*)
+  "order": "payment._id",                               (*)
+  "name": "any name",                                   (*)
+  "brand": "brand",                                     (*)
+  "phone": "phone no",                                  (*)
+  "email": "email add",                                 (*)
+  "profit": 400                                         (*)
+  "orderCost": 400                                      (*)
 }
 
 POST {{origin}}/finances/:financeId
@@ -1473,7 +1464,6 @@ PATCH {{origin}}/finances/:financeId
 
 
 
-/api/payablePayments
 
 ## Payable Payments
 - GET {{origin}}/api/payablePayments 		                // get all 
@@ -1487,15 +1477,15 @@ PATCH {{origin}}/finances/:financeId
 #### Add PayablePayment 
 ```
 body {
-  "user": "user._id",
+  "user": "user._id",                                   (*)
+  "VendorName": "any name",                             (*)
   "profit": 400
-  "VendorName": "any name",
-  "phone": "phone no",
-  "email": "email add",
+  "phone": "phone no",                                  (*)
+  "email": "email add",                                 (*)
   "order": "payment._id",
   "brand": "brand",
-  "totalEarning": 400
-  "totalOrder": 400
+  "totalEarning": 400                                   (*)
+  "totalOrder": 400                                     (*)
 }
 
 POST {{origin}}/payablePayments/:payablePaymentId
@@ -1531,15 +1521,15 @@ PATCH {{origin}}/payablePayments/:payablePaymentId
 - PATCH {{origin}}/api/delivery-fees/:deliveryFeeId     // To Update 
 - DELETE {{origin}}/api/delivery-fees/:deliveryFeeId    // To Delete
 
-- GET {{origin}}/api/delivery-fees/reset                // Reset to default 64 entry
+- GET {{origin}}/api/delivery-fees/reset                // (Admin Only) Reset to default 64 entry
 - GET {{origin}}/api/delivery-fees?_limit=64 		// get 64 document only 
 
 
 #### Add EventProuct 
 ```
 {
-  "district" : "rajshahi",
-  "deliveryFee" : 50
+  "district" : "rajshahi",                              (*)
+  "deliveryFee" : 50                                    (*)
 }
 
 POST {{origin}}/delivery-fees/:deliveryFeeId
@@ -1555,6 +1545,46 @@ POST {{origin}}/delivery-fees/:deliveryFeeId
 PATCH {{origin}}/delivery-fees/:deliveryFeeId
 ```
 
+
+
+
+
+
+
+
+
+## Report
+- GET {{origin}}/api/reports 		        // get all 
+- GET {{origin}}/api/reports/:reportId          // Get Single 
+
+- POST {{origin}}/api/reports                  // To create 
+- PATCH {{origin}}/api/reports/:reportId       // To Update 
+- DELETE {{origin}}/api/reports/:reportId      // To Delete
+
+
+#### Add Report 
+```
+{
+  "user" : "667e915a3204d8967daaf4a1",                  (*)
+  "title": "test report 2",                             (*)
+  "message": "this is a sourt summary",                 (*)
+  "description": "long descriptions goes here"
+  "image" : "data:image/jpg,aksdjadjf"
+}
+
+POST {{origin}}/reports/:reportId 
+```
+
+#### Update Report
+```
+body {
+  "title": "test report 2",                             
+  "message": "this is a sourt summary",                
+  "description": "long descriptions goes here"
+  "image" : "data:image/jpg,aksdjadjf"
+}
+PATCH {{origin}}/reports/:reportId 
+```
 
 
 
