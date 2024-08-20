@@ -21,20 +21,17 @@ import { promisify } from 'util'
 // GET /api/users/:userId/reviews
 // GET /api/users/me/reviews
 export const getAllReviews:RequestHandler = catchAsync( async (req, res, _next) => {
-	// const logedInUser = req.user as LogedInUser
-	// const userId = logedInUser._id || req.params.userId
+	const logedInUser = req.user as LogedInUser
 
-	const userId = req.params.userId
+	const userId = req.params.userId === 'me' ? logedInUser._id : req.params.userId
 	const productId = req.params.productId
 
 	let filter = {}
 	if(productId) filter = { product: productId.toString() } 
 	if(userId) filter = { user: userId.toString() } 
 
-	console.log(filter)
+	// console.log(filter)
 	
-	// const filter = productId ? { product: productId.toString() } : {}
-	// const reviews = await Review.find<ReviewDocument>(filter)
 	const reviews:ReviewDocument[] = await apiFeatures(Review, req.query, filter)
 
 	res.json({
