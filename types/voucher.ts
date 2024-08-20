@@ -1,10 +1,10 @@
-import { Types } from 'mongoose'
+import { Types, Document } from 'mongoose'
 
-export type VoucherDocument = {
-	_id: Types.ObjectId,
-	id: string,
-	createdAt: string,
-	updatedAt: string
+export type VoucherDocument = Document & {
+	// _id: Types.ObjectId,
+	// id: string,
+	// createdAt: string,
+	// updatedAt: string
 
 	user: Types.ObjectId,
 	customId: string

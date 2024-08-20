@@ -52,5 +52,12 @@ voucherSchema.pre('save', function(next) {
 	next()
 })
 
+// Step-3: Show virtual fields on document
+voucherSchema.pre(/^find/, function (this: VoucherDocument, next) {
+	this.populate('user')
+
+	next()
+})
+
 export const Voucher: Model<VoucherDocument> = models.Voucher || model<VoucherDocument>('Voucher', voucherSchema)
 export default Voucher
