@@ -1,5 +1,5 @@
 /* DTO = Data Transfer Object */
-import type { PaymentUpdate } from '../types/payment'
+import type { PaymentUpdate } from '../types/_payment'
 import { filterObjectByArray } from '../utils'
 
 

@@ -1203,25 +1203,43 @@ PATCH {{origin}}/api/packages/:packageId
 #### Cash On Payment
 ```
 body {
-	"product": "667ea9b1df5d6c0e864f1841",          (*)
-  	"price": 300,                                   (*) 
-	"currency": "BDT",
-	"paymentType" : "cash",
-   //   "user": "user._id",                             (*)     comes from logedIn User
-
-	"shippingInfo" : {
-	        "name": "Riajul Islam",                 (*)
-	        "email" : "riajul@gmail.com",           (*)
-	        "phone" : "01957500605",                (*)
-	        "method": "Courier",
-		"address1": "shipping address",         (*)
-		"address2": "",
-		"city": "Dhaka",
-		"state": "Dhaka",
-		"postcode": 1000,
-		"country": "Bangladesh"
-		"deliveryFee": 50
-	}
+  "products": [
+    {
+      "product": "667ea9b1df5d6c0e864f1841",
+      "price": 43,
+      "quantity": 3
+    },
+    {
+      "product": "667fc61231ae221f0375d86a",
+      "price": 430,
+      "quantity": 2
+    },
+    {
+      "product": "667fc61231ae221f0375d86a",
+      "price": 430,
+      "quantity": 2
+    }
+  ],
+  "status": "pending",
+  "currency": "BDT",
+  "paymentType": "cash",
+  "user": "667e915a3204d8967daaf4a1",
+  "shippingInfo": {
+    "name": "Riajul Islam",
+    "email": "riajul@gmail.com",
+    "phone": "01957500605",
+    "method": "Courier",
+    "address1": "shipping address",
+    "address2": "",
+    "city": "Dhaka",
+    "state": "Dhaka",
+    "postcode": 1000,
+    "country": "Bangladesh",
+    "deliveryFee": 50
+  },
+  "orderCost": 516,
+  "profit": 100,
+  "brand": "BrandName"
 }
 
 POST {{origin}}/api/payments
@@ -1231,7 +1249,7 @@ POST {{origin}}/api/payments
 #### To update Cash On PaymentStatus
 ```
 body {
-	"status": "completed",                          : completed | pending (default)
+  "status": "completed",                          : ['pending', 'completed', 'shipped', 'cancelled']
 }
 PATCH {{origin}}/api/payments/:paymentId
 ```

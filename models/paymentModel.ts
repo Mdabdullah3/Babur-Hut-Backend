@@ -1,162 +1,116 @@
-import type { PaymentDocument } from '../types/payment'
-import type { Model } from 'mongoose'
-import { Schema, models, model } from 'mongoose'
+import { Schema, model } from 'mongoose';
 
-/*
-{
-	"customId": 'bhc000001',
-	"status": 'active',
-	"discount": 42,
-}
-	transactionId: Types.ObjectId
-	user: Types.ObjectId
-	product: Types.ObjectId
-	price: number
-	currency: string
-	status: string
-*/
+import { IProduct, IShippingInfo, IOrder } from '../types/_test'
 
-const paymentSchema = new Schema<PaymentDocument>({
-	transactionId: {
+
+// Create the Product schema
+const productSchema = new Schema<IProduct>({
+	product: {
 		type: Schema.Types.ObjectId,
+		ref: 'Product',
+		required: true
+	},
+	price: {
+		type: Number,
+		required: true
+	},
+	quantity: {
+		type: Number,
+		required: true
+	}
+});
+
+// Create the Shipping Info schema
+const shippingInfoSchema = new Schema<IShippingInfo>({
+	name: {
+		type: String,
+		required: true
+	},
+	email: {
+		type: String,
+		required: true
+	},
+	phone: {
+		type: String,
+		required: true
+	},
+	method: {
+		type: String,
+		required: true
+	},
+	address1: {
+		type: String,
+		required: true
+	},
+	address2: String,
+	city: {
+		type: String,
+		required: true
+	},
+	state: {
+		type: String,
+		required: true
+	},
+	postcode: {
+		type: Number,
+		required: true
+	},
+	country: {
+		type: String,
+		required: true
+	},
+	deliveryFee: {
+		type: Number,
+		required: true
+	}
+});
+
+// Create the Order schema
+const paymentSchema = new Schema<IOrder>({
+	products: [productSchema],
+	status: {
+		type: String,
+		lowercase: true,
+		trim: true,
+		enum: ['pending', 'completed', 'shipped', 'cancelled'],
+		default: 'pending'
+	},
+	currency: {
+		type: String,
 		required: true,
-		unique: true
+		lowercase: true,
+		trim: true,
+	},
+	paymentType: {
+		type: String,
+		required: true,
+		lowercase: true,
+		trim: true,
 	},
 	user: {
 		type: Schema.Types.ObjectId,
 		ref: 'User',
-		required: true,
+		required: true
 	},
-	product: {
-		type: Schema.Types.ObjectId,
-		ref: 'Product',
-		required: true,
-	},
+	shippingInfo: shippingInfoSchema,
 
-	paymentType: {
-		type: String,
-		lowercase: true,
-		trim: true,
-		enum: ['online', 'cash'],
-		default: 'cash'
-	},
-	status: { 								
-		type: String,
-		lowercase: true,
-		trim: true,
-		enum: ['completed', 'pending'],
-		default: 'pending'
-	},
-	price: { 								
+
+	orderCost: {
 		type: Number,
-		required: true,
+		required: false
 	},
-	
-	currency: {
+	profit: {
+		type: Number,
+		required: false
+	},
+	brand: {
 		type: String,
-		default: 'bdt',
+		required: false,
 		lowercase: true,
-		trim: true
-	},
-
-
-	shippingInfo: {
-	  name: {
-			type: String,
-			lowercase: true,
-			trim: true,
-			maxlength: 50,
-			required: 'true'
-		},
-
-	  phone: {
-			type: String,
-			lowercase: true,
-			trim: true,
-			maxlength: 15,
-			required: 'true'
-		},
-
-	  email: {
-			type: String,
-			lowercase: true,
-			trim: true,
-			maxlength: 50,
-			required: 'true'
-		},
-
-	  method: {
-			type: String,
-			lowercase: true,
-			trim: true,
-			maxlength: 15,
-			default: 'Courier'
-		},
-
-	  address1: {
-			type: String,
-			lowercase: true,
-			trim: true,
-			maxlength: 250,
-			required: true
-		},
-	  address2: {
-			type: String,
-			lowercase: true,
-			trim: true,
-			maxlength: 250,
-			default: ''
-		},
-
-	  city: {
-			type: String,
-			lowercase: true,
-			trim: true,
-			maxlength: 150,
-			default: 'dhaka'
-		},
-
-	  state: {
-			type: String,
-			lowercase: true,
-			trim: true,
-			maxlength: 150,
-			default: 'dhaka'
-		},
-
-	  postcode: {
-			type: String,
-			lowercase: true,
-			trim: true,
-			maxlength: 6,
-			default: ''
-		},
-	  country: {
-			type: String,
-			lowercase: true,
-			trim: true,
-			maxlength: 20,
-			default: 'Bangladesh'
-		},
-	  deliveryFee: {
-			type: String,
-			trim: true,
-			maxlength: 20,
-			default: "0"
-		},
+		trim: true,
 	}
+}, { timestamps: true });
 
-
-}, {
-	timestamps: true,
-})
-
-
-paymentSchema.pre('save', function(next) {
-	this.price = +this.price
-
-	next()
-})
-
-export const Payment: Model<PaymentDocument> = models.Payment || model<PaymentDocument>('Payment', paymentSchema)
-export default Payment
+// Create and export the Order model
+const Payment = model<IOrder>('Payment', paymentSchema);
+export default Payment;

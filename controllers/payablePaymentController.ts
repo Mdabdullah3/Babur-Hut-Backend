@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express';
 import { appError, catchAsync } from './errorController';
-import PayablePayment from '../models/paymentModel';
+import PayablePayment from '../models/_paymentModel';
 
 
 // GET 	/api/payablePayments

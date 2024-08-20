@@ -34,4 +34,5 @@ export interface IOrder extends Document {
   orderCost?: number;
   profit?: number;
   brand?: string;
+
 }
