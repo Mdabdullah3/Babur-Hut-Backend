@@ -8,7 +8,7 @@ export const router = Router({ mergeParams: true })
 router.route('/reset')
 	.get(
 		authController.protect,
-		authController.restrictTo('admin'), 
+		// authController.restrictTo('admin'), 
 		deliveryFeeController.resetDeliveryFee
 	)
 

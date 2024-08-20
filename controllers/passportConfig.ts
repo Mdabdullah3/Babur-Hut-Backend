@@ -20,8 +20,11 @@ export const passportConfig = () => {
 		passReqToCallback: true 					// now (username, password, done) => (req, email, password, done)
 	}, async (_req, email, password, done) => {
 
+
 		try {
+			// const filter = { }
 			const user = await User.findOne({ email }).select('+password')
+
 			if(!user) return done(appError(`No user found with this ${email}`, 401, 'AuthError') , false )
 
 			const isPasswordVarified = bcryptjs.compareSync( password, user.password )

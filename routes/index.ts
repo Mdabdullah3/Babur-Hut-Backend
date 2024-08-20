@@ -19,9 +19,13 @@ import { router as eventProductRouter } from './eventProductRoutes'
 import { router as deliveryFeesRouter } from './deliveryFeeRoutes'
 import { router as reportRouter } from './reportRoutes'
 
+import { router as testRouter } from './_testRoutes' 		// just for test
+
 
 // => / 	(root)
 const router = Router()
+
+router.use('/api/test', testRouter) 			// just for testing
 
 router.use('/', pageRouter)
 router.use('/upload', fileRouter)

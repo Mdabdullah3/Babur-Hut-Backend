@@ -79,7 +79,6 @@ export const getSubCategoryById:RequestHandler = catchAsync(async (req, res, nex
 export const updateSubCategoryById:RequestHandler = catchAsync(async (req, res, next) => {
 	try {
 		const subCategoryId = req.params.subCategoryId
-		const filteredBody = filterBodyForUpdateSubCategory(req.body) 
 
 		const allowedFields = [
 			'name',
@@ -99,6 +98,8 @@ export const updateSubCategoryById:RequestHandler = catchAsync(async (req, res, 
 			const { error: _errorImage, image } = await fileService.handleBase64File(req.body.image, '/subCcategories')
 			if(image) req.body.image = image
 		}
+
+		const filteredBody = filterBodyForUpdateSubCategory(req.body) 
 
 		const subCategory = await SubCategory.findById(subCategoryId)
 		if(!subCategory) return next(appError(`no subCagegory found by id:${subCategoryId} `))

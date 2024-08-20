@@ -108,6 +108,10 @@ export const createCashOnPayment:RequestHandler = catchAsync( async (req, res, n
 	})
 })
 
+
+
+
+
 // GET 	/api/payments/:paymentId + authController.protect
 export const getPaymentById:RequestHandler = catchAsync( async (req, res, _next) => {
 	const paymentId = req.params.paymentId
@@ -131,7 +135,7 @@ export const updatePaymentById:RequestHandler = catchAsync( async (req, res, nex
 	const paymentId = req.params.paymentId
 
 	const filteredBody = paymentDto.filterBodyForUpdatePayment(req.body)
-	console.log(filteredBody, paymentId)
+	// console.log(filteredBody, paymentId)
 
 	const payment = await Payment.findByIdAndUpdate(paymentId, filteredBody, { new: true })
 	if(!payment) return next(appError('payment update failed'))

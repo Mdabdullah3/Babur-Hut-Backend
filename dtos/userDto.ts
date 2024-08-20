@@ -44,9 +44,11 @@ export const filterBodyForCreateUser = (body: CreateUser) => {
 		'gender',
 		'location',
 		'otherPermissions',
-		// 'role',
-		// 'isActive',
-		// 'isVerified',
+
+		'role',
+		'isActive',
+		'isVerified',
+
 		'idCardFrontPageImage',
 		'idCardBackPageImage',
 		'idCardNumber',
@@ -91,8 +93,11 @@ export const filterBodyForUpdate = (body: UpdateUser) => {
 		'avatar', 								// need to delete old photo, so use seperate route
 		'address',
 		'gender',
+
 		'email', 							// update seperate route to verify email
 		'phone', 							// update seperate route to verify otp
+		'role',
+
 		'username',
 		'password',
 		'confirmPassword',

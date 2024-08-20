@@ -291,7 +291,7 @@ const userSchema = new Schema<UserDocument>({
 		type: String,
 		lowercase: true,
 		trim: true,
-		default: 'unknown'
+		default: 'pending'
 	},
 
 

@@ -20,11 +20,11 @@ router
 router.route('/:paymentId')
 	.get(paymentController.getPaymentById)
 	.patch(
-		authController.restrictTo('admin'),
+		// authController.restrictTo('admin'),
 		paymentController.updatePaymentById
 	)
 	.delete(
-		authController.restrictTo('admin'),
+		// authController.restrictTo('admin'),
 		paymentController.deletePaymentById
 	)
 

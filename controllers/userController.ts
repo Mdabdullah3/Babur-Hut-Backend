@@ -79,16 +79,15 @@ export const updateUserById:RequestHandler = async (req, res, next) => {
 	const userId = req.params.id
 
 	try {
-		// if not self nor admin then don't allow to update
-		const logedInUser = req.user as LogedInUser
-		// const logedInUser = req.user as UserDocument
+		// // if not self nor admin then don't allow to update
+		// const logedInUser = req.user as LogedInUser
 
-		const isSelf = logedInUser._id.toString() === userId
-		const isAdmin = logedInUser.role === 'admin'
+		// const isSelf = logedInUser._id.toString() === userId
+		// const isAdmin = logedInUser.role === 'admin'
 
-		if(!isSelf) {
-			if(!isAdmin) return next(appError('only self or admin user can update others user'))
-		}
+		// if(!isSelf) {
+		// 	if(!isAdmin) return next(appError('only self or admin user can update others user'))
+		// }
 
 		if(req.body.coverPhoto) {
 			const imageSize = getDataUrlSize(req.body.coverPhoto)
