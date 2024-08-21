@@ -2,13 +2,14 @@ import type { RequestHandler } from 'express'
 import { promisify } from 'util'
 import { appError, catchAsync } from './errorController'
 import { filterBodyForUpdateSubCategory } from '../dtos/categoryDto'
-import { getDataUrlSize } from '../utils'
+import { apiFeatures, getDataUrlSize } from '../utils'
 import * as fileService from '../services/fileService'
 import SubCategory from '../models/subCategoryModel'
 
 // GET 	/api/sub-categories
-export const getAllSubCagegories:RequestHandler = catchAsync(async (_req, res, _next) => {
-	const subCategories = await SubCategory.find()
+export const getAllSubCagegories:RequestHandler = catchAsync(async (req, res, _next) => {
+	// const subCategories = await SubCategory.find()
+	const subCategories = await apiFeatures(SubCategory, req.query, {})
 
 	res.status(200).json({
 		status: 'success',

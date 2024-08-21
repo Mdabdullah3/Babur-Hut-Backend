@@ -1,14 +1,15 @@
 import type { RequestHandler } from 'express';
 import { appError, catchAsync } from './errorController';
-import { getDataUrlSize } from '../utils';
+import { apiFeatures, getDataUrlSize } from '../utils';
 import * as fileService from '../services/fileService'
 import Other from '../models/otherModel';
 import { promisify } from 'util';
 
 
 // GET 	/api/others
-export const getOthers: RequestHandler = catchAsync( async (_req, res, _next) => {
-	const others = await Other.find()
+export const getOthers: RequestHandler = catchAsync( async (req, res, _next) => {
+	// const others = await Other.find()
+	const others = await apiFeatures(Other, req.query, {})
 
 	res.status(200).json({
 		status: 'success',

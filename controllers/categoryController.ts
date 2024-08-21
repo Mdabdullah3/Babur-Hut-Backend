@@ -10,7 +10,8 @@ import * as categoryDto from '../dtos/categoryDto'
 
 // GET 	/api/categories
 export const getAllCagegories:RequestHandler = catchAsync(async (_req, res, _next) => {
-	const categories = await Category.find().populate('subCategories')
+	// const categories = await apiFeatures(Category, req.query, {}) 	not populated virtual property, why ?
+	const categories = await Category.find()
 
 	res.status(200).json({
 		status: 'success',

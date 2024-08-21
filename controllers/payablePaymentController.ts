@@ -1,11 +1,12 @@
 import type { RequestHandler } from 'express';
 import { appError, catchAsync } from './errorController';
-import PayablePayment from '../models/_paymentModel';
+import PayablePayment from '../models/payablePaymentModel';
+import { apiFeatures } from '../utils';
 
 
 // GET 	/api/payablePayments
-export const getFinances: RequestHandler = catchAsync( async (_req, res, _next) => {
-	const payablePayments = await PayablePayment.find()
+export const getFinances: RequestHandler = catchAsync( async (req, res, _next) => {
+	const payablePayments = await apiFeatures(PayablePayment, req.query, {})
 
 	res.status(200).json({
 		status: 'success',

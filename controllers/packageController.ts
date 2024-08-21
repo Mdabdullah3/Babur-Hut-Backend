@@ -2,14 +2,15 @@ import type { RequestHandler } from 'express'
 import { appError, catchAsync } from './errorController'
 import { filterBodyForUpdatePackage } from '../dtos/packageDto'
 import { promisify } from 'util';
-import { getDataUrlSize } from '../utils';
+import { apiFeatures, getDataUrlSize } from '../utils';
 import Package from '../models/packageModel'
 import * as fileService from '../services/fileService'
 
 
 // GET 	/api/packages
-export const getAllPackages:RequestHandler = catchAsync(async (_req, res, _next) => {
-	const packages = await Package.find()
+export const getAllPackages:RequestHandler = catchAsync(async (req, res, _next) => {
+	// const packages = await Package.find()
+	const packages = await apiFeatures(Package, req.query, {})
 
 	res.status(200).json({
 		status: 'success',

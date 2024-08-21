@@ -1,14 +1,15 @@
 import type { RequestHandler } from 'express';
 import { appError, catchAsync } from './errorController';
-import { getDataUrlSize } from '../utils';
+import { apiFeatures, getDataUrlSize } from '../utils';
 import * as fileService from '../services/fileService'
 import Event from '../models/eventModel';
 import { promisify } from 'util';
 
 
 // GET 	/api/events
-export const getEvents: RequestHandler = catchAsync( async (_req, res, _next) => {
-	const events = await Event.find()
+export const getEvents: RequestHandler = catchAsync( async (req, res, _next) => {
+	// const events = await Event.find()
+	const events = await apiFeatures(Event, req.query, {})
 
 	res.status(200).json({
 		status: 'success',

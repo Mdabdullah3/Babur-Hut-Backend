@@ -10,6 +10,16 @@ import { Schema, models, model } from 'mongoose'
 	email: string
 	totalEarning: string
 	totalOrder: string
+
+{
+	"user": "667e915a3204d8967daaf4a1",
+	"profit": "34",
+	"vendorName": "vendor name",
+	"phone": "1654000656",
+	"email": "abc@gmail.com",
+	"totalEarning": "200",
+	"totalOrder": "500"
+}
 */
 
 const payableSchema = new Schema<PayableDocument>({

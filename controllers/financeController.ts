@@ -1,11 +1,12 @@
 import type { RequestHandler } from 'express';
 import { appError, catchAsync } from './errorController';
 import Finance from '../models/financeModel';
+import { apiFeatures } from '../utils';
 
 
 // GET 	/api/finances
-export const getFinances: RequestHandler = catchAsync( async (_req, res, _next) => {
-	const finances = await Finance.find()
+export const getFinances: RequestHandler = catchAsync( async (req, res, _next) => {
+	const finances = await apiFeatures( Finance, req.query, {} )
 
 	res.status(200).json({
 		status: 'success',
