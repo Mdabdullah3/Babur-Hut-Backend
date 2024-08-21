@@ -11,6 +11,7 @@ export const filterBodyForUpdatePackage = (body: UpdatePackage) => {
 		'duration',
 		'price',
 		'maxProduct',
+		'image',
 	]
 
 	return filterObjectByArray(body, allowedFields)

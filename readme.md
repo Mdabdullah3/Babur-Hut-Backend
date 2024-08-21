@@ -1156,12 +1156,13 @@ PATCH {{origin}}/api/sub-categories/:subCategoryId
 #### Add Package
 ```
 body {
-	"name": "package name 2",                       (*)
-	"user": "667ff88eb5dfd416e36015ad",             (*)
-	"status": "active",
-	"duration": 5,
-	"price": 300,
-	"maxProduct": 10
+  "name": "package name 2",                             (*)
+  "user": "667ff88eb5dfd416e36015ad",                   (*)
+  "status": "active",
+  "duration": 5,
+  "price": 300,
+  "maxProduct": 10
+  "image: "data:image/jpg;a3wwra...",
 }
 
 POST {{origin}}/api/packages
@@ -1173,11 +1174,12 @@ POST {{origin}}/api/packages
 #### Update Package
 ```
 body {
-	"name": "package name 2",
-	"status": "active",
-	"duration": 5,
-	"price": 300,
-	"maxProduct": 10
+  "name": "package name 2",        
+  "status": "active",
+  "duration": 5,
+  "price": 300,
+  "maxProduct": 10
+  "image: "data:image/jpg;a3wwra...",
 }
 PATCH {{origin}}/api/packages/:packageId
 ```

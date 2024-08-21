@@ -20,6 +20,7 @@ const productSchema = new Schema<IProduct>({
 	}
 });
 
+
 // Create the Shipping Info schema
 const shippingInfoSchema = new Schema<IShippingInfo>({
 	name: {
@@ -110,6 +111,16 @@ const paymentSchema = new Schema<IOrder>({
 		trim: true,
 	}
 }, { timestamps: true });
+
+
+
+paymentSchema.pre(/^find/, function (this: IProduct, next) {
+	this.populate('products.product')
+	this.populate('user')
+
+	next()
+})
+
 
 // Create and export the Order model
 const Payment = model<IOrder>('Payment', paymentSchema);

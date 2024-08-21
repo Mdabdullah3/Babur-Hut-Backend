@@ -45,6 +45,10 @@ const packageSchema = new Schema<PackageDocument>({
 		default: 0
 	},
 
+	image: {
+		public_id: String,
+		secure_url: String,
+	},
 
 }, {
 	timestamps: true,

@@ -1,18 +1,18 @@
-import { Types } from 'mongoose'
+import type { Types, Document } from 'mongoose'
 
+type Image = {
+	public_id: string
+	secure_url: string
+}
 
-export type PackageDocument = {
-	_id: Types.ObjectId,
-	id: string,
-	createdAt: string,
-	updatedAt: string
-
+export type PackageDocument = Document & {
 	name: string
 	user: Types.ObjectId
 	status: string
 	duration: number,
 	price: number,
 	maxProduct: number,
+	image: Image
 }
 
 
@@ -22,4 +22,5 @@ export type UpdatePackage = {
 	duration: number,
 	price: number,
 	maxProduct: number,
+	image: Image
 }

@@ -1,7 +1,12 @@
 import type { Document, Types } from 'mongoose';
 
 // Define the Product interface
-export interface IProduct {
+// export interface IProduct {
+// 	product: Types.ObjectId;
+// 	price: number;
+// 	quantity: number;
+// }
+export type IProduct = Document & {
 	product: Types.ObjectId;
 	price: number;
 	quantity: number;
