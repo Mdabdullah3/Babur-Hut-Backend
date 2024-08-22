@@ -10,10 +10,11 @@ import SubCategory from '../models/subCategoryModel'
 export const getAllSubCagegories:RequestHandler = catchAsync(async (req, res, _next) => {
 	// const subCategories = await SubCategory.find()
 	const subCategories = await apiFeatures(SubCategory, req.query, {})
+	const total = await SubCategory.countDocuments()
 
 	res.status(200).json({
 		status: 'success',
-		total: subCategories.length,
+		total,
 		data: subCategories,
 	})
 })

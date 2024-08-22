@@ -1204,22 +1204,51 @@ PATCH {{origin}}/api/packages/:packageId
 
 #### Cash On Payment
 ```
-body {
+{
   "products": [
     {
       "product": "667ea9b1df5d6c0e864f1841",
       "price": 43,
-      "quantity": 3
+      "quantity": 3,
+		  "vendor": "667e915a3204d8967daaf4a1",
+			"status": "pending",
+			"vendorPayment": {
+        "vat": 4,
+        "commission": 3,
+        "payableAmount": 200,
+        "profit": 50
+      },
+      "vendorPaymentStatus": "non-paid"
     },
     {
       "product": "667fc61231ae221f0375d86a",
       "price": 430,
-      "quantity": 2
+      "quantity": 2,
+		  "vendor": "667e915a3204d8967daaf4a1",
+			"status": "pending",
+			"vendorPayment": {
+        "vat": 4,
+        "commission": 3,
+        "payableAmount": 200,
+        "profit": 50
+      },
+      "vendorPaymentStatus": "paid"
+
     },
     {
       "product": "667fc61231ae221f0375d86a",
       "price": 430,
-      "quantity": 2
+      "quantity": 2,
+		  "vendor": "667e915a3204d8967daaf4a1",
+			"status": "pending",
+			"vendorPayment": {
+        "vat": 4,
+        "commission": 3,
+        "payableAmount": 200,
+        "profit": 50
+      },
+      "vendorPaymentStatus": "non-paid"
+
     }
   ],
   "status": "pending",
@@ -1243,6 +1272,7 @@ body {
   "profit": 100,
   "brand": "BrandName"
 }
+
 
 POST {{origin}}/api/payments
 ```
@@ -1544,8 +1574,10 @@ PATCH {{origin}}/payablePayments/:payablePaymentId
 - GET {{origin}}/api/delivery-fees/reset                // (Admin Only) Reset to default 64 entry
 - GET {{origin}}/api/delivery-fees?_limit=64 		// get 64 document only 
 
+- PATCH {{origin}}/delivery-fees/update-many            // To update multiple fees
 
-#### Add EventProuct 
+
+#### Add Delivery-fee 
 ```
 {
   "district" : "rajshahi",                              (*)
@@ -1555,14 +1587,29 @@ PATCH {{origin}}/payablePayments/:payablePaymentId
 POST {{origin}}/delivery-fees/:deliveryFeeId
 ```
 
-#### Update Event
+#### Update Delivery-fee
 ```
-{
+body {
   "district" : "rajshahi",
   "deliveryFee" : 50
 }
 
 PATCH {{origin}}/delivery-fees/:deliveryFeeId
+```
+
+#### Update Many Delivery-fee
+```
+body {
+  "deliveryFeeIds": [
+    "66c75de27bbb9c8e5d45950b",                         # deliveryFeeId
+    "66c75de27bbb9c8e5d45950f",                         # deliveryFeeId
+    "66c75de27bbb9c8e5d45951f"                          # deliveryFeeId
+    ...
+  ],
+  "deliveryFee" : 150
+}
+
+PATCH {{origin}}/delivery-fees/update-many
 ```
 
 

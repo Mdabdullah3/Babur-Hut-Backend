@@ -10,10 +10,11 @@ import { promisify } from 'util';
 export const getEvents: RequestHandler = catchAsync( async (req, res, _next) => {
 	// const events = await Event.find()
 	const events = await apiFeatures(Event, req.query, {})
+	const total = await Event.countDocuments()
 
 	res.status(200).json({
 		status: 'success',
-		total: events.length,
+		total,
 		data: events
 	})
 })

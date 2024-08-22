@@ -1,11 +1,25 @@
 import type { Document, Types } from 'mongoose';
 
-// Define the Product interface
-export interface IProduct {
+
+type VendorPayment = {
+	vat: number
+	commission: number
+	payableAmount: number
+	profit: number
+}
+
+export type IProduct  = Document & {
 	product: Types.ObjectId;
 	price: number;
 	quantity: number;
+
+	vendor: Types.ObjectId;
+	status: string 														// ['pending', 'cancel', 'approved']
+	vendorPaymentStatus: 'paid' | 'non-paid'
+	vendorPayment: VendorPayment
 }
+
+
 
 // Define the ShippingInfo interface
 export interface IShippingInfo {
@@ -25,7 +39,8 @@ export interface IShippingInfo {
 // Define the Order interface extending Document
 export interface IOrder extends Document {
 	products: IProduct[];
-	status: 'pending' | 'completed' | 'shipped' | 'cancelled';
+	status: string
+	// status: 'pending' | 'completed' | 'shipped' | 'cancelled' 
 	currency: string;
 	paymentType: string;
 	user: Types.ObjectId;

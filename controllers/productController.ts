@@ -38,10 +38,11 @@ export const getAllProducts:RequestHandler = catchAsync( async (req, res, _next)
 	if(userId) filter = { user: userId.toString() } 
 
 	const products:ProductDocument[] = await apiFeatures(Product, req.query, filter)
+	const total = await Product.countDocuments()
 
 	res.json({
 		status: 'success',
-		total: products.length,
+		total,
 		data: products,
 	})
 })
@@ -81,10 +82,10 @@ export const addProduct:RequestHandler = catchAsync(async (req, res, next) => {
 
 	try {
 		//--- Custom product Id
-		const currentDocuments = await Product.countDocuments()
+		// const currentDocuments = await Product.countDocuments()
 		const	customId = generateSequentialCustomId({ 
 			categoryName: 'product', 
-			countDocuments: currentDocuments
+			// countDocuments: currentDocuments
 		})
 		req.body.customId = customId
 

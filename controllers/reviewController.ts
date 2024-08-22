@@ -33,10 +33,11 @@ export const getAllReviews:RequestHandler = catchAsync( async (req, res, _next) 
 	// console.log(filter)
 	
 	const reviews:ReviewDocument[] = await apiFeatures(Review, req.query, filter)
+	const total = await Review.countDocuments()
 
 	res.json({
 		status: 'success',
-		total: reviews.length,
+		total,
 		data: reviews
 	})
 })

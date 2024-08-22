@@ -12,6 +12,13 @@ router.route('/reset')
 		deliveryFeeController.resetDeliveryFee
 	)
 
+router.route('/update-many')
+	.patch(
+		// authController.protect,
+		// authController.restrictTo('admin'), 
+		deliveryFeeController.updateManyDeliveryFee
+	)
+
 
 router.route('/')
 	.get(deliveryFeeController.getDeliveryFees)

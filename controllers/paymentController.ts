@@ -9,10 +9,11 @@ import { apiFeatures } from '../utils';
 export const getPayments: RequestHandler = catchAsync( async (req, res, _next) => {
 	// const payments = await Payment.find()
 	const payments = await apiFeatures(Payment, req.query, {})
+	const total = await Payment.countDocuments()
 
 	res.status(200).json({
 		status: 'success',
-		total: payments.length,
+		total,
 		data: payments
 	})
 })

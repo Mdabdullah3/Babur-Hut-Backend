@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-import { IProduct, IShippingInfo, IOrder } from '../types/_test'
+import { IProduct, IShippingInfo, IOrder } from '../types/payment'
 
 
 // Create the Product schema
@@ -17,8 +17,47 @@ const productSchema = new Schema<IProduct>({
 	quantity: {
 		type: Number,
 		required: true
-	}
+	},
+
+	vendor: { 															// role='vendor': which user will sold product
+		type: Schema.Types.ObjectId,
+		ref: 'User',
+		required: true
+	},
+	status: {
+		type: String,
+		default: 'pending'
+	},
+	vendorPaymentStatus: {
+		type: String,
+		enum: ['paid', 'non-paid'],
+		default: 'non-paid'
+	},
+
+	vendorPayment: {
+		vat: {
+			type: String,
+			required: true,
+			trim: true
+		},
+		commission: {
+			type: String,
+			required: true,
+			trim: true
+		},
+		payableAmount: {
+			type: String,
+			required: true,
+			trim: true
+		},
+		profit: {
+			type: String,
+			required: true
+		},
+	},
+
 });
+
 
 
 // Create the Shipping Info schema
@@ -88,13 +127,13 @@ const paymentSchema = new Schema<IOrder>({
 		lowercase: true,
 		trim: true,
 	},
-	user: {
+	user: { 																// role='user' : which user will buy
 		type: Schema.Types.ObjectId,
 		ref: 'User',
 		required: true
 	},
-	shippingInfo: shippingInfoSchema,
 
+	shippingInfo: shippingInfoSchema,
 
 	orderCost: {
 		type: Number,
@@ -115,7 +154,8 @@ const paymentSchema = new Schema<IOrder>({
 
 
 paymentSchema.pre(/^find/, function (this: IProduct, next) {
-	this.populate('products.product')
+	this.populate('products.product products.vendor')
+	// this.populate('products.vendor')
 	this.populate('user')
 
 	next()

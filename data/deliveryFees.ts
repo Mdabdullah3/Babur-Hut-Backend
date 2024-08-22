@@ -3,15 +3,15 @@ import { DeliveryFee } from '../types/deliveryFee';
 export const deliveryFeesData: DeliveryFee[] = [
   {
     "district": "Dhaka",
-    "deliveryFee": 0
+    "deliveryFee": 50
   },
   {
     "district": "Faridpur",
-    "deliveryFee": 0
+    "deliveryFee": 20
   },
   {
     "district": "Gazipur",
-    "deliveryFee": 0
+    "deliveryFee": 20
   },
   {
     "district": "Gopalganj",

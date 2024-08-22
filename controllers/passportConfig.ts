@@ -7,6 +7,7 @@ import * as oAuth2Strategy from 'passport-google-oauth2'
 import bcryptjs from 'bcryptjs'
 import User from '../models/userModel'
 import { appError } from './errorController'
+import { isEmail } from 'validator'
 
 
 export const passportConfig = () => {
@@ -21,9 +22,11 @@ export const passportConfig = () => {
 	}, async (_req, email, password, done) => {
 
 
+
 		try {
-			// const filter = { }
-			const user = await User.findOne({ email }).select('+password')
+			// const user = await User.findOne({ email }).select('+password')
+			const filter = isEmail(email)  ? { email } : { phone: email }
+			const user = await User.findOne( filter ).select('+password')
 
 			if(!user) return done(appError(`No user found with this ${email}`, 401, 'AuthError') , false )
 

@@ -11,10 +11,11 @@ import * as fileService from '../services/fileService'
 export const getAllPackages:RequestHandler = catchAsync(async (req, res, _next) => {
 	// const packages = await Package.find()
 	const packages = await apiFeatures(Package, req.query, {})
+	const total = await Package.countDocuments()
 
 	res.status(200).json({
 		status: 'success',
-		total: packages.length,
+		total,
 		data: packages,
 	})
 })

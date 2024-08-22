@@ -7,10 +7,11 @@ import { apiFeatures } from '../utils';
 // GET 	/api/finances
 export const getFinances: RequestHandler = catchAsync( async (req, res, _next) => {
 	const finances = await apiFeatures( Finance, req.query, {} )
+	const total = await Finance.countDocuments()
 
 	res.status(200).json({
 		status: 'success',
-		total: finances.length,
+		total,
 		data: finances
 	})
 })

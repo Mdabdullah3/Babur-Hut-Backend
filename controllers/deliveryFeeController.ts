@@ -11,10 +11,11 @@ export const getDeliveryFees: RequestHandler = catchAsync( async (req, res, _nex
 	// const deliveryFees = await DeliveryFee.find()
 	const filter = {}
 	const deliveryFees = await apiFeatures(DeliveryFee, req.query, filter)
+	const total = await DeliveryFee.countDocuments()
 
 	res.status(200).json({
 		status: 'success',
-		total: deliveryFees.length,
+		total,
 		data: deliveryFees
 	})
 })
@@ -55,6 +56,30 @@ export const updateDeliveryFee: RequestHandler = catchAsync( async (req, res, ne
 		data: deliveryFee
 	})
 })
+
+
+// PATCH 	/api/delivery-fees/update-many
+export const updateManyDeliveryFee: RequestHandler = catchAsync( async (req, res, next) => {
+	const deliveryFeeIds = req.body.deliveryFeeIds
+	if(!deliveryFeeIds?.length) return next(appError('must provide: deliveryFeeIds'))
+
+
+	const deliveryFee = await DeliveryFee.updateMany(
+		{
+			_id: { $in: [...deliveryFeeIds ] },
+		},
+		{ 
+			$set: { deliveryFee: req.body.deliveryFee }
+		}
+	)
+	if(!deliveryFee) return next(appError('no deliveryFee document update failed'))
+
+	res.status(201).json({
+		status: 'success',
+		data: deliveryFee
+	})
+})
+
 
 // DELETE 	/api/delivery-fees/:deliveryFeeId
 export const deleteDeliveryFee: RequestHandler = catchAsync( async (req, res, next) => {

@@ -10,10 +10,11 @@ import { promisify } from 'util';
 export const getOthers: RequestHandler = catchAsync( async (req, res, _next) => {
 	// const others = await Other.find()
 	const others = await apiFeatures(Other, req.query, {})
+	const total = await Other.countDocuments()
 
 	res.status(200).json({
 		status: 'success',
-		total: others.length,
+		total,
 		data: others
 	})
 })

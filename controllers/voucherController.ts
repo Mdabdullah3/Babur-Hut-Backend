@@ -8,10 +8,11 @@ import { filterBodyForUpdateVoucher } from '../dtos/voucherDto'
 export const getAllVouchers:RequestHandler = catchAsync(async (req, res, _next) => {
 	// const vouchers = await Voucher.find()
 	const vouchers = await apiFeatures(Voucher, req.query, {})
+	const total = await Voucher.countDocuments()
 
 	res.status(200).json({
 		status: 'success',
-		total: vouchers.length,
+		total,
 		data: vouchers,
 	})
 })
@@ -23,10 +24,10 @@ export const addVoucher:RequestHandler = catchAsync(async (req, res, next) => {
 	const { discount } = req.body
 	if(!discount) return next(appError('discount missing needed'))
 
-	const currentDocuments = await Voucher.countDocuments()
+	// const currentDocuments = await Voucher.countDocuments()
 	const	customId = generateSequentialCustomId({ 
 		categoryName: 'Voucher', 
-		countDocuments: currentDocuments
+		// countDocuments: currentDocuments
 	})
 	req.body.customId = customId
 

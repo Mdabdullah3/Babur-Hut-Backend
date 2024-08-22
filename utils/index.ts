@@ -2,6 +2,7 @@
 /* Handle Common utility functions here */
 
 import { Buffer } from 'node:buffer'
+import crypto from 'node:crypto'
 
 // const path = require('path')
 // const fs = require('fs');
@@ -103,19 +104,17 @@ export const generateRandomVendorId = (projectName: string, categoryName: string
 type CustomIdProps = {
 	projectName?: string, 
 	categoryName: string, 
-	countDocuments: number
+	// countDocuments?: number
 }
 export const generateSequentialCustomId = (props: CustomIdProps) => {
 	const {
 		projectName='babur hat',
 		categoryName,
-		countDocuments,
 	} = props
 	
 	const productCode = projectName.split(' ').map( (item: string) => item[0]).join('').toUpperCase()
 	const categoryCode = categoryName[0].toUpperCase()
-	const sequentialDecimalValue = String(countDocuments + 1).padStart(8, '0')
+	const sequentialDecimalValue = crypto.randomUUID()
 
-	const vendorId = `${productCode}${categoryCode}${sequentialDecimalValue}`
-	return vendorId
+	return `${productCode}${categoryCode}${sequentialDecimalValue}`
 }

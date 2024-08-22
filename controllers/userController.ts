@@ -24,10 +24,11 @@ export const getAllUsers:RequestHandler = catchAsync( async (req, res, _next) =>
 	// const users = await User.find<UserDocument>()
 	const filter = {}
 	const users:UserDocument[] = await apiFeatures(User, req.query, filter)
+	const total = await User.countDocuments()
 
 	res.status(200).json({
 		status: 'success',
-		total: users.length,
+		total,
 		data: users
 	})
 })

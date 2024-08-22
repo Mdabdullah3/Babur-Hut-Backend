@@ -9,10 +9,11 @@ export const getEventProducts: RequestHandler = catchAsync( async (req, res, _ne
 	// const eventProducts = await EventProduct.find()
 	const filter = {}
 	const eventProducts = await apiFeatures(EventProduct, req.query, filter)
+	const total = await EventProduct.countDocuments()
 
 	res.status(200).json({
 		status: 'success',
-		total: eventProducts.length,
+		total,
 		data: eventProducts
 	})
 })
