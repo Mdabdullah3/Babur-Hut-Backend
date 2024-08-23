@@ -15,11 +15,15 @@ import { sendMail } from '../utils/nodemailer'
 
 import type { Session } from 'express-session';
 import * as tokenService from '../services/tokenService'
+import isEmail from 'validator/lib/isEmail'
  
 type CustomSession = Session & {
   state: string;
 }
 
+type CustomUser = Express.User & {
+	_id: string
+}
 
 
 
@@ -218,9 +222,6 @@ export const logout:RequestHandler = (req, res, next) => {
 
 
 
-type CustomUser = Express.User & {
-	_id: string
-}
 
 
 // GET /auth/google/ 		=> 	/api/auth/google 	(Proxy Reverse For API)
@@ -252,23 +253,18 @@ export const googleCallbackHandler:RequestHandler = catchAsync( async (req, res,
       // return res.status(403).send('Invalid state parameter');
     }
 
-    // Validate the ID token (optional but recommended for added security)
-    // Implement ID token validation here if needed
 
-    // After successful authentication, generate a session token or JWT
     req.logIn(user, async (err) => {
       if (err) { return next(err); }
 
-      // Determine if the request comes from a web or mobile client
-      const isMobile = req.headers['user-agent']?.includes('Android') || req.query.mobile;
+      // const isMobile = req.headers['user-agent']?.includes('Android') || req.query.mobile;
+		  const isFlutterApp = req.headers['user-agent']?.includes('flutter') || req.query.flutter;
 
-       // Respond with a JSON containing the token for mobile apps
-      if (isMobile) {
+      if (isFlutterApp) {
         const token = await tokenService.generateTokenForUser(user._id); // Implement your token generation logic
         res.json({ status: 'success', data: { token } });
 
       } else {
-        // Redirect to the success route for web clients
         const authToken = await tokenService.generateTokenForUser(user._id); // Implement your token generation logic
         res.redirect(`/api/auth/google/success/?authToken=${authToken}`);
       }
@@ -631,3 +627,153 @@ export const verifyOTP = catchAsync( async (req, res, next) => {
 // 	})
 // })
 
+
+
+//-------------------------[ Update Email via Email ]-------------------------
+
+// POST 	/api/auth/update-email 	+ auth				: for email change with email varification
+export const sendUpdateEmailRequest = catchAsync(async (req, res, next) => {
+	const { email } = req.body
+	if(!email ) return next(appError('email field must required'))
+	if(!isEmail(email) ) return next(appError(`${email} is not valid email.`))
+
+	const logedInUser = req.user as LogedInUser
+	const userId = logedInUser._id
+
+	const user = await User.findById(userId)
+	if(!user ) return next(appError('no user found'))
+  const resetToken = await user.createEmailResetToken()
+  // const resetToken = await tokenService.generateEmailResetToken()
+
+	const subject = `To Change Email: ${logedInUser.name} (only valid for 10 minutes)`
+  let text = 'Please copy/paste the bellow url or click to update your email: \n'
+      text += `${req.protocol}://${req.get('host')}/api/auth/update-email/${resetToken}?email=${email}`
+
+	try {
+		// await otpService.sendSMS(phone, otp) 				// get twilio details first
+		await sendMail({ to: email, subject, text })
+
+	} catch (error: unknown) {
+		if(error instanceof Error) return next(appError(error.message, 401, 'EmailUpdateError'))		
+
+		if( typeof error === 'string')
+		return next(appError(error, 400, 'EmailUpdateError'))		
+	}
+
+
+	res.status(201).json({
+		status: 'success', 
+		message: `an email is send to ${email} to change email`,
+
+		// data: {
+		// 	subject, text, resetToken
+		// }
+	})
+})
+
+
+// GET 	/api/auth/update-email/:resetToken 	
+export const updateEmail = catchAsync(async (req, res, next) => {
+	const { resetToken } = req.params
+	if(!resetToken ) return next(appError('resetToken not found must'))
+
+	const { email } = req.query
+	if(!email ) return next(appError('email field must required'))
+	if(typeof email != 'string') return next(appError('email must be string'))
+
+	const logedInUser = req.user as LogedInUser
+	const userId = logedInUser._id
+
+	const user = await User.findById(userId)
+	if(!user) return next(appError('no user found'))
+
+	const isEmailUpdated =  await user.handleEmailUpdate(resetToken, email) 
+	if(!isEmailUpdated) return next(appError('email update failed: make sure you have request for sendUpdateEmailRequest '))
+	
+
+	res.status(201).json({
+		status: 'success', 
+		data: {
+			user
+		}
+	})
+})
+
+
+//-------------------------[ Update Phone Number via OTP ]-------------------------
+
+// POST 	/api/auth/update-phone 	+ auth				: for phone change with otp varification
+export const sendUpdatePhoneRequest = catchAsync(async (req, res, next) => {
+	const { phone } = req.body
+	if(!phone ) return next(appError('phone field must required'))
+
+	const logedInUser = req.user as LogedInUser
+	// const userId = logedInUser._id
+
+	const user = await User.findOne({ phone })
+	if(!user ) return next(appError('no user found'))
+
+  const otp = await user.createEmailResetToken()
+  // const resetToken = await tokenService.generateEmailResetToken()
+
+	const subject = `To Change Email: ${logedInUser.name} (only valid for 10 minutes)`
+
+	try {
+		// await otpService.sendSMS(phone, otp) 				// get twilio details first
+		await sendMail({ 
+			to: 'letmeexplore01@gmail.com',  										// from the application
+			subject, 
+  		text: `To update phone vai otp: ${otp}`
+		})
+
+	} catch (error: unknown) {
+		if(error instanceof Error) return next(appError(error.message, 401, 'EmailUpdateError'))		
+
+		if( typeof error === 'string')
+		return next(appError(error, 400, 'EmailUpdateError'))		
+	}
+
+
+	res.status(201).json({
+		status: 'success', 
+		message: `an otp is send via message on ${phone}`,
+
+		// data: {
+		// 	subject, text, resetToken
+		// }
+	})
+})
+
+
+// GET 	/api/auth/update-phone/:resetToken 	
+export const updatePhone = catchAsync(async (req, res, next) => {
+	const { resetToken } = req.params
+	if(!resetToken ) return next(appError('resetToken not found must'))
+
+	const { email } = req.query
+	if(!email ) return next(appError('email field must required'))
+	if(typeof email != 'string') return next(appError('email must be string'))
+
+	const logedInUser = req.user as LogedInUser
+	const userId = logedInUser._id
+
+	const user = await User.findById(userId)
+	if(!user) return next(appError('no user found'))
+
+	const isEmailUpdated =  await user.handleEmailUpdate(resetToken, email) 
+	if(!isEmailUpdated) return next(appError('email update failed: make sure you have request for sendUpdateEmailRequest '))
+	
+
+	res.status(201).json({
+		status: 'success', 
+		data: {
+			user
+		}
+	})
+})
+
+
+
+
+	// . PATCH 	/api/users/change-email 					: for email change with email varification
+	// . PATCH 	/api/users/change-mobile-number 	: for mobile number change with otp varification

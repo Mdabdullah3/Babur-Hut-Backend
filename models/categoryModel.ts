@@ -36,6 +36,10 @@ const categorySchema = new Schema<CategoryDocument>({
 		trim: true,
 		lowercase: true,
 	},
+
+	transactionCost: String,
+	transactionId: String,
+
 }, {
 	timestamps: true,
 	toJSON: {

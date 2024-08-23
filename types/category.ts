@@ -13,6 +13,9 @@ export type CategoryDocument = Document & {
 	commission: string,
 	image: Image
 	icon: string
+
+	transactionCost: string
+	transactionId: string
 }
 
 export type CreateCagetory = {
@@ -23,6 +26,8 @@ export type CreateCagetory = {
 	commission: Date,
 	image: Image
 	icon: string
+	transactionCost: string
+	transactionId: string
 }
 export type UpdateCagetory = {
 	name: string
@@ -32,15 +37,12 @@ export type UpdateCagetory = {
 	commission: Date,
 	image: Image
 	icon: string
+	transactionCost: string
+	transactionId: string
 }
 
 
-export type SubCategoryDocument = {
-	_id: Types.ObjectId,
-	id: string,
-	createdAt: string,
-	updatedAt: string
-
+export type SubCategoryDocument = Document & {
 	category: Types.ObjectId
 	name: string
 	shippingCharge: string
@@ -49,6 +51,7 @@ export type SubCategoryDocument = {
 	commission: string,
 	image: Image
 	icon: string
+	transactionCost: string
 }
 
 export type UpdateSubCagetory = {
@@ -59,4 +62,5 @@ export type UpdateSubCagetory = {
 	commission: Date,
 	image: Image
 	icon: string
+	transactionCost: string
 }

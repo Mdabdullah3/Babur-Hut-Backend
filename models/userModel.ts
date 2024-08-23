@@ -294,6 +294,8 @@ const userSchema = new Schema<UserDocument>({
 		default: 'pending'
 	},
 
+	emailResetToken: String,
+	emailResetTokenExpires: Date
 
 }, {
 	timestamps: true
@@ -323,6 +325,60 @@ userSchema.methods.getPasswordResetToken = async function (this: UserDocument) {
 	// return to unhashed version to user, which will be send via email (securely)
 	return resetToken
 }
+
+
+userSchema.methods.createEmailResetToken = async function() {
+	const resetToken = crypto.randomBytes(32).toString('hex')
+
+	// save the hashed version in database, and return unhashed, so that hash it again then compare it
+	this.emailResetToken = crypto.createHash('sha256').update(resetToken).digest('hex')
+	this.emailResetTokenExpires = Date.now() + 1000 * 60 * 10 	// now + 10 Minure
+	await this.save({ validateBeforeSave: false })
+
+	// return to unhashed version to user, which will be send via email (securely)
+	return resetToken
+}
+
+userSchema.methods.handleEmailUpdate = async function(this: UserDocument, resetToken: string, email: string) {
+	/* if expire date is not bigger than current time, that means time expires
+			We can it in 2 ways:
+				1. when we query 	: 	await User.findOne({ passwordResetToken: resetToken, passwordResetTokenExpires: {$gt: Date.now()} })
+				2. const isExpires = new Date(this.passwordResetTokenExpires) < new Date()
+	*/
+
+	if( !this.emailResetToken ) return false 						// don't have resetToken so no need to perform next
+	if( !this.emailResetTokenExpires ) return false 		// don't have resetToken so no need to perform next
+	if(!isEmail(email)) return false
+
+	if( new Date(this.emailResetTokenExpires) < new Date() ) return false
+
+	const hashedResetToken = crypto.createHash('sha256').update(resetToken).digest('hex')
+	if( hashedResetToken !== this.emailResetToken ) return false
+
+	this.email = email
+
+	this.emailResetToken = undefined
+	this.emailResetTokenExpires = undefined
+
+	/* Must need to update passwordChangedAt property, so that password changed after login or not, can be chedked
+			We can it also in 2 ways/place:
+				1. here like this 	:	this.passwordChangedAt = new Date()
+				2. in middleware 		:
+
+				.pre('save', function() {
+					if( !this.isModified('password') ) return
+					this.passwordChangedAt: new Date();
+					next()
+				})
+						. middleware is the parject place for this job, because it run everytime automatically without any warry.
+							but because it is only need to update once, so method (1) is ok too */
+
+	await this.save({ validateBeforeSave: false })
+
+	return this
+}
+
+
 
 
 // type ResetTokenPayload = {
@@ -380,6 +436,8 @@ userSchema.methods.getPasswordResetToken = async function (this: UserDocument) {
 // 	this.confirmPassword = undefined
 // 	return this
 // }
+
+
 
 
 export const User: Model<UserDocument>  = models.User|| model<UserDocument>('User', userSchema)

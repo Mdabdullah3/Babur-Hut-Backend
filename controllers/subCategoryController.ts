@@ -10,6 +10,11 @@ import SubCategory from '../models/subCategoryModel'
 export const getAllSubCagegories:RequestHandler = catchAsync(async (req, res, _next) => {
 	// const subCategories = await SubCategory.find()
 	const subCategories = await apiFeatures(SubCategory, req.query, {})
+	.populate({
+		path: 'category',
+		select: 'name vat shippingCharge status commision'
+	})
+
 	const total = await SubCategory.countDocuments()
 
 	res.status(200).json({

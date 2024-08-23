@@ -9,6 +9,7 @@ import { router as paymentRouter } from '../routes/paymentRoutes'
 // => /api/users/
 export const router = Router()
 
+
 router.get('/me', authController.protect, userController.getMe)
 router.patch('/me', authController.protect, userController.updateMe, userController.updateUserById)
 router.delete('/me', authController.protect, userController.deleteMe, userController.deleteUserById)

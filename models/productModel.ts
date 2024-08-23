@@ -236,10 +236,11 @@ productSchema.virtual('reviews', {
 
 
 // Step-3: Show virtual fields on document
-productSchema.pre('find', function (this: ProductDocument, next) {
+productSchema.pre(/^find/, function (this: ProductDocument, next) {
 
 	this.populate('reviews')
 	this.populate('user')
+	this.populate('subCategory')
 
 	next()
 })

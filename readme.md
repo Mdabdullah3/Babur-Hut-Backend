@@ -80,6 +80,8 @@ Database has common 4 type of errors
 - GET /api/auth/login 			: Local Login
 - GET /api/auth/out 			: logout (local + google)
 		
+- POST 	/api/auth/update-email 		        : Send request to update email by new email 
+- GET 	/api/auth/update-email/:resetToken 	: handle update email from google link click
 
 - GET /api/users
 - DELETE /api/users/:id
@@ -204,6 +206,22 @@ try {
 	console.log(err)
 }
 ```
+
+##### Update Email via email verification
+```
+body {
+  "email" : "riajul@gmail.com"
+}
+POST 	/api/auth/update-email                  : Check email `mailtrap` for testing
+```
+
+
+- Copy/paste the `link` in url or click that link, which will update email, [make sure you are `logedIn` User]
+
+```
+GET  http......./api/auth/update-email/:resetToken?email=riajul@gmail.com
+```
+
 
 
 
@@ -1079,6 +1097,8 @@ PATCH {{origin}}/api/vouchers/:voucherId
   "commission": "0",
   "image: "data:image/jpg;a3wwra...",
   "icon": "my icon name",
+	"transactionCose": "2",
+	"transactionId": "askdjfalsdjf",
 }
 
 POST {{origin}}/api/categories
@@ -1094,6 +1114,8 @@ body {
   "status": "active",
   "commission": "0",
   "icon": "my icon name",
+	"transactionCose": "2",
+	"transactionId": "askdjfalsdjf",
 }
 PATCH {{origin}}/api/categories/:categoryId
 ```
@@ -1121,6 +1143,7 @@ PATCH {{origin}}/api/categories/:categoryId
   "commission": "0"
   "image: "data:image/jpg;a3wwra...",
   "icon": "my icon name",
+	"transactionCose": "2"
 }
 
 POST {{origin}}/api/sub-categories
@@ -1136,7 +1159,8 @@ body {
   "shippingCharge": "200",
   "vat": "2",
   "status": "active",
-  "commission": "0"
+  "commission": "0",
+	"transactionCose": "2"
 }
 PATCH {{origin}}/api/sub-categories/:subCategoryId
 ```

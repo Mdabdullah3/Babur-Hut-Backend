@@ -39,10 +39,20 @@ const subCategorySchema = new Schema<SubCategoryDocument>({
 		trim: true,
 		lowercase: true,
 	},
+
+	transactionCost: String
+
 }, {
 	timestamps: true,
 })
 
+
+// subCategorySchema.pre(/^find/, function (this: SubCategoryDocument, next) {
+
+// 	this.populate('category')
+
+// 	next()
+// })
 
 export const SubCategory: Model<SubCategoryDocument> = models.SubCategory || model<SubCategoryDocument>('SubCategory', subCategorySchema)
 export default SubCategory

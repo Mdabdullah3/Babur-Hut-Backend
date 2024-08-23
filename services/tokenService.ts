@@ -1,3 +1,4 @@
+// import crypto from 'node:crypto'
 import * as jwt from 'jsonwebtoken'
 
 const { JWT_AUTH_TOKEN_SECRET } = process.env
@@ -7,10 +8,31 @@ if(!JWT_AUTH_TOKEN_SECRET) throw new Error(`${JWT_AUTH_TOKEN_SECRET}`)
 export const generateTokenForUser = async (id: string) => {
 	return jwt.sign({ id }, JWT_AUTH_TOKEN_SECRET, { expiresIn: '10m' })
 }
-
 export const verifyUserAuthToken = async (authToken: string) => {
 	return jwt.verify(authToken, JWT_AUTH_TOKEN_SECRET)
 }
+
+
+// export const generateEmailResetToken = async () => {
+// 	return crypto.randomBytes(32).toString('hex')
+// }
+// export const verifyEmailResetToken = async (resetToken: string) => {
+// 	return crypto.createHash('sha256').update(resetToken).digest('hex')
+// }
+
+// export const generateEmailResetToken = async (id: string) => {
+// 	// return jwt.sign({ id }, JWT_AUTH_TOKEN_SECRET, { expiresIn: '10m' })
+// 	return crypto.randomBytes(32).toString('hex')
+// }
+
+// export const verifyEmailResetToken = async (authToken: string) => {
+// 	return jwt.verify(authToken, JWT_AUTH_TOKEN_SECRET)
+// }
+
+
+
+
+
 
 
 // const jwt = require('jsonwebtoken')

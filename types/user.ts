@@ -73,6 +73,12 @@ export type UserDocument = Document & {
 	comparePassword: (password: string) => Promise<boolean>
 	getPasswordResetToken: () => Promise<string>
 
+	emailResetToken: string | undefined
+	emailResetTokenExpires: Date | undefined
+	createEmailResetToken: () => Promise<string>
+	handleEmailUpdate: (resetToken: string, email: string) => Promise<boolean>
+
+
 	otherPermissions : {
 		isVendor: boolean,
 		isCustomer: boolean,

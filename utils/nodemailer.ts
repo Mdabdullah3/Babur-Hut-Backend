@@ -16,9 +16,9 @@ import { createTransport } from 'nodemailer'
 */
 
 export const sendMail = async ({
-	from='<robitops10@gmail.com>',  											// from the application
+	from='letmeexplore01@gmail.com',  										// from the application
 	to='',  																							// to sender email
-	subject='password-reset(only valid for 10 minutes)',  //
+	subject='(only valid for 10 minutes)',  //
 	text='default message' 																//
 } = {}) => {
 

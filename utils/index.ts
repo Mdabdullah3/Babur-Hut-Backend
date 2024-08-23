@@ -116,5 +116,5 @@ export const generateSequentialCustomId = (props: CustomIdProps) => {
 	const categoryCode = categoryName[0].toUpperCase()
 	const sequentialDecimalValue = crypto.randomUUID()
 
-	return `${productCode}${categoryCode}${sequentialDecimalValue}`
+	return `${productCode}${categoryCode}-${sequentialDecimalValue}`
 }

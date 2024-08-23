@@ -12,6 +12,8 @@ export const filterBodyForAddCategory = (body: CreateCagetory) => {
 		'commission',
 		'image',
 		'icon',
+		'transactionCost',
+		'transactionId',
 	]
 
 	return filterObjectByArray(body, allowedFields)
@@ -27,6 +29,8 @@ export const filterBodyForUpdateCategory = (body: UpdateCagetory) => {
 		'commission',
 		'image',
 		'icon',
+		'transactionCost',
+		'transactionId',
 	]
 
 	return filterObjectByArray(body, allowedFields)
@@ -43,6 +47,7 @@ export const filterBodyForUpdateSubCategory = (body: UpdateSubCagetory) => {
 		'status',
 		'commission',
 		'image',
+		'transactionCost',
 	]
 
 	return filterObjectByArray(body, allowedFields)
