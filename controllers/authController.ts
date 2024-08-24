@@ -237,7 +237,7 @@ export const googleLoginRequest:RequestHandler = catchAsync( async (req, res, ne
 
   passport.authenticate('google', {
     scope: ['profile', 'email'],
-    state: state 																	// Include the state in the request to Google
+    // state: state 																	// Include the state in the request to Google
   })(req, res, next);
 
 })
@@ -250,15 +250,18 @@ export const googleCallbackHandler:RequestHandler = catchAsync( async (req, res,
     if (err) { return next(err); }
     if (!user) { return res.redirect('/auth/failure'); }
 
-    // Validate the state parameter to prevent CSRF attacks
-    if (req.query.state !== (req.session as CustomSession).state) {
-      return next(appError('invalid state parameter', 403, 'GoogleError'))
-      // return res.status(403).send('Invalid state parameter');
-    }
+    // // Validate the state parameter to prevent CSRF attacks
+    // if (req.query.state !== (req.session as CustomSession).state) {
+    //   return next(appError('invalid state parameter', 403, 'GoogleError'))
+    //   // return res.status(403).send('Invalid state parameter');
+    // }
 
 
     req.logIn(user, async (err) => {
-      if (err) { return next(err); }
+      if (err) { 
+				console.log('google authentication error', err)
+				return next(err); 
+			}
 
       // const isMobile = req.headers['user-agent']?.includes('Android') || req.query.mobile;
 		  const isFlutterApp = req.headers['user-agent']?.includes('flutter') || req.query.flutter;
@@ -266,10 +269,12 @@ export const googleCallbackHandler:RequestHandler = catchAsync( async (req, res,
       if (isFlutterApp) {
         const token = await tokenService.generateTokenForUser(user._id); // Implement your token generation logic
         res.json({ status: 'success', data: { token } });
+				console.log({ flutter: token })
 
       } else {
         const authToken = await tokenService.generateTokenForUser(user._id); // Implement your token generation logic
         res.redirect(`/api/auth/google/success/?authToken=${authToken}`);
+				console.log({ web: authToken })
       }
     });
   })(req, res, next);
@@ -283,7 +288,7 @@ export const googleSuccessHandler: RequestHandler = catchAsync( async (req, res,
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const authToken = req.query.authToken as any
-	console.log({ authToken })
+	console.log({ googleSuccessHandler: authToken })
 
 	if(!authToken) return next(appError('No authToken: authentication failed'))
 
