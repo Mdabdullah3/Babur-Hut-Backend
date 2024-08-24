@@ -257,6 +257,7 @@ PATCH 	/api/auth/update-phone                  : Check phone `mailtrap` for test
 	- `GET {{origin}}/api/products`
 	- `GET {{origin}}/api/reviews`
 	- `GET {{origin}}/api/users`
+        ...
 
 
 ```
@@ -776,6 +777,10 @@ body: {
 - POST {{origin}}/api/auth/forgot-password
 - PATCH {{origin}}/api/auth/reset-password
 
+
+- GET {{origin}}/api/users/:userId/vouchers     // Get all vouchers of this user
+- GET {{origin}}/api/users/me/vouchers          // Get all vouchers of logedIn User
+
 ```
 GET /api/users/
 GET /api/users/?_page=1&_limit=4
@@ -1074,6 +1079,8 @@ DELETE /api/users 	: Only user himself or admin can delete other users
 
 ## Vouchers
 - GET {{origin}}/api/vouchers 		        // get all vouchers
+- GET {{origin}}/api/users/:userId/vouchers     // Get all vouchers of this user
+- GET {{origin}}/api/users/me/vouchers          // Get all vouchers of logedIn User
 - GET {{origin}}/api/vouchers/:voucherId        // Get Single Voucher by (_id), not client's voucherId
 
 - POST {{origin}}/api/vouchers                  // To create voucher

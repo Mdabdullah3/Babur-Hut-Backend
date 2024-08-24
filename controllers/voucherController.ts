@@ -1,4 +1,5 @@
 import type { RequestHandler } from 'express'
+import type { LogedInUser } from '../types/user'
 import { appError, catchAsync } from './errorController'
 import Voucher from '../models/voucherModel'
 import { apiFeatures, generateSequentialCustomId } from '../utils'
@@ -6,8 +7,14 @@ import { filterBodyForUpdateVoucher } from '../dtos/voucherDto'
 
 // GET 	/api/vouchers
 export const getAllVouchers:RequestHandler = catchAsync(async (req, res, _next) => {
-	// const vouchers = await Voucher.find()
-	const vouchers = await apiFeatures(Voucher, req.query, {})
+	const logedInUser = req.user as LogedInUser
+	const userId = req.params.userId === 'me' ? logedInUser._id : req.params.userId
+
+	let filter = {}
+	if(userId) filter = { user: userId.toString() } 
+
+	// const vouchers = await Voucher.find(filter)
+	const vouchers = await apiFeatures(Voucher, req.query, filter)
 	const total = await Voucher.countDocuments()
 
 	res.status(200).json({

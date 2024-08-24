@@ -5,6 +5,7 @@ import * as authController from '../controllers/authController'
 import { router as reviewRouter } from '../routes/reviewRoutes'
 import { router as productRouter } from '../routes/productRoutes'
 import { router as paymentRouter } from '../routes/paymentRoutes'
+import { router as voucherRouter } from '../routes/voucherRoutes'
 
 // => /api/users/
 export const router = Router()
@@ -17,6 +18,7 @@ router.delete('/me', authController.protect, userController.deleteMe, userContro
 router.use('/:userId/reviews', reviewRouter)
 router.use('/:userId/products', productRouter)
 router.use('/:userId/payments', paymentRouter)
+router.use('/:userId/vouchers', voucherRouter)
 
 
 router.route('/')
