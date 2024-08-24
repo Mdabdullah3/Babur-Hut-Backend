@@ -132,6 +132,9 @@ export const register:RequestHandler = async (req, res, next) => {
 
 		const filteredBody = userDto.filterBodyForCreateUser(req.body)
 
+		const userFound = await User.findOne({ email: req.body.email })
+		if(userFound) return next(appError('This email already registerted'))
+
 		const user = await User.create(filteredBody)
 		if(!user) return next(appError('user not found'))
 
@@ -276,14 +279,22 @@ export const googleCallbackHandler:RequestHandler = catchAsync( async (req, res,
 
 // GET /auth/google/ 		=> /api/auth/google/success/?authToken={authToken} 
 export const googleSuccessHandler: RequestHandler = catchAsync( async (req, res, next) => {
-  const authToken = req.query.authToken;
+
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const authToken = req.query.authToken as any
+	console.log({ authToken })
+
 	if(!authToken) return next(appError('No authToken: authentication failed'))
 
-	if(typeof authToken === 'string') {
-		const isVerifiedToken = await tokenService.verifyUserAuthToken(authToken) 
-		if(!isVerifiedToken) return next(appError('authenticate validation failed'))
+	// if(typeof authToken === 'string') {
+	// 	const isVerifiedToken = await tokenService.verifyUserAuthToken(authToken) 
+	// 	if(!isVerifiedToken) return next(appError('authenticate validation failed'))
 
-	} else throw next(appError(`authToken: ${authToken}`))
+	// } else throw next(appError(`authToken: ${authToken}`))
+
+	const isVerifiedToken = await tokenService.verifyUserAuthToken(authToken) 
+	if(!isVerifiedToken) return next(appError('authenticate validation failed'))
 
 	const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN
 	if(CLIENT_ORIGIN) {
@@ -433,14 +444,6 @@ export const resetPassword:RequestHandler = catchAsync( async (req, res, next) =
 })
 
 
-/*
-*/
-// ---
-// const userService = require('../services/userService')
-// const tokenService = require('../services/tokenService')
-// const fileService = require('../services/fileService')
-// const userDto = require('../dtos/userDto')
-
 
 // POST 	/api/auth/send-otp 
 /* We can store hashed otp in database:
@@ -532,7 +535,7 @@ export const verifyOTP = catchAsync( async (req, res, next) => {
 	const password = crypto.randomBytes(6).toString('hex')
 	if(!user) {
 		const requiredFields = {
-			email: phone, 																		// just to prevent empty duplication error
+			// email: phone, 																		// just to prevent empty duplication error
 			phone,
 			role,
 			name: crypto.randomBytes(4).toString('hex'), 			// => 590e4eec
@@ -571,64 +574,6 @@ export const verifyOTP = catchAsync( async (req, res, next) => {
 
 })
 
-
-
-// // otp-create user middleware
-// // post('/otp-registration', authController.otpLoginMiddleware, authController.register)
-// export const otpLoginMiddleware:RequestHandler = catchAsync( async (req, _res, next) => {
-// 	// const otpDoc = await OtpModel.findOne({ phone: req.body.phone })
-// 	// if(!otpDoc) return next(appError('please get otp first, before going to create account'))
-
-// 	// if(!otpDoc.isVerified) return next(appError('please verify otp first, before going to create account'))
-// 	// next()
-
-
-// 	const password = crypto.randomBytes(6).toString('hex')
-
-// 	const requiredFields = {
-// 		phone,
-// 		name: crypto.randomBytes(4).toString('hex'), 								// => 590e4eec
-// 		password,
-// 		confirmPassword : password
-// 	}
-// 	const user = await User.create(requiredFields)
-
-// })
-
-/*
-		// check is user otp verified: by phone number
-		if(req.body.phone) {
-			const otpDoc = await OtpModel.findOne({ phone: req.body.phone })
-			if(!otpDoc) return next(appError('please get otp first, before going to create account'))
-			if(!otpDoc.isVerified) return next(appError('please verify otp first, before going to create account'))
-
-			filteredBody.isVerified = true
-
-			otpDoc.deleteOne({ phone: req.body.phone })
-		}
-*/
-		
-
-
-// // PATCH 	/api/auth/active-user + auth
-// exports.activeUser = catchAsync(async (req, res, next) => {
-// 	const { name, avatar } = req.body
-// 	if(!name || !avatar) return next(appError('missing fields: [name,avatar]'))
-
-// 	const { error, url } = await fileService.handleBase64File(avatar)
-// 	if(error) return next(appError(error))
-
-// 	const userId = req.userId
-// 	const user = await userService.activeUser(userId, { name, avatar: url, isActive: true })
-// 	if(!user) return next(appError('update user failed'))
-
-// 	res.status(201).json({
-// 		status: 'success', 
-// 		data: {
-// 			user: userDto.filterUser(user._doc)
-// 		}
-// 	})
-// })
 
 
 
@@ -705,26 +650,6 @@ export const updateEmail = catchAsync(async (req, res, next) => {
 
 //-------------------------[ Update Phone Number via OTP ]-------------------------
 
-// 	// Step-3: 
-// 	try {
-// 		// await otpService.sendSMS(phone, otp) 				// get twilio details first
-// 		await sendMail({
-// 			from: 'letmeexplore01@gmail.com',
-// 			to: 'your_target_user@gmail.com',
-// 			subject: 'Testing | sending OTP via email',
-// 			text: `otp: ${otp}`
-// 		})
-
-// 	} catch (error: unknown) {
-// 		if(error instanceof Error) return next(appError(error.message, 401, 'OTP_error'))		
-
-// 		if( typeof error === 'string')
-// 		return next(appError(error, 400, 'OTP_error'))		
-// 	}
-
-
-
-
 // POST 	/api/auth/update-phone 	+ auth				: for phone change with otp varification
 export const sendUpdatePhoneRequest = catchAsync(async (req, res, next) => {
 	const { phone } = req.body
@@ -779,7 +704,7 @@ export const sendUpdatePhoneRequest = catchAsync(async (req, res, next) => {
 	})
 })
 
-// patch 	/api/auth/update-phone/
+// PATCH 	/api/auth/update-phone/
 export const updatePhone = catchAsync( async (req, res, next) => {
 	const { phone, otp, hash } = req.body
 	if(!phone || !otp || !hash) return next(appError('you must send: { phone, otp, hash: hashedOTP }'))
@@ -828,6 +753,3 @@ export const updatePhone = catchAsync( async (req, res, next) => {
 
 
 
-
-	// . PATCH 	/api/users/change-email 					: for email change with email varification
-	// . PATCH 	/api/users/change-mobile-number 	: for mobile number change with otp varification
