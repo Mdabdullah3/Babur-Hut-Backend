@@ -51,7 +51,8 @@ export const apiFeatures = (Model:any, query:any, newFilter={}) => {
 	}
 	searchObj = search[1] ? searchObj : {}
 
-	const filter = { ...searchObj, ...newFilter }
+	const _filter = query._filter || newFilter
+	const filter = { ...searchObj, ..._filter }
 
 	return Model.find(filter) 					// => Searching
 		.skip(skip).limit(limit) 					// => Pagination

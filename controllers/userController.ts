@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express'
-import type { LogedInUser, UserDocument } from '../types/user'
+import type { LogedInUser } from '../types/user'
 import User from '../models/userModel'
 import { appError, catchAsync } from './errorController'
 import { apiFeatures, getDataUrlSize } from '../utils'
@@ -21,9 +21,8 @@ import { promisify } from 'node:util'
 
 // GET /api/users
 export const getAllUsers:RequestHandler = catchAsync( async (req, res, _next) => {
-	// const users = await User.find<UserDocument>()
 	const filter = {}
-	const users:UserDocument[] = await apiFeatures(User, req.query, filter)
+	const users = await apiFeatures(User, req.query, filter)
 	const total = await User.countDocuments()
 
 	res.status(200).json({

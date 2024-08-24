@@ -486,7 +486,7 @@ export const sendOTP = catchAsync( async(req, res, next) => {
 		if(!otpDoc) return next(appError('phone number can not save into otp model'))
 	}
 
-	console.log('authController.sendOTP', { otp }) 	// require for local testing
+	if (process.env.NODE_ENV === 'development') console.log({ otp })
 
 	res.status(200).json({
 		status: 'success',
@@ -503,12 +503,13 @@ export const sendOTP = catchAsync( async(req, res, next) => {
 body {
 	"otp": 8430,
 	"phone": "01957500605",
+	"role": "admin",
 	"hash": "Lp+1ufeABW9LtlInKNI1Des6nSNYzcttp0I5tHtZVDI=.1719580163272"
 }
 */
-export const verifyOTP = catchAsync( async (req, res, next) => {
-	const { phone, otp, hash } = req.body
 
+export const verifyOTP = catchAsync( async (req, res, next) => {
+	const { phone, otp, hash, role='vendor' } = req.body
 	if(!phone || !otp || !hash) return next(appError('you must send: { phone, otp, hash: hashedOTP }'))
 
 	// step-1: check expires
@@ -522,19 +523,19 @@ export const verifyOTP = catchAsync( async (req, res, next) => {
 	const isValid = await hashService.validateOTP(data, hashedOTP)
 	if(!isValid) return next(appError('hashed otp violated'))
 
-
-	// const	otpDoc = await OtpModel.findOneAndUpdate({ phone }, { $set: { isVerified: true }}, { new: true })
 	const	otpDoc = await OtpModel.findOneAndDelete({ phone })
 	if(!otpDoc) return next(appError('please retry with your new otp'))
-	// console.log(otpDoc)
+
 
 	// step-3: Create user
 	let user = await User.findOne({ phone })
 	const password = crypto.randomBytes(6).toString('hex')
 	if(!user) {
 		const requiredFields = {
+			email: phone, 																		// just to prevent empty duplication error
 			phone,
-			name: crypto.randomBytes(4).toString('hex'), 								// => 590e4eec
+			role,
+			name: crypto.randomBytes(4).toString('hex'), 			// => 590e4eec
 			password,
 			confirmPassword : password,
 			isVerified: true,
@@ -542,6 +543,8 @@ export const verifyOTP = catchAsync( async (req, res, next) => {
 		}
 		user = await User.create(requiredFields)
 	}
+
+	user.password = password
 
 
 	// step-4: login User 
@@ -551,7 +554,7 @@ export const verifyOTP = catchAsync( async (req, res, next) => {
 		res.status(200).json({
 			status: 'success',
 			message: 'given a random password for later login, fill free to change you password any time',
-			data: { ...user, password }
+			data: user
 		})
 
 	})
@@ -702,75 +705,126 @@ export const updateEmail = catchAsync(async (req, res, next) => {
 
 //-------------------------[ Update Phone Number via OTP ]-------------------------
 
+// 	// Step-3: 
+// 	try {
+// 		// await otpService.sendSMS(phone, otp) 				// get twilio details first
+// 		await sendMail({
+// 			from: 'letmeexplore01@gmail.com',
+// 			to: 'your_target_user@gmail.com',
+// 			subject: 'Testing | sending OTP via email',
+// 			text: `otp: ${otp}`
+// 		})
+
+// 	} catch (error: unknown) {
+// 		if(error instanceof Error) return next(appError(error.message, 401, 'OTP_error'))		
+
+// 		if( typeof error === 'string')
+// 		return next(appError(error, 400, 'OTP_error'))		
+// 	}
+
+
+
+
 // POST 	/api/auth/update-phone 	+ auth				: for phone change with otp varification
 export const sendUpdatePhoneRequest = catchAsync(async (req, res, next) => {
 	const { phone } = req.body
 	if(!phone ) return next(appError('phone field must required'))
 
-	const logedInUser = req.user as LogedInUser
-	// const userId = logedInUser._id
+	// const logedInUser = req.user as LogedInUser
 
-	const user = await User.findOne({ phone })
-	if(!user ) return next(appError('no user found'))
+	// Step-1: 
+	const otp = await otpService.generateOTP()
 
-  const otp = await user.createEmailResetToken()
-  // const resetToken = await tokenService.generateEmailResetToken()
+	/* Step-2: To send user otp and hashedOtp too, so that no need to store 
+						into database, and later get hashedOtp back from client to validate
+	*/
+	const ttl = 1000 * 60 * 50 						// => TTL = Time To Live
+	const expires = Date.now() + ttl
+	const data = `${phone}.${otp}.${expires}`
+	const hashedOtp = await hashService.hashOTP(data)
 
-	const subject = `To Change Email: ${logedInUser.name} (only valid for 10 minutes)`
-
+	// Step-3: 
 	try {
 		// await otpService.sendSMS(phone, otp) 				// get twilio details first
-		await sendMail({ 
-			to: 'letmeexplore01@gmail.com',  										// from the application
-			subject, 
-  		text: `To update phone vai otp: ${otp}`
+		await sendMail({
+			from: 'letmeexplore01@gmail.com',
+			to: 'your_target_user@gmail.com',
+			subject: 'Testing | sending OTP via email',
+			text: `otp: ${otp}`
 		})
 
 	} catch (error: unknown) {
-		if(error instanceof Error) return next(appError(error.message, 401, 'EmailUpdateError'))		
+		if(error instanceof Error) return next(appError(error.message, 401, 'OTP_error'))		
 
 		if( typeof error === 'string')
-		return next(appError(error, 400, 'EmailUpdateError'))		
+		return next(appError(error, 400, 'OTP_error'))		
 	}
 
+	// save phone number into database temporaryly, after verify will delete and create user
+	let otpDoc = await OtpModel.findOne({ phone })
+	if(!otpDoc) {
+		otpDoc = await OtpModel.create({ phone })
+		if(!otpDoc) return next(appError('phone number can not save into otp model'))
+	}
 
-	res.status(201).json({
-		status: 'success', 
-		message: `an otp is send via message on ${phone}`,
-
-		// data: {
-		// 	subject, text, resetToken
-		// }
-	})
-})
-
-
-// GET 	/api/auth/update-phone/:resetToken 	
-export const updatePhone = catchAsync(async (req, res, next) => {
-	const { resetToken } = req.params
-	if(!resetToken ) return next(appError('resetToken not found must'))
-
-	const { email } = req.query
-	if(!email ) return next(appError('email field must required'))
-	if(typeof email != 'string') return next(appError('email must be string'))
-
-	const logedInUser = req.user as LogedInUser
-	const userId = logedInUser._id
-
-	const user = await User.findById(userId)
-	if(!user) return next(appError('no user found'))
-
-	const isEmailUpdated =  await user.handleEmailUpdate(resetToken, email) 
-	if(!isEmailUpdated) return next(appError('email update failed: make sure you have request for sendUpdateEmailRequest '))
-	
+	if (process.env.NODE_ENV === 'development') console.log({ otp })
 
 	res.status(201).json({
 		status: 'success', 
 		data: {
-			user
+			message: `an otp message is send to you via SMS`, 
+			phone,
+			hash: `${hashedOtp}.${expires}`, 				// send phone, expires + hashedOTP which will be require later
 		}
 	})
 })
+
+// patch 	/api/auth/update-phone/
+export const updatePhone = catchAsync( async (req, res, next) => {
+	const { phone, otp, hash } = req.body
+	if(!phone || !otp || !hash) return next(appError('you must send: { phone, otp, hash: hashedOTP }'))
+
+	const logedInUser = req.user as LogedInUser
+	const userId = logedInUser._id
+
+	// step-1: check expires
+	const [ hashedOTP, expires ] = hash.split('.')
+
+	const isValidHashed = expires > Date.now()
+	if(!isValidHashed) return next(appError('your OTP expires, please collect new OTP', 401, 'TokenError'))
+
+	// step-2: check hashed hash
+	const data = `${phone}.${otp}.${expires}` 			// get the same pattern from send otp
+	const isValid = await hashService.validateOTP(data, hashedOTP)
+	if(!isValid) return next(appError('hashed otp violated'))
+
+	const	otpDoc = await OtpModel.findOneAndDelete({ phone })
+	if(!otpDoc) return next(appError('please retry with your new otp'))
+
+	// step-3: Create user
+	const user = await User.findByIdAndUpdate(userId, { phone }, { new: true })
+	if(!user) return next(appError('user update failed with phone field'))
+
+
+	// // step-4: login User 
+	// req.logIn(user, (err) => {
+	// 	if(err) return next(err)
+
+	// 	res.status(200).json({
+	// 		status: 'success',
+	// 		message: 'given a random password for later login, fill free to change you password any time',
+	// 		data: user 
+	// 	})
+	// })
+
+
+	res.status(200).json({
+		status: 'success',
+		data: user
+	})
+
+})
+
 
 
 

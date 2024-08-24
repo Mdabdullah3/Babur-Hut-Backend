@@ -83,6 +83,9 @@ Database has common 4 type of errors
 - POST 	/api/auth/update-email 		        : Send request to update email by new email 
 - GET 	/api/auth/update-email/:resetToken 	: handle update email from google link click
 
+- POST 	/api/auth/update-phone 		        : Send request to update phone by OTP
+- PATCH /api/auth/update-phone 		        : Update phone number by OTP
+
 - GET /api/users
 - DELETE /api/users/:id
 
@@ -167,10 +170,10 @@ try {
 ##### For OTP Login
 `
 ```
-POST 	/api/auth/send-otp 
 {
   "phone" : "01957500605"
 }
+POST 	/api/auth/send-otp 
 
 - Check Message for OTP 
 - for testing, I'm  sending otp via email
@@ -180,12 +183,13 @@ testing email: credentials checkout in group
 
 
 ```
-POST 	/api/auth/verify-otp  	
 {
-	"otp": 2429,
+    "otp": 2429,
     "phone": "01957500605",
+    "role": "vendor",                           [ default role=vendor ]
     "hash": "g0jjVjXHr+q2ZBiKsS+4pvmgpbHJ4jAbS8q0MbF+uAs=.1719659241411"
 }
+POST 	/api/auth/verify-otp  	
 ```
 
 
@@ -223,6 +227,28 @@ GET  http......./api/auth/update-email/:resetToken?email=riajul@gmail.com
 ```
 
 
+##### Update Phove via OTP Message
+```
+{
+  "phone": "01957500606"
+}
+POST 	/api/auth/update-phone                  : Check phone `mailtrap` for testing
+
+
+{
+  "otp" : "9256",
+  "phone": "01957500606",
+  "hash": "1v8vGUyIrHyXXmAjnBwUoUNjQls4TA/yHgMI828lxBw=.1724504917047"
+}
+PATCH 	/api/auth/update-phone                  : Check phone `mailtrap` for testing
+
+
+
+```
+
+
+
+
 
 
 ### API Features 
@@ -237,6 +263,7 @@ GET  http......./api/auth/update-email/:resetToken?email=riajul@gmail.com
 {{origin}}/api/products
 	?_page=2
 	&_limit=3
+	&_filter[category]=pant
 	&_sort=-createdAt,price 						# field1,field2,...
 	&_search=awesome product,name,summary,description 			# find text 'awesome product' in name, or summary or description any of  field
 	&_fields=name,summary,price 			# only get those 3 fields + populated + build-in fields
@@ -514,6 +541,18 @@ GET /api/products/?_fields='name,slug,price' 						: Only got 3 fields (+ _id, p
 - GET {{origin}}/api/users/:userId/products
 ```
 
+#### Get Multiple Products by product IDs
+```
+body {
+  "productIds": [
+    "667ea9b1df5d6c0e864f1841",
+    "667fc61231ae221f0375d86a"
+  ]
+}
+
+POST {{origin}}/api/products/many                       : To get multiple products
+```
+
 #### Add Product
 ```
 body: {
@@ -716,7 +755,8 @@ body: {
 
 ## Users
 
-- GET {{origin}}/api/users
+- GET {{origin}}/api/users                      // Get all users
+- GET {{origin}}/api/users?filter[role]=vendor  // Get all users role=vendor
 
 - POST {{origin}}/api/auth/register
 - POST {{origin}}/api/auth/login

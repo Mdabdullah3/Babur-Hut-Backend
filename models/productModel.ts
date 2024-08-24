@@ -240,7 +240,7 @@ productSchema.pre(/^find/, function (this: ProductDocument, next) {
 
 	this.populate('reviews')
 	this.populate('user')
-	this.populate('subCategory')
+	// this.populate('subCategory')
 
 	next()
 })

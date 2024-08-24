@@ -9,6 +9,8 @@ router
 	.post('/update-email', authController.protect, authController.sendUpdateEmailRequest)
 	.get('/update-email/:resetToken', authController.protect, authController.updateEmail)
 
+	.post('/update-phone', authController.protect, authController.sendUpdatePhoneRequest)
+	.patch('/update-phone', authController.protect, authController.updatePhone)
 
 router
 	.post('/register', authController.register)

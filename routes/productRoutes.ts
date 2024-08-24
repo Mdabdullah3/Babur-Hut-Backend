@@ -9,7 +9,7 @@ export const router = Router({ mergeParams: true })
 
 router.use('/:productId/reviews', reviewRouter)
 router.get('/get-random-products', productController.gerRandomProducts)
-router.get('/get-random-products', productController.gerRandomProducts)
+router.post('/many', productController.getlProductsByIds)
 
 router.route('/')
 	.get(productController.getAllProducts)

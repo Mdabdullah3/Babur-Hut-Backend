@@ -1,9 +1,7 @@
 import type { RequestHandler } from 'express'
-import type { ProductDocument, Image} from '../types/product'
-// import type { LogedInUser } from '../types/user'
+import type { Image} from '../types/product'
 import Product from '../models/productModel'
 import User from '../models/userModel'
-// import crypto from 'crypto'
 import { appError, catchAsync } from './errorController'
 import { apiFeatures, generateSequentialCustomId, getDataUrlSize } from '../utils'
 import { isValidObjectId } from 'mongoose'
@@ -37,7 +35,7 @@ export const getAllProducts:RequestHandler = catchAsync( async (req, res, _next)
 	// if(productId) filter = { product: productId.toString() } 
 	if(userId) filter = { user: userId.toString() } 
 
-	const products:ProductDocument[] = await apiFeatures(Product, req.query, filter)
+	const products = await apiFeatures(Product, req.query, filter)
 	const total = await Product.countDocuments()
 
 	res.json({
@@ -46,6 +44,25 @@ export const getAllProducts:RequestHandler = catchAsync( async (req, res, _next)
 		data: products,
 	})
 })
+
+
+// => POST /api/products/meny
+export const getlProductsByIds:RequestHandler = catchAsync( async (req, res, _next) => {
+
+	const productIds = req.body.productIds || []
+	const products = await Product.find({_id: { $in: productIds }})
+
+	res.json({
+		status: 'success',
+		total: products.length,
+		data: products,
+	})
+})
+
+
+
+
+
 
 /* => POST /api/products
 req.body = {
@@ -74,8 +91,6 @@ req.body = {
 
 	# link url
 	"video": "http://youtube.com/video-url",
-
-
 }
 */
 export const addProduct:RequestHandler = catchAsync(async (req, res, next) => {
