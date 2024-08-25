@@ -10,6 +10,11 @@ import { Schema, models, model } from 'mongoose'
 */
 
 const reportSchema = new Schema<ReportDocument>({
+	product: {
+		type: Schema.Types.ObjectId,
+		ref: 'Product',
+		// required: true
+	},
 	user: {
 		type: Schema.Types.ObjectId,
 		ref: 'User',

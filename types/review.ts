@@ -21,6 +21,7 @@ export type ReviewDocument = {
 	likes: Types.ObjectId[],
 	dislikes: Types.ObjectId[],
 	image: Image
+	ratings: number, 			
 
 	createdAt: Date,
 	updatedAt: Date
@@ -32,10 +33,12 @@ export type CreateReview = {
 	review: string
 	comment: string, 			// comment field
 	image: Image
+	ratings: number, 			
 }
 export type UpdateReview = {
 	product: Types.ObjectId,
 	review: string
 	comment: string, 			// comment field
 	image: Image
+	ratings: number, 			
 }

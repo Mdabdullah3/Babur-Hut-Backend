@@ -51,12 +51,10 @@ const reviewSchema = new Schema<ReviewDocument>({
 
 	},
 
-	// reviewRatings: { 					// product.ratings == avarage([reviewRatings, ... ])
-	// 	type: Number,
-	// 	default: 1,
-	// 	min: 1,
-	// 	max: 5
-	// },
+	ratings: { 							// will be calculated from 'reviews' collection
+		type: Number,
+		default: 4
+	},
 
 	likes: [{
 		type: Schema.Types.ObjectId,
@@ -74,6 +72,12 @@ const reviewSchema = new Schema<ReviewDocument>({
 })
 
 
+// productSchema.pre('save', function(this) {
+reviewSchema.pre('save', function(next) {
+	this.ratings = +this.ratings 	
+
+	next()
+})
 
 reviewSchema.pre(/^find/, function(next) {
 	// this.populate({

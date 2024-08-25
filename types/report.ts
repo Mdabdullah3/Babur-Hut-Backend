@@ -6,6 +6,7 @@ type Image = {
 }
 
 export type ReportDocument = Document & {
+	product: Types.ObjectId,
 	user: Types.ObjectId,
 	title: string
 	message: string
@@ -14,6 +15,7 @@ export type ReportDocument = Document & {
 }
 
 export type UpdateReport = {
+	product: Types.ObjectId,
 	title: string
 	message: string
 	description: string

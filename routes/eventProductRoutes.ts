@@ -4,6 +4,8 @@ import * as eventProductController from '../controllers/eventProductsController'
 // => /api/event-products/
 export const router = Router({ mergeParams: true })
 
+router.post('/many', eventProductController.getlEventProductsByIds)
+
 router.route('/')
 	.get(eventProductController.getEventProducts)
 	.post(eventProductController.addEventProduct)

@@ -224,6 +224,10 @@ const userSchema = new Schema<UserDocument>({
 		isSupport: Boolean,
 		isEventManager: Boolean,
 		isMessage: Boolean,
+
+		isHasDashboard: Boolean,
+		isHasBanner: Boolean,
+		isHasPropUpAdds: Boolean,
 	},
 
 	likes: [{ 													

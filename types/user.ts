@@ -5,25 +5,7 @@ type Image = {
 	public_id: string
 	secure_url: string
 }
-// export type Info = {
-// 	name: string
-// 	value: string
-// }
-// export type Experience = {
-// 	_id: Types.ObjectId
-// 	title: string
-// 	companyName: string
-// 	joiningDate: Date
-// 	currentStatus: 'active' | 'inactive'
-// 	jobLocation: string
-// 	logoBackgroundColor: string
-// }
 
-// enum Role {
-// 	admin='admin',
-// 	guest='guest',
-// 	user='user'
-// }
 
 type Location = {
 	address1: string
@@ -45,6 +27,28 @@ export type LogedInUser = {
   updatedAt: Date
 }
 
+
+type OtherPermissions = {
+	isVendor: boolean,
+	isCustomer: boolean,
+	isCategories: boolean,
+	isProducts: boolean,
+	isOrders: boolean,
+	isReviews: boolean,
+	isVouchers: boolean,
+	isAdManager: boolean,
+	isRoleManager: boolean,
+	isMessageCenter: boolean,
+	isFinance: boolean,
+	isShipment: boolean,
+	isSupport: boolean,
+	isEventManager: boolean,
+	isMessage: boolean,
+
+	isHasDashboard: boolean
+	isHasBanner: boolean
+	isHasPropUpAdds: boolean
+}
 
 
 export type UserDocument = Document & {
@@ -78,24 +82,7 @@ export type UserDocument = Document & {
 	createEmailResetToken: () => Promise<string>
 	handleEmailUpdate: (resetToken: string, email: string) => Promise<boolean>
 
-
-	otherPermissions : {
-		isVendor: boolean,
-		isCustomer: boolean,
-		isCategories: boolean,
-		isProducts: boolean,
-		isOrders: boolean,
-		isReviews: boolean,
-		isVouchers: boolean,
-		isAdManager: boolean,
-		isRoleManager: boolean,
-		isMessageCenter: boolean,
-		isFinance: boolean,
-		isShipment: boolean,
-		isSupport: boolean,
-		isEventManager: boolean,
-		isMessage: boolean,
-	}
+	otherPermissions : OtherPermissions
 
 	likes: Types.ObjectId[]
 	orders: Types.ObjectId[]
@@ -125,23 +112,8 @@ export type CreateUser = {
 	coverPhoto: string
 	avatar: string
 	role: string
-	otherPermissions : {
-		isVendor: boolean,
-		isCustomer: boolean,
-		isCategories: boolean,
-		isProducts: boolean,
-		isOrders: boolean,
-		isReviews: boolean,
-		isVouchers: boolean,
-		isAdManager: boolean,
-		isRoleManager: boolean,
-		isMessageCenter: boolean,
-		isFinance: boolean,
-		isShipment: boolean,
-		isSupport: boolean,
-		isEventManager: boolean,
-		isMessage: boolean,
-	}
+
+	otherPermissions : OtherPermissions
 
 	idCardFrontPageImage: Image
 	idCardBackPageImage: Image

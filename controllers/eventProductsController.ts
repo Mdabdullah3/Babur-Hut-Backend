@@ -18,6 +18,19 @@ export const getEventProducts: RequestHandler = catchAsync( async (req, res, _ne
 	})
 })
 
+// => POST /api/event-products/meny
+export const getlEventProductsByIds:RequestHandler = catchAsync( async (req, res, _next) => {
+
+	const eventProductIds = req.body.eventProductIds || []
+	const products = await EventProduct.find({_id: { $in: eventProductIds }})
+
+	res.json({
+		status: 'success',
+		total: products.length,
+		data: products,
+	})
+})
+
 // GET 	/api/event-products/:eventProductId
 export const getEventProductById: RequestHandler = catchAsync( async (req, res, next) => {
 	const { eventProductId = ''} = req.params

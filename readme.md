@@ -716,6 +716,7 @@ body: {
 # "user": "will comes from logedIn User",
   "product": "6649ebc8dabbe03d553861f9",                (*)
   "image" : "data:image/jpeg;base64,/9j/4AAQSkZJRgA..."
+	"ratings: 5, 
 
   # for Review
   "review" : "I'm using too (delete me)",
@@ -813,21 +814,25 @@ body {
   },
 
   otherPermissions : {
-	isVendor: false, 	: boolean value: true/false
-	isCustomer: false,
-	isCategories: false,
-	isProducts: false,
-	isOrders: false,
-	isReviews: false,
-	isVouchers: false,
-	isAdManager: false,
-	isRoleManager: false,
-	isMessageCenter: false,
-	isFinance: false,
-	isShipment: false,
-	isSupport: false,
-	isEventManager: false,
-	isMessage: false,
+		isVendor: false, 	: boolean value: true/false
+		isCustomer: false,
+		isCategories: false,
+		isProducts: false,
+		isOrders: false,
+		isReviews: false,
+		isVouchers: false,
+		isAdManager: false,
+		isRoleManager: false,
+		isMessageCenter: false,
+		isFinance: false,
+		isShipment: false,
+		isSupport: false,
+		isEventManager: false,
+		isMessage: false,
+
+		isHasDashboard: false,
+		isHasBanner: false,
+		isHasPropUpAdds: false,
   },
 
   idCardFrontPageImage: "image.png",
@@ -871,6 +876,10 @@ body: {
 		isSupport: boolean,
 		isEventManager: boolean,
 		isMessage: boolean,
+
+		isHasDashboard: false,
+		isHasBanner: false,
+		isHasPropUpAdds: false,
 	}
 
 	idCardFrontPageImage: Image
@@ -899,8 +908,8 @@ body: {
 #### User Login 
 ```
 body: {
-  "email": "riajul@gmail.com",                          (*)
-  "password": "{{pass}}"                                (*)
+  "email": "riajul@gmail.com",  Or  "email": "01916800154"      (*)
+  "password": "{{pass}}"                                        (*)
 }
 
 - POST {{origin}}/api/auth/register
@@ -1533,6 +1542,17 @@ PATCH {{origin}}/event-products/:eventProductId
 ```
 
 
+#### Get Multiple Event-Products by eventProductIds
+```
+body {
+  "eventProductIds": [
+    "66cb15a49a40eb566f4ffba8",
+    "66c1fb657f3326eca9bc9fce"
+  ]
+}
+
+POST {{origin}}/api/event-products/many                 : To get multiple event products
+```
 
 
 
@@ -1703,6 +1723,7 @@ PATCH {{origin}}/delivery-fees/update-many
 #### Add Report 
 ```
 {
+  "product" : "667e915a3204d8967daaf4a1",     
   "user" : "667e915a3204d8967daaf4a1",                  (*)
   "title": "test report 2",                             (*)
   "message": "this is a sourt summary",                 (*)
@@ -1716,6 +1737,7 @@ POST {{origin}}/reports/:reportId
 #### Update Report
 ```
 body {
+  "product" : "667e915a3204d8967daaf4a1",     
   "title": "test report 2",                             
   "message": "this is a sourt summary",                
   "description": "long descriptions goes here"
