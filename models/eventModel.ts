@@ -59,7 +59,7 @@ eventSchema.virtual('eventProducts', {
 })
 
 // Step-3: Show virtual fields on document
-eventSchema.pre('find', function (this: EventsDocument, next) {
+eventSchema.pre(/^find/, function (this: EventsDocument, next) {
 	this.populate('eventProducts')
 	next()
 })
