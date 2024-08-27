@@ -9,6 +9,12 @@ import { Schema, models, model } from 'mongoose'
 	vat: "string",
 	status: "string",
 	commission: "string",
+
+	shippingChargeType: "string",
+	commissionType: "string",
+	vatType: "string",
+	transactionCostType: "string",
+
 }
 */
 
@@ -21,12 +27,45 @@ const subCategorySchema = new Schema<SubCategoryDocument>({
 	name: {
 		type: String,
 		required: true,
-		unique: true
+		unique: true,
+		trim: true,
+		lowercase: true,
 	},
-	shippingCharge: String,
-	vat: String,
-	status: String,
-	commission: String,
+	shippingCharge: {
+		type: String,
+		trim: true,
+		lowercase: true,
+	},
+	shippingChargeType: {
+		type: String,
+		trim: true,
+		lowercase: true,
+	},
+	vat: {
+		type: String,
+		trim: true,
+		lowercase: true,
+	},
+	vatType: {
+		type: String,
+		trim: true,
+		lowercase: true,
+	},
+	status: {
+		type: String,
+		trim: true,
+		lowercase: true,
+	},
+	commission: {
+		type: String,
+		trim: true,
+		lowercase: true,
+	},
+	commissionType: {
+		type: String,
+		trim: true,
+		lowercase: true,
+	},
 
 	image: {
 		public_id: String,
@@ -40,7 +79,16 @@ const subCategorySchema = new Schema<SubCategoryDocument>({
 		lowercase: true,
 	},
 
-	transactionCost: String
+	transactionCost: {
+		type: String,
+		trim: true,
+		lowercase: true,
+	},
+	transactionCostType: {
+		type: String,
+		trim: true,
+		lowercase: true,
+	},
 
 }, {
 	timestamps: true,

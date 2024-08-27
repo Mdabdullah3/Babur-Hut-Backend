@@ -2,7 +2,7 @@ import type { ProductDocument } from '../types/product'
 import type { Model } from 'mongoose'
 import { model, models, Schema } from 'mongoose'
 import slug from 'slugify'
-import { product } from '../data/product'
+// import { product } from '../data/product'
 
 
 /*
@@ -10,14 +10,14 @@ import { product } from '../data/product'
 	"user": "alskdjfalksdjfaksjdf",
 	"name": "my-product-name",
 	"slug": "my-product-name",
-	"price": 40,
-	"quantity": 2,
+//	"price": 40,
+//	"quantity": 2,
 	"summary": "summary description between 10-150",
 	"description": "description between 10-1000",
 
 	"category": "shirt",
 	"brand": "niki",
-	"size": "xl",
+//	"size": "xl",
 
 	"coverPhoto": "/upload/images/cover-photo.jpg",
 	"images": [
@@ -26,7 +26,7 @@ import { product } from '../data/product'
 		"/upload/images/photo-3.jpg",
 	],
 	
-	discount: "1243",
+//	discount: "1243",
 	subCategory: "subcategory.id"
 	warranty: "12 Months",
 	packaging: {
@@ -67,18 +67,18 @@ const productSchema = new Schema<ProductDocument>({
 		// minlength: 5, 		// if add validation then failed slug mising
 		default: '',
 	},
-	price: {
-		type: Number,
-		required: true,
-		min: 1,
-		// set: function(price: number) { 		// because we set: price: Float! in GraphQL Schema
-		// 	return price.toFixed(2)
-		// }
-	},
-	quantity: {
-		type: Number,
-		default: 1
-	},
+	// price: {
+	// 	type: Number,
+	// 	required: true,
+	// 	min: 1,
+	// 	// set: function(price: number) { 		// because we set: price: Float! in GraphQL Schema
+	// 	// 	return price.toFixed(2)
+	// 	// }
+	// },
+	// quantity: {
+	// 	type: Number,
+	// 	default: 1
+	// },
 	summary: {
 		type: String,
 		required: true,
@@ -110,13 +110,13 @@ const productSchema = new Schema<ProductDocument>({
 		lowercase: true,
 		// enum: product.brands
 	},
-	size: {
-		type: String,
-		required: true,
-		default: 'xs',
-		// enum: ['xs', 'sm', 'lg', 'xxl']
-		enum: product.sizes
-	},
+	// size: {
+	// 	type: String,
+	// 	required: true,
+	// 	default: 'xs',
+	// 	// enum: ['xs', 'sm', 'lg', 'xxl']
+	// 	enum: product.sizes
+	// },
 	// { public_id, secureUrl, altImageName, width, height }
 	coverPhoto: {
 		public_id: {
@@ -193,21 +193,32 @@ const productSchema = new Schema<ProductDocument>({
 		ref: 'User',
 	}],
 
-	discount: {
-		type: String,
-	},
+	// discount: {
+	// 	type: String,
+	// 	trim: true,
+	// 	lowercase: true,
+	// },
 	subCategory: {
 		type: Schema.Types.ObjectId,
 		ref: 'SubCategory',
 	},
-	warranty: String,
+	warranty: {
+		type: String,
+		trim: true,
+		lowercase: true,
+	},
 	packaging: {
 		weight: String,
 		height: String,
 		width: String,
 		dimension: String,
-	}
+	},
 
+	status: {
+		type: String,
+		trim: true,
+		lowercase: true,
+	},
 
 }, {
 	timestamps: true,
@@ -218,8 +229,8 @@ const productSchema = new Schema<ProductDocument>({
 
 // productSchema.pre('save', function(this) {
 productSchema.pre('save', function(next) {
-	this.price = +this.price 								// convert to number
-	this.quantity = +this.quantity
+	// this.price = +this.price 								// convert to number
+	// this.quantity = +this.quantity
 
 	const slugString = this.slug.trim() ? this.slug : this.name
 	this.slug = slug(slugString, { lower: true })

@@ -13,6 +13,8 @@ export const filterBodyForUpdateVoucher = (body: UpdateVoucher) => {
 		'discount',
 		'startDate',
 		'endDate',
+ 		'discountType',
+ 		'minimumPurchase',
 	]
 
 	return filterObjectByArray(body, allowedFields)

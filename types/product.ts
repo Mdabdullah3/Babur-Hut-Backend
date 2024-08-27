@@ -1,4 +1,4 @@
-import { Types } from 'mongoose'
+import { Types, Document } from 'mongoose'
 
 export type Image = {
 	public_id: string
@@ -26,23 +26,17 @@ type Packaging = {
 
 
 
-export type ProductDocument = {
-	populate(arg0: string): unknown
-	_id: Types.ObjectId
-	id: string
-	createdAt: Date
-	updatedAt: Date
-
+export type ProductDocument = Document & {
 	customId: string
 	user: Types.ObjectId
 	name: string
-	price: number
+	// price: number
 	summary: string
 	description: string
 	category: string
 	brand: string
-	size: string
-	quantity: number,
+	// size: string
+	// quantity: number,
 	coverPhoto: Image
 	images: Image[]
 	video: Image
@@ -57,11 +51,12 @@ export type ProductDocument = {
 	specifications: Specifications
 	likes: Types.ObjectId[]
 
-	discount: string
+	// discount: string
 	subCategory: Types.ObjectId
 	warranty: string
 	packaging: Packaging
   discountPrice: string
+  status: string
 }
 
 export type CreateProduct = {
@@ -87,6 +82,7 @@ export type CreateProduct = {
 	warranty: string
 	packaging: Packaging
   discountPrice: string
+  status: string
 }
 
 export type UpdateProduct = {
@@ -111,5 +107,6 @@ export type UpdateProduct = {
 	warranty: string
 	packaging: Packaging
   discountPrice: string
+  status: string
 }
 

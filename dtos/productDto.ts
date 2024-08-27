@@ -38,6 +38,7 @@ export const filterBodyForCreateProduct = (body: CreateProduct) => {
 		'warranty',
 		'packaging',
 		'discountPrice',
+  	'status',
 	]
 
 	return filterObjectByArray(body, allowedFields)
@@ -66,6 +67,7 @@ export const filterBodyForUpdateProduct = (body: UpdateProduct) => {
 		'warranty',
 		'packaging',
 		'discountPrice',
+  	'status',
 	]
 
 	return filterObjectByArray(body, allowedFields)

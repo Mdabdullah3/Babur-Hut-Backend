@@ -38,8 +38,18 @@ const voucherSchema = new Schema<VoucherDocument>({
 		// required: true,
 	},
 	startDate: Date,
-	endDate: Date
+	endDate: Date,
 
+ 	discountType: {
+		type: String,
+		trim: true,
+		lowercase: true
+	},
+ 	minimumPurchase: {
+		type: String,
+		trim: true,
+		lowercase: true
+	}
 
 }, {
 	timestamps: true,

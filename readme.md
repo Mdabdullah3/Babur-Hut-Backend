@@ -600,7 +600,9 @@ body: {
  	height: string
  	width: string
  	dimension: string
-  }
+  },
+
+  status: "string"
 }
 
 - POST {{origin}}/api/products
@@ -610,49 +612,50 @@ body: {
 #### Update Product
 ```
 body: {
-	"customId": 'unique-id',
-	"name": "it is my sample product",
-	"slug": "it-is-my-sample-product-unitque",
-	"price": 500,
-	"quantity": 5,
-	"summary": "summary description between 10-150",
-	"description": "description between 10-1000",
+  "customId": 'unique-id',
+  "name": "it is my sample product",
+  "slug": "it-is-my-sample-product-unitque",
+  "price": 500,
+  "quantity": 5,
+  "summary": "summary description between 10-150",
+  "description": "description between 10-1000",
+  
+  "category": "pant",
+  "brand": "niki",
+  "size": "xs",
+  
+  "coverPhoto": "data:jpg/images;alkjdfajd...=",
+  "images": [
+    "data:jpg/images;alkjdfajd...=",
+    "data:jpg/images;rraksdjfasdkjf...=",
+    "data:jpg/images;fflkjdfajd...=",
+  ],
 
-	"category": "pant",
-	"brand": "niki",
-	"size": "xs",
+  # "video" : "data:image/jpeg;base64,/9j/4A...",       # to upload raw video
+  "video" : "http://your-video-lingk-',                 # to upload video link
+  specifications: {
+    screenSize: "...",
+    batteryLife: "",
+    cameraResolution: "",
+    storageCapacity: "",
+    os: "",
+    size: "",
+    material: "",
+    color: "",
+    gender: ""
+  },
 
-	"coverPhoto": "data:jpg/images;alkjdfajd...=",
-	"images": [
-		"data:jpg/images;alkjdfajd...=",
-		"data:jpg/images;rraksdjfasdkjf...=",
-		"data:jpg/images;fflkjdfajd...=",
-	],
-
-      # "video" : "data:image/jpeg;base64,/9j/4A...",           # to upload raw video
-	"video" : "http://your-video-lingk-',                   # to upload video link
-	specifications: {
-		screenSize: "...",
-		batteryLife: "",
-		cameraResolution: "",
-		storageCapacity: "",
-		os: "",
-		size: "",
-		material: "",
-		color: "",
-		gender: ""
-	},
-
-	discount: "232",
-	subCategory: "subCategory._id",
-	warranty: "...",
+  discount: "232",
+  subCategory: "subCategory._id",
+  warranty: "...",
   discountPrice: "...",
-	packaging: {
-		weight: string
-		height: string
-		width: string
-		dimension: string
-	}
+  packaging: {
+    weight: string
+    height: string
+    width: string
+    dimension: string
+  },
+  status: "string"
 }
 
 - PATCH {{origin}}/api/products/6649ebc8dabbe03d553861f9
@@ -677,6 +680,57 @@ body: {
 ```
 - GET {{origin}}/api/products/:productId/like
 ```
+
+
+## Product-Variant
+- GET {{origin}}/api/product-variants 		                // get all 
+- GET {{origin}}/api/product-variants/:productVariantId         // Get Single 
+
+- POST {{origin}}/api/product-variants                          // To create 
+- PATCH {{origin}}/api/product-variants/:productVariantId       // To Update 
+- DELETE {{origin}}/api/product-variants/:productVariantId      // To Delete
+
+
+#### Add Product-Variant
+```
+body {
+  "product": "66c86221f8a224b845232d55",                        (*) 
+  "user" : "667e915a3204d8967daaf4a1",
+  "name": "variant 2",
+  "price": 200,                                                 (*)
+  "discount": 20,
+  "quantity": 2,
+  "material" : "kniting",
+  "size": "sm",                                                 (*)
+  "gender": "common",
+  "color" : "#fff",
+  "image" : "data:image/jpg,aksdjadjf"
+}
+
+POST {{origin}}/api/product-variants
+```
+
+#### Update Product-Variant
+```
+body {
+  "product": "66c86221f8a224b845232d55",       
+  "user" : "667e915a3204d8967daaf4a1",
+  "name": "variant 2",
+  "price": 200, 
+  "discount": 20,
+  "quantity": 2,
+  "material" : "kniting",
+  "size": "sm",    
+  "gender": "common",
+  "color" : "#fff",
+  "image" : "data:image/jpg,aksdjadjf"
+}
+PATCH {{origin}}/api/product-variants/:productVariantId
+```
+
+
+
+
 
 
 
@@ -1107,6 +1161,9 @@ body {
   "startDate": "2024-07-12T13:45:49.432Z",
   "endDate": "2024-07-12T13:45:49.432Z",
   "status" : "active"
+
+  "discountType": "string",
+  "minimumPurchase": "string"
 }
 
 POST {{origin}}/api/vouchers
@@ -1125,6 +1182,9 @@ body {
   "startDate": "2024-07-12T13:45:49.432Z",
   "endDate": "2024-07-12T13:45:49.432Z",
   "status" : "active"
+
+  "discountType": "string",
+  "minimumPurchase": "string"
 }
 PATCH {{origin}}/api/vouchers/:voucherId
 ```
@@ -1148,13 +1208,18 @@ PATCH {{origin}}/api/vouchers/:voucherId
 {
   "name": "category-name",                              (*)
   "shippingCharge": "200",
+  "shippingChargeType": "string",
   "vat": "2",
+  "vatType": "string",
   "status": "active",
   "commission": "0",
+  "commissionType": "string",
   "image: "data:image/jpg;a3wwra...",
   "icon": "my icon name",
-	"transactionCose": "2",
-	"transactionId": "askdjfalsdjf",
+  "transactionCost": "2",
+  "transactionCostType": "string",
+  "transactionId": "askdjfalsdjf",
+
 }
 
 POST {{origin}}/api/categories
@@ -1166,12 +1231,17 @@ POST {{origin}}/api/categories
 body {
   "name": "category-new-name",
   "shippingCharge": "200",
+  "shippingChargeType": "string",
   "vat": "2",
+  "vatType": "string",
   "status": "active",
   "commission": "0",
+  "commissionType": "string",
   "icon": "my icon name",
-	"transactionCose": "2",
-	"transactionId": "askdjfalsdjf",
+  "transactionCost": "2",
+  "transactionCostType": "string",
+  "transactionId": "askdjfalsdjf",
+
 }
 PATCH {{origin}}/api/categories/:categoryId
 ```
@@ -1188,18 +1258,23 @@ PATCH {{origin}}/api/categories/:categoryId
 - DELETE {{origin}}/api/sub-categories/:subCategoryId   // To Delete
 
 
+
 #### Add SubCategory
 ```
 {
   "category": "category._id",                           (*)
   "name": "category-name",                              (*)
   "shippingCharge": "200",
+  "shippingChargeType": "string",
   "vat": "2",
+  "vatType": "string",
   "status": "active",
   "commission": "0"
+  "commissionType": "string",
   "image: "data:image/jpg;a3wwra...",
   "icon": "my icon name",
-	"transactionCose": "2"
+  "transactionCost": "2"
+  "transactionCostType": "string",
 }
 
 POST {{origin}}/api/sub-categories
@@ -1209,14 +1284,19 @@ POST {{origin}}/api/sub-categories
 #### Update SubCategory
 ```
 body {
+
   "name": "subCcategory-new-name",
   "image: "data:image/jpg;a3wwra...",
   "icon": "my icon name",
   "shippingCharge": "200",
+  "shippingChargeType": "string",
   "vat": "2",
+  "vatType": "string",
   "status": "active",
   "commission": "0",
-	"transactionCose": "2"
+  "commissionType": "string",
+  "transactionCost": "2",
+  "transactionCostType": "string",
 }
 PATCH {{origin}}/api/sub-categories/:subCategoryId
 ```
