@@ -250,12 +250,13 @@ export const googleCallbackHandler:RequestHandler = catchAsync( async (req, res,
     if (err) { return next(err); }
     if (!user) { return res.redirect('/auth/failure'); }
 
-    // Validate the state parameter to prevent CSRF attacks
-    if (req.query.state !== (req.session as CustomSession).state) {
-      return next(appError('invalid state parameter', 403, 'GoogleError'))
-      // return res.status(403).send('Invalid state parameter');
-    }
+    // // Validate the state parameter to prevent CSRF attacks
+    // if (req.query.state !== (req.session as CustomSession).state) {
+    //   return next(appError('invalid state parameter', 403, 'GoogleError'))
+    //   // return res.status(403).send('Invalid state parameter');
+    // }
 
+		console.log({ state: req.query.state, sessionState: (req.session as CustomSession).state })
 
     req.logIn(user, async (err) => {
       if (err) { 
@@ -263,7 +264,6 @@ export const googleCallbackHandler:RequestHandler = catchAsync( async (req, res,
 				return next(err); 
 			}
 
-      // const isMobile = req.headers['user-agent']?.includes('Android') || req.query.mobile;
 		  const isFlutterApp = req.headers['user-agent']?.includes('flutter') || req.query.flutter;
 
       if (isFlutterApp) {
@@ -284,19 +284,17 @@ export const googleCallbackHandler:RequestHandler = catchAsync( async (req, res,
 
 // GET /auth/google/ 		=> /api/auth/google/success/?authToken={authToken} 
 export const googleSuccessHandler: RequestHandler = catchAsync( async (req, res, next) => {
-
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const authToken = req.query.authToken as any
 	console.log({ googleSuccessHandler: authToken })
 
 	if(!authToken) return next(appError('No authToken: authentication failed'))
 
-	// if(typeof authToken === 'string') {
-	// 	const isVerifiedToken = await tokenService.verifyUserAuthToken(authToken) 
-	// 	if(!isVerifiedToken) return next(appError('authenticate validation failed'))
+	if(typeof authToken === 'string') {
+		const isVerifiedToken = await tokenService.verifyUserAuthToken(authToken) 
+		if(!isVerifiedToken) return next(appError('authenticate validation failed'))
 
-	// } else throw next(appError(`authToken: ${authToken}`))
+	} else throw next(appError(`authToken: ${authToken}`))
 
 	const isVerifiedToken = await tokenService.verifyUserAuthToken(authToken) 
 	if(!isVerifiedToken) return next(appError('authenticate validation failed'))

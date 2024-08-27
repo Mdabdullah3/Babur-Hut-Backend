@@ -107,7 +107,7 @@ app.set('view engine', 'pug')
 app.use(session({
 	secret: SESSION_SECRET,
 	resave: false,
-	saveUninitialized: false,
+	saveUninitialized: true,
 	store: MongoStore.create({ mongoUrl: DATABASE_URL }),
 	cookie: {
 		httpOnly: true,
