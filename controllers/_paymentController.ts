@@ -197,7 +197,7 @@ export const createPaymentRequest:RequestHandler = catchAsync( async (req, res, 
 
 	const body = req.query as typeof req.body
 	body.user = userId 						// make sure user is logend in
-	body.price = product.price 		// override user value with real product value, no way to modify from client
+	// body.price = product.price 		// override user value with real product value, no way to modify from client
 
 	const transactionId = new Types.ObjectId()
 	body.transaction = transactionId
@@ -206,7 +206,7 @@ export const createPaymentRequest:RequestHandler = catchAsync( async (req, res, 
 
 
 	const data = {
-		total_amount: product.price,
+		// total_amount: product.price,
 		currency: body.currency,
 		tran_id: transactionId, // use unique tran_id for each api call
 
