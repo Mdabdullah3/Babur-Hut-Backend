@@ -558,6 +558,7 @@ POST {{origin}}/api/products/many                       : To get multiple produc
 ```
 body: {
   "customId": 'unique-id',
+  "productVariant": 'productVariant._id',
 # "user": logedInUser.id,                               (*) : comes from logedIn session
   "name": "it is my sample product",                    (*)
   "slug": "it-is-my-sample-product-unitque",

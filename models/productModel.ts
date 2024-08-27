@@ -52,6 +52,11 @@ const productSchema = new Schema<ProductDocument>({
 		ref: 'User',
 		required: true
 	},
+	productVariant: {
+		type: Schema.Types.ObjectId,
+		ref: 'productVariant',
+		// required: true
+	},
 	name: {
 		type: String,
 		required: true,

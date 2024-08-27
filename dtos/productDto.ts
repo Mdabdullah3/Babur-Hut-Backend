@@ -20,6 +20,7 @@ export const filterProductDocument = (product: ProductDocument) => {
 export const filterBodyForCreateProduct = (body: CreateProduct) => {
 	const allowedFields = [
 		'customId', 				// user._id
+		'productVariant',
 		'user', 				// user._id
 		'name',
 		'slug',
@@ -48,6 +49,7 @@ export const filterBodyForCreateProduct = (body: CreateProduct) => {
 export const filterBodyForUpdateProduct = (body: UpdateProduct) => {
 	const allowedFields = [
 		'customId',
+		'productVariant',
 		'name',
 		'slug',
 		'price',
