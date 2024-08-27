@@ -237,7 +237,7 @@ export const googleLoginRequest:RequestHandler = catchAsync( async (req, res, ne
 
   passport.authenticate('google', {
     scope: ['profile', 'email'],
-    // state: state 																	// Include the state in the request to Google
+    state: state 																	// Include the state in the request to Google
   })(req, res, next);
 
 })
@@ -250,11 +250,11 @@ export const googleCallbackHandler:RequestHandler = catchAsync( async (req, res,
     if (err) { return next(err); }
     if (!user) { return res.redirect('/auth/failure'); }
 
-    // // Validate the state parameter to prevent CSRF attacks
-    // if (req.query.state !== (req.session as CustomSession).state) {
-    //   return next(appError('invalid state parameter', 403, 'GoogleError'))
-    //   // return res.status(403).send('Invalid state parameter');
-    // }
+    // Validate the state parameter to prevent CSRF attacks
+    if (req.query.state !== (req.session as CustomSession).state) {
+      return next(appError('invalid state parameter', 403, 'GoogleError'))
+      // return res.status(403).send('Invalid state parameter');
+    }
 
 
     req.logIn(user, async (err) => {
