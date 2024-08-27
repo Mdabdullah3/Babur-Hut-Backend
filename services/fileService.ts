@@ -34,7 +34,7 @@ export const handleBase64File = async (dataUrl: string, subDir='/users', _fileTy
 		if(!dataUrl || typeof dataUrl !== 'string' ) return tempObj
 		const baseDir = '/upload'
 
-		if( !dataUrl.startsWith('data') ) return { error: `'${dataUrl}' is not valid dataUrl`, image: null  }
+		if( !dataUrl?.startsWith('data') ) return { error: `'${dataUrl}' is not valid dataUrl`, image: null  }
 
 		// Step-1: seperate metadata from base64 string dataUrl 
 		const [ metadata, base64 ] = dataUrl.split(';base64,')

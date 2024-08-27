@@ -347,7 +347,7 @@ export const googleAuthFailure:RequestHandler = catchAsync( async (_req, _res, n
 // })
 
 
-/* PATCH /auth/update-password
+/* PATCH /auth/update-password 	+ protect
 {
   "currentPassword": "asdfasdff",
   "password": "asdfasdf",
@@ -361,7 +361,10 @@ export const updatePassword:RequestHandler = catchAsync( async (req, res, next) 
 	if(!currentPassword || !password || !confirmPassword) return next(appError(missingFieldsError))
 	if(currentPassword === password ) return next(appError(`please choose different password than currentPassword`))
 
-	const user = await User.findOne().select('+password')
+	const logedInUser = req.user as LogedInUser
+
+	// const user = await User.findOne().select('+password')
+	const user = await User.findById(logedInUser._id).select('+password')
 	if(!user?.password) return next(appError('missing password from user document'))
 
 	// const isAuthenticated = bcryptjs.compareSync(currentPassword, user?.password)
