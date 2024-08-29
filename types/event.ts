@@ -19,6 +19,7 @@ export type EventsDocument = Document & {
 	startDate: Date
 	endDate: Date
 
+	description: string
 	// products: Product[]
 }
 
@@ -31,5 +32,6 @@ export type UpdateEvent = {
 	startDate: Date
 	endDate: Date
 
+	description: string
 	// products: Product[]
 }

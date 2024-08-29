@@ -32,6 +32,12 @@ const packageSchema = new Schema<PackageDocument>({
 		lowercase: true,
 		trim: true,
 	},
+	description: { 
+		type: String,
+		// required: true,
+		lowercase: true,
+		trim: true,
+	},
 	price: { 								
 		type: Number,
 		default: 0

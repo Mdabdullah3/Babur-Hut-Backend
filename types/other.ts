@@ -5,11 +5,18 @@ type Image = {
 	secure_url: string
 }
 
+
+
 export type OtherDocument = Document & {
 	name: string
 	banner: string
 	user: Types.ObjectId,
 	image: Image
+
+	mobileBanner: Image
+	popupImageMobile: Image
+	logo: Image
+	popupImage: Image
 }
 
 export type UpdateOther = {
@@ -17,4 +24,9 @@ export type UpdateOther = {
 	banner: string
 	user: Types.ObjectId,
 	image: Image
+
+	mobileBanner: Image
+	popupImageMobile: Image
+	logo: Image
+	popupImage: Image
 }

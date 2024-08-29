@@ -20,11 +20,11 @@ import { Schema, models, model } from 'mongoose'
 */
 
 const productVariantSchema = new Schema<ProductVariantDocument>({
-	product: {
-		type: Schema.Types.ObjectId,
-		ref: 'Product',
-		required: true
-	},
+	// product: {
+	// 	type: Schema.Types.ObjectId,
+	// 	ref: 'Product',
+	// 	required: true
+	// },
 	user: {
 		type: Schema.Types.ObjectId,
 		ref: 'User',

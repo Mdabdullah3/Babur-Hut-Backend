@@ -363,19 +363,21 @@ export const deleteProductByIdOrSlug:RequestHandler = catchAsync(async (req, res
 	if(!product) return next(appError('product not found'))
 	
 
-	if(product.coverPhoto) {
+	if(product?.coverPhoto?.secure_url) {
 		setTimeout(() => {
 			promisify(fileService.removeFile)(product.coverPhoto.secure_url)
 		}, 1000);
 	}
 	if(product.images.length) {
 		product.images.forEach( image => {
-			setTimeout(() => {
-				promisify(fileService.removeFile)(image.secure_url)
-			}, 1000);
+			if(image?.secure_url) {
+				setTimeout(() => {
+					promisify(fileService.removeFile)(image.secure_url)
+				}, 1000);
+			}
 		})
 	}
-	if(product.video && !product.video.secure_url.startsWith('http')) {
+	if(product?.video?.secure_url && !product?.video?.secure_url?.startsWith('http')) {
 		setTimeout(() => {
 			promisify(fileService.removeFile)(product.video.secure_url)
 		}, 1000);

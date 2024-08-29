@@ -13,6 +13,8 @@ export type PackageDocument = Document & {
 	price: number,
 	maxProduct: number,
 	image: Image
+
+	description: string
 }
 
 
@@ -23,4 +25,5 @@ export type UpdatePackage = {
 	price: number,
 	maxProduct: number,
 	image: Image
+	description: string
 }

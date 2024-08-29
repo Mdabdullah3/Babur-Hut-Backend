@@ -404,15 +404,32 @@ export const updatePassword:RequestHandler = catchAsync( async (req, res, next) 
 export const forgotPassword:RequestHandler = catchAsync( async (req, res, next) => {
 	const { email } = req.body
 	if(!email) return next(appError('email fields is mandatory'))
+	if(!isEmail(email)) return next(appError(`invalid email: ${email}`))
 
 	const user = await User.findOne({ email })
 	if(!user) return next(appError(`you are not registerted user, please register first`))
 
 	const resetToken = await user.getPasswordResetToken()
 
+	try {
+		await sendMail({
+			from: 'robitops10@gmail.com',
+			to: email,
+			subject: 'Password Reset Token | baburhaatbd.com',
+			text: `resetToken: ${resetToken}`
+		})
+
+	} catch (error: unknown) {
+		if(error instanceof Error) return next(appError(error.message, 401, 'ResetPasswordTokenError'))		
+
+		if( typeof error === 'string')
+		return next(appError(error, 400, 'ResetPasswordTokenError'))		
+	}
+
+
 	res.status(200).json({
 		status: 'success',
-		resetToken
+		message: `token sent to ${email}`
 	})
 
 })
@@ -473,13 +490,16 @@ export const sendOTP = catchAsync( async(req, res, next) => {
 
 	// Step-3: 
 	try {
-		// await otpService.sendSMS(phone, otp) 				// get twilio details first
-		await sendMail({
-			from: 'letmeexplore01@gmail.com',
-			to: 'your_target_user@gmail.com',
-			subject: 'Testing | sending OTP via email',
-			text: `otp: ${otp}`
-		})
+		const data = await otpService.sendSMS(phone, otp) 				// get twilio details first
+		if(data.error) return next( appError(data.msg, data.error, 'OTP_ERROR') )
+		console.log(data)
+
+		// await sendMail({
+		// 	from: 'letmeexplore01@gmail.com',
+		// 	to: 'your_target_user@gmail.com',
+		// 	subject: 'Testing | sending OTP via email',
+		// 	text: `otp: ${otp}`
+		// })
 
 	} catch (error: unknown) {
 		if(error instanceof Error) return next(appError(error.message, 401, 'OTP_error'))		
@@ -676,13 +696,16 @@ export const sendUpdatePhoneRequest = catchAsync(async (req, res, next) => {
 
 	// Step-3: 
 	try {
-		// await otpService.sendSMS(phone, otp) 				// get twilio details first
-		await sendMail({
-			from: 'letmeexplore01@gmail.com',
-			to: 'your_target_user@gmail.com',
-			subject: 'Testing | sending OTP via email',
-			text: `otp: ${otp}`
-		})
+		const data = await otpService.sendSMS(phone, otp) 				
+		if(data.error) return next( appError(data.msg, data.error, 'OTP_ERROR') )
+		console.log(data)
+
+		// await sendMail({
+		// 	from: 'letmeexplore01@gmail.com',
+		// 	to: 'your_target_user@gmail.com',
+		// 	subject: 'Testing | sending OTP via email',
+		// 	text: `otp: ${otp}`
+		// })
 
 	} catch (error: unknown) {
 		if(error instanceof Error) return next(appError(error.message, 401, 'OTP_error'))		

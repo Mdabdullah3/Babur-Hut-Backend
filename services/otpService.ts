@@ -1,30 +1,44 @@
 import crypto from 'crypto'
-// import type { Request } from 'express'
-// import { sendMail } from '../utils/nodemailer'
-
+import axios from 'axios'
 
 // const { SMS_SID='', SMS_SECRET='', SMS_FROM_NUMBER } = process.env
 // const twilio = require('twilio')(SMS_SID, SMS_SECRET, { })
+
 
 export const generateOTP = async () => {
 	return crypto.randomInt(1000, 9999)
 }
 
 export const sendSMS = async (phone: string, otp: number) => {
-	// return await twilio.messages.create({
-	// 	to: phone,
-	// 	from: SMS_FROM_NUMBER,
-	// 	body: `your coderhouse otp: ${otp}`
-	// })
+	const OTP_SECRET = process.env.OTP_SECRET
+	if(!OTP_SECRET) throw new Error(`OTP_SECRET Error: ${OTP_SECRET}`)
 
-	console.log({ phone, otp })
+  try {
+    const { data } = await axios.post( 'https://api.sms.net.bd/sendsms', { 
+			api_key: OTP_SECRET,
+			msg: `Your baburhaatbd OTP Code is ${otp}`,
+			to: phone 
+		});
 
+		return data
+
+  } catch (error) {
+   	return error
+	}
 }
 
 
-// export const sendOtpMail = async (req: Request, email: string) => {
-//   // send resetToken via email.
-//   let text = 'Please copy/paste the bellow url to reset the password: \n'
-//       text += `${req.protocol}://${req.get('host')}/api/users/reset-password/${resetToken}`
-//   await sendMail({ to: email, text })   // from, to, subject, text
+
+// export const sendSMS = async (phone: string, otp: number) => {
+// 	return await twilio.messages.create({
+// 		to: phone,
+// 		from: SMS_FROM_NUMBER,
+// 		body: `your coderhouse otp: ${otp}`
+// 	})
+
+// 	const body = `Your baburhaatbd OTP Code is ${otp}`
+// 	body
 // }
+
+
+

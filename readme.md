@@ -695,7 +695,6 @@ body: {
 #### Add Product-Variant
 ```
 body {
-  "product": "66c86221f8a224b845232d55",                        (*) 
   "user" : "667e915a3204d8967daaf4a1",
   "name": "variant 2",
   "price": 200,                                                 (*)
@@ -714,7 +713,6 @@ POST {{origin}}/api/product-variants
 #### Update Product-Variant
 ```
 body {
-  "product": "66c86221f8a224b845232d55",       
   "user" : "667e915a3204d8967daaf4a1",
   "name": "variant 2",
   "price": 200, 
@@ -1324,6 +1322,7 @@ body {
   "price": 300,
   "maxProduct": 10
   "image: "data:image/jpg;a3wwra...",
+  "description": "any description",   
 }
 
 POST {{origin}}/api/packages
@@ -1341,6 +1340,7 @@ body {
   "price": 300,
   "maxProduct": 10
   "image: "data:image/jpg;a3wwra...",
+  "description": "any description",   
 }
 PATCH {{origin}}/api/packages/:packageId
 ```
@@ -1566,6 +1566,7 @@ body {
   "status": "status",                                   (*)
   "startDate": "new Date( Date.now() )",
   "endDate": "new Date( Date.now() + 1000 * 60 * 60 * 5)",
+  "description": "any description",   
 }
 
 POST {{origin}}/events/:eventId
@@ -1580,6 +1581,7 @@ body {
   "status": "status",
   "startDate": "new Date( Date.now() )",
   "endDate": "new Date( Date.now() + 1000 * 60 * 60 * 5)",
+  "description": "any description",   
 }
 PATCH {{origin}}/events/:eventId
 ```

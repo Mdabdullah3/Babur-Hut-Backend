@@ -6,6 +6,11 @@ import { Schema, models, model } from 'mongoose'
 {
 	"user": 'user._id',
 	"image": 'data:image/jpb,asdjfakjdfajdf',
+
+	mobileBanner: Image
+	popupImageMobile: Image
+	logo: Image
+	popupImage: Image
 }
 */
 
@@ -20,9 +25,28 @@ const otherSchema = new Schema<OtherDocument>({
 	image: {
 		public_id: String,
 		secure_url: String,
-		alt: String,
-		size: String
 	},
+
+	mobileBanner: {
+		public_id: String,
+		secure_url: String,
+	},
+
+	popupImageMobile: {
+		public_id: String,
+		secure_url: String,
+	},
+
+	logo: {
+		public_id: String,
+		secure_url: String,
+	},
+
+	popupImage: {
+		public_id: String,
+		secure_url: String,
+	},
+
 
 }, {
 	timestamps: true,

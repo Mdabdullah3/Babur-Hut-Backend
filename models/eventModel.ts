@@ -42,6 +42,11 @@ const eventSchema = new Schema<EventsDocument>({
 	startDate: Date,
 	endDate: Date,
 
+	description: { 
+		type: String,
+		lowercase: true,
+		trim: true,
+	},
 
 }, {
 	timestamps: true,

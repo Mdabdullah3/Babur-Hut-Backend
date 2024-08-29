@@ -7,7 +7,7 @@ export type Image = {
 
 
 export type ProductVariantDocument = Document & {
-	product: Types.ObjectId
+	// product: Types.ObjectId
 	user: Types.ObjectId
 	name: string
 
