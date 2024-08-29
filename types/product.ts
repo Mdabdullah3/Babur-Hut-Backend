@@ -29,7 +29,7 @@ type Packaging = {
 export type ProductDocument = Document & {
 	customId: string
 	user: Types.ObjectId
-	productVariant: Types.ObjectId
+	productVariants: Types.ObjectId[]
 	name: string
 	// price: number
 	summary: string

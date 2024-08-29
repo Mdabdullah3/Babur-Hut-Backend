@@ -52,11 +52,11 @@ const productSchema = new Schema<ProductDocument>({
 		ref: 'User',
 		required: true
 	},
-	productVariant: {
+	productVariants: [{
 		type: Schema.Types.ObjectId,
-		ref: 'productVariant',
+		ref: 'ProductVariant',
 		// required: true
-	},
+	}],
 	name: {
 		type: String,
 		required: true,
@@ -256,7 +256,8 @@ productSchema.pre(/^find/, function (this: ProductDocument, next) {
 
 	this.populate('reviews')
 	this.populate('user')
-	// this.populate('subCategory')
+	this.populate('productVariants')
+	// this.populate('subCategory') 	// if populate here and populate on Category then it create loop
 
 	next()
 })

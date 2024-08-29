@@ -413,7 +413,6 @@ export const forgotPassword:RequestHandler = catchAsync( async (req, res, next) 
 
 	try {
 		await sendMail({
-			from: 'robitops10@gmail.com',
 			to: email,
 			subject: 'Password Reset Token | baburhaatbd.com',
 			text: `resetToken: ${resetToken}`
@@ -495,7 +494,6 @@ export const sendOTP = catchAsync( async(req, res, next) => {
 		console.log(data)
 
 		// await sendMail({
-		// 	from: 'letmeexplore01@gmail.com',
 		// 	to: 'your_target_user@gmail.com',
 		// 	subject: 'Testing | sending OTP via email',
 		// 	text: `otp: ${otp}`
@@ -617,14 +615,12 @@ export const sendUpdateEmailRequest = catchAsync(async (req, res, next) => {
 	const user = await User.findById(userId)
 	if(!user ) return next(appError('no user found'))
   const resetToken = await user.createEmailResetToken()
-  // const resetToken = await tokenService.generateEmailResetToken()
 
 	const subject = `To Change Email: ${logedInUser.name} (only valid for 10 minutes)`
   let text = 'Please copy/paste the bellow url or click to update your email: \n'
       text += `${req.protocol}://${req.get('host')}/api/auth/update-email/${resetToken}?email=${email}`
 
 	try {
-		// await otpService.sendSMS(phone, otp) 				// get twilio details first
 		await sendMail({ to: email, subject, text })
 
 	} catch (error: unknown) {
@@ -701,7 +697,6 @@ export const sendUpdatePhoneRequest = catchAsync(async (req, res, next) => {
 		console.log(data)
 
 		// await sendMail({
-		// 	from: 'letmeexplore01@gmail.com',
 		// 	to: 'your_target_user@gmail.com',
 		// 	subject: 'Testing | sending OTP via email',
 		// 	text: `otp: ${otp}`
