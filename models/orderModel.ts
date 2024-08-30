@@ -1,18 +1,25 @@
 import type { OrderDocument } from '../types/order'
 import type { Model } from 'mongoose'
 import { model, models, Schema } from 'mongoose'
+import isEmail from 'validator/lib/isEmail'
 
 
 /*
 {
 	"user": "user.id",
 	"product": "product.id",
-	"transactionId": "transactionId",
+	// "transactionId": "transactionId",
 
 	"price": "my-product-name",
-	"currency": 'BDT',
+	"currency": "BDT",
+	"paymentType":  "cash-on-delivery",  					// ['courier', 'cash-on-delivery']
+	"status": "pending", 													// ['pending', 'completed', 'shipped', 'cancelled'],
 
 	"shippingInfo" : {
+		"name": "riajul islam",
+		"email": "riajul@gmail.com",
+		"phone": "01957500605",
+
 		"method": "Courier",
 		"address1": "shipping address",
 		"address2": "",
@@ -20,39 +27,118 @@ import { model, models, Schema } from 'mongoose'
 		"state": "Dhaka",
 		"postcode": 1000,
 		"country": "Bangladesh",
+
+		"deliveryFee": 40
 	}
 }
 
+{
+  "user" : "667e915a3204d8967daaf4a1",
+  "product" : "667ea9b1df5d6c0e864f1841",
+
+	"price": 525,
+	"currency": "BDT",
+	"paymentType":  "cash-on-delivery",  
+	"status": "pending", 
+
+	"shippingInfo" : {
+		"name": "riajul islam",
+		"email": "riajul@gmail.com",
+		"phone": "01957500605",
+
+		"method": "Courier",
+		"address1": "shipping address",
+		"address2": "",
+		"city": "Dhaka",
+		"state": "Dhaka",
+		"postcode": 1000,
+		"country": "Bangladesh",
+
+		"deliveryFee": 40
+	}
+}
+*/
+
+/*
+[
+	{
+		"user" : "667e915a3204d8967daaf4a1",
+		"product" : "667ea9b1df5d6c0e864f1841",
+
+		"price": 525,
+		"currency": "BDT",
+		"paymentType":  "cash-on-delivery",  
+		"status": "pending", 
+
+		"shippingInfo" : {
+			"name": "riajul islam",
+			"email": "riajul@gmail.com",
+			"phone": "01957500605",
+
+			"method": "Courier",
+			"address1": "shipping address",
+			"address2": "",
+			"city": "Dhaka",
+			"state": "Dhaka",
+			"postcode": 1000,
+			"country": "Bangladesh",
+
+			"deliveryFee": 40
+		}
+	},
+
+	{
+		"user" : "667e915a3204d8967daaf4a1",
+		"product" : "667ea9b1df5d6c0e864f1841",
+
+		"price": 525,
+		"currency": "BDT",
+		"paymentType":  "cash-on-delivery",  
+		"status": "pending", 
+
+		"shippingInfo" : {
+			"name": "riajul islam",
+			"email": "riajul@gmail.com",
+			"phone": "01957500605",
+
+			"method": "Courier",
+			"address1": "shipping address",
+			"address2": "",
+			"city": "Dhaka",
+			"state": "Dhaka",
+			"postcode": 1000,
+			"country": "Bangladesh",
+
+			"deliveryFee": 40
+		}
+	}
+]
 */
 
 
 // this model is replaced by paymentModel
-const orderModel = new Schema<OrderDocument>({
-
+const orderSchema = new Schema<OrderDocument>({
 	user: { 																	// customer
 		type: Schema.Types.ObjectId,
 		ref: 'User',
 		required: true,
-		unique: true,
 	},
 	product: {
 		type: Schema.Types.ObjectId,
 		ref: 'Product',
 		required: true,
-		unique: true,
 	},
+	// transactionId: {
+	// 	type: Schema.Types.ObjectId,
+	// 	// required: true,
+	// 	// unique: true,
+	// },
 
-	customers: [{ 													
-		type: Schema.Types.ObjectId,
-		ref: 'User',
-	}],
-
-	transactionId: {
-		type: Schema.Types.ObjectId,
+	price: {
+		type: Number,
 		required: true,
-		unique: true,
+		min: 1,
 	},
-
 	currency: {
 		type: String,
 		trim: true,
@@ -61,21 +147,55 @@ const orderModel = new Schema<OrderDocument>({
 		maxlength: 4,
 		default: 'bdt'
 	},
-	price: {
-		type: Number,
+
+	paymentType: {
+		type: String,
 		required: true,
-		min: 1,
-		// set: function(price: number) { 		// because we set: price: Float! in GraphQL Schema
-		// 	return price.toFixed(2)
-		// }
+		lowercase: true,
+		trim: true,
+		enum: ['courier', 'cash-on-delivery'],
+		default: 'cash-on-delivery'
+	},
+	status: {
+		type: String,
+		lowercase: true,
+		trim: true,
+		enum: ['pending', 'completed', 'shipped', 'cancelled'],
+		default: 'pending'
 	},
 
 	shippingInfo: {
+		name: {
+			type: String,
+			trim: true,
+			lowercase: true,
+			required: true,
+		},
+		email: {
+			type: String,
+			lowercase: true,
+			trim: true,
+			validate: isEmail
+		},
+		phone: {
+			type: String,
+			trim: true,
+			lowercase: true,
+			required: true,
+		},
+
 		method: {
 			type: String,
 			trim: true,
 			lowercase: true,
-			enum: ['Courier'], 					// need from frontend
+			// enum: ['courier'], 					// need from frontend
+			required: true,
+		},
+		deliveryFee: {
+			type: String,
+			trim: true,
+			lowercase: true,
+			// enum: ['courier'], 					// need from frontend
 			required: true,
 		},
 		address1: {
@@ -112,7 +232,7 @@ const orderModel = new Schema<OrderDocument>({
 			type: Number,
 			min: 100,
 			max: 99999,
-			required: true,
+			// required: true,
 		},
 		country: {
 			type: String,
@@ -128,8 +248,16 @@ const orderModel = new Schema<OrderDocument>({
 	timestamps: true
 })
 
+// productSchema.pre('save', function(this) {
+orderSchema.pre('save', function(next) {
+	this.price = +this.price 								// convert to number
+	// this.quantity = +this.quantity
 
-export const Order: Model<OrderDocument> = models.Order || model<OrderDocument>('Order', orderModel)
+
+	next()
+})
+
+export const Order: Model<OrderDocument> = models.Order || model<OrderDocument>('Order', orderSchema)
 export default Order
 
 

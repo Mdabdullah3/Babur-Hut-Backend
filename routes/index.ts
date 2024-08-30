@@ -6,7 +6,8 @@ import { router as userRouter } from './userRoutes'
 import { router as productRouter } from './productRoutes'
 import { router as productVariantRouter } from './productVariantRoutes'
 import { router as reviewRouter } from './reviewRoutes'
-import { router as paymentRouter } from './paymentRoutes'
+import { router as orderRouter } from './orderRouters'
+// import { router as paymentRouter } from './paymentRoutes'
 import { router as voucherRouter } from './voucherRoutes'
 import { router as categoryRouter } from './cagegoryRouter'
 import { router as subCategoryRouter } from './subCagegoryRouter'
@@ -20,13 +21,13 @@ import { router as eventProductRouter } from './eventProductRoutes'
 import { router as deliveryFeesRouter } from './deliveryFeeRoutes'
 import { router as reportRouter } from './reportRoutes'
 
-import { router as testRouter } from './_testRoutes' 		// just for test
+// import { router as testRouter } from './_testRoutes' 		// just for test
 
 
 // => / 	(root)
 const router = Router()
 
-router.use('/api/test', testRouter) 			// just for testing
+// router.use('/api/test', testRouter) 			// just for testing
 
 router.use('/', pageRouter)
 router.use('/upload', fileRouter)
@@ -35,7 +36,8 @@ router.use('/api/users', userRouter)
 router.use('/api/products', productRouter)
 router.use('/api/product-variants', productVariantRouter)
 router.use('/api/reviews', reviewRouter)
-router.use('/api/payments', paymentRouter)
+router.use('/api/orders', orderRouter)
+// router.use('/api/payments', paymentRouter)
 router.use('/api/notifications', notificationRouter)
 
 router.use('/api/vouchers', voucherRouter)

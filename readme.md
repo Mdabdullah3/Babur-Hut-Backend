@@ -1347,6 +1347,114 @@ PATCH {{origin}}/api/packages/:packageId
 
 
 
+## Order
+- GET   /api/orders                             : Get All orders
+- GET   /api/orders/:orderId                    : Get Single Order
+- POST  /api/orders/many                        : Get Multiple Order by req.body.orderIds=[]
+
+- GET   /api/users/:userId/orders               : Get All orders of given users
+- GET   /api/users/me/orders                    : Get All orders of logedIn users
+
+- POST  /api/orders                             : To Create single/multiple Order
+
+- PATCH /api/orders/:orderId 	                : Only Admin (role='admin') can update Order status
+- DELETE /api/orders/:orderId 	                : Only Admin (role='admin') can delete Order
+
+- GET   /api/users/:userId/orders               : Get orders of Single User
+
+
+
+#### Get Multiple Orders
+```
+{
+  "orderIds": [
+	"66d1cf0cbc804e7f656c84de",
+	"66d1cfe2e2827162cd584631"
+	]
+}
+POST {{origin}}/api/orders/many
+```
+
+
+#### To create Single Order
+```
+#  for Single Order send Object
+
+body {
+  "user" : "66cb6175017d8682d2b9e6ef",
+  "product" : "667ea9b1df5d6c0e864f1841",
+
+  "price": 525,
+  "currency": "BDT",
+  "paymentType":  "cash-on-delivery",  
+  "status": "pending", 
+
+  "shippingInfo" : {
+    "name": "riajul islam",
+    "email": "riajul@gmail.com",
+    "phone": "01957500605",
+    
+    "method": "Courier",
+    "address1": "shipping address",
+    "address2": "",
+    "city": "Dhaka",
+    "state": "Dhaka",
+    "postcode": 1000,
+    "country": "Bangladesh",
+    
+    "deliveryFee": 40
+  }
+}
+
+
+
+
+#  for Multiple Order send Array Object
+
+body [
+  {
+    "user" : "66cb6175017d8682d2b9e6ef",
+    "product" : "667ea9b1df5d6c0e864f1841",
+  
+    "price": 525,
+    "currency": "BDT",
+    "paymentType":  "cash-on-delivery",  
+    "status": "pending", 
+  
+    "shippingInfo" : {
+      "name": "riajul islam",
+      "email": "riajul@gmail.com",
+      "phone": "01957500605",
+      
+      "method": "Courier",
+      "address1": "shipping address",
+      "address2": "",
+      "city": "Dhaka",
+      "state": "Dhaka",
+      "postcode": 1000,
+      "country": "Bangladesh",
+      
+      "deliveryFee": 40
+    }
+  }
+]
+
+POST {{origin}}/api/orders
+```
+
+
+#### To update Cash On PaymentStatus
+```
+body {
+  "status": "completed",                          : ['pending', 'completed', 'shipped', 'cancelled']
+}
+PATCH {{origin}}/api/orders/:orderId
+```
+
+
+
+
+
 ## Payments
 - GET /api/payments                             : Get All Payments
 

@@ -126,6 +126,8 @@ const paymentSchema = new Schema<IOrder>({
 		required: true,
 		lowercase: true,
 		trim: true,
+		// enum: ['courier', 'cash-on-delivery'],
+		// default: 'cash-on-delivery'
 	},
 	user: { 																// role='user' : which user will buy
 		type: Schema.Types.ObjectId,
@@ -160,6 +162,10 @@ paymentSchema.pre(/^find/, function (this: IProduct, next) {
 
 	next()
 })
+
+
+
+
 
 
 // Create and export the Order model
