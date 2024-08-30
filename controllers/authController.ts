@@ -618,7 +618,9 @@ export const sendUpdateEmailRequest = catchAsync(async (req, res, next) => {
 
 	const subject = `To Change Email: ${logedInUser.name} (only valid for 10 minutes)`
   let text = 'Please copy/paste the bellow url or click to update your email: \n'
-      text += `${req.protocol}://${req.get('host')}/api/auth/update-email/${resetToken}?email=${email}`
+      // text += `${req.protocol}://${req.get('host')}/api/auth/update-email/${resetToken}?email=${email}`
+      text += `${process.env.CLIENT_ORIGIN}/api/auth/update-email/${resetToken}?email=${email}`
+			
 
 	try {
 		await sendMail({ to: email, subject, text })
