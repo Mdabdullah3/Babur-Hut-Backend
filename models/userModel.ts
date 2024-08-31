@@ -101,7 +101,7 @@ const userSchema = new Schema<UserDocument>({
 		// required: true,
 		lowercase: true,
 		trim: true,
-		// unique: true,
+		unique: true,
 		validate: isEmail
 	},
 	password: {
@@ -150,7 +150,8 @@ const userSchema = new Schema<UserDocument>({
 
 	phone: {
 		type: String,
-		default: ''
+		trim: true,
+		unique: true,
 	},
 
 	location: {

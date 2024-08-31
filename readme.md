@@ -1379,10 +1379,12 @@ POST {{origin}}/api/orders/many
 #### To create Single Order
 ```
 #  for Single Order send Object
+- ***transactionId*** Must be unique per transaction, but will be same for multiple product item
 
 body {
   "user" : "66cb6175017d8682d2b9e6ef",
   "product" : "667ea9b1df5d6c0e864f1841",
+  "transactionId" : "UniqueId",                         : Unique Id
 
   "price": 525,
   "currency": "BDT",
@@ -1415,6 +1417,34 @@ body [
   {
     "user" : "66cb6175017d8682d2b9e6ef",
     "product" : "667ea9b1df5d6c0e864f1841",
+    "transactionId" : "UniqueId",                         : Unique Id, but same for product one
+  
+    "price": 525,
+    "currency": "BDT",
+    "paymentType":  "cash-on-delivery",  
+    "status": "pending", 
+  
+    "shippingInfo" : {
+      "name": "riajul islam",
+      "email": "riajul@gmail.com",
+      "phone": "01957500605",
+      
+      "method": "Courier",
+      "address1": "shipping address",
+      "address2": "",
+      "city": "Dhaka",
+      "state": "Dhaka",
+      "postcode": 1000,
+      "country": "Bangladesh",
+      
+      "deliveryFee": 40
+    }
+  },
+
+  {
+    "user" : "66cb6175017d8682d2b9e6ef",
+    "product" : "667ea9b1df5d6c0e864f1841",
+    "transactionId" : "UniqueId",                         : Unique Id, but same for 2nd product 
   
     "price": 525,
     "currency": "BDT",

@@ -17,8 +17,8 @@ dbConnect() 		// also add dotenv.config()
 errorController.exceptionErrorHandler() // put it very top
 
 
-// const { SESSION_SECRET,  MONGO_HOST, CLIENT_ORIGIN, NODE_ENV } = process.env || {}
-const { SESSION_SECRET,  MONGO_HOST, NODE_ENV } = process.env || {}
+// const { SESSION_SECRET,  MONGO_HOST, NODE_ENV } = process.env || {}
+const { SESSION_SECRET,  MONGO_HOST } = process.env || {}
 const publicDirectory = path.join(process.cwd(), 'public')
 
 // MONGO_HOST required into session({ store })
@@ -77,7 +77,7 @@ const corsOptions = {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      const msg = 'Riaz: The CORS policy for this site does not allow access from the specified Origin.';
       return callback(new Error(msg), false);
     }
     return callback(null, true);
@@ -111,7 +111,8 @@ app.use(session({
 	store: MongoStore.create({ mongoUrl: DATABASE_URL }),
 	cookie: {
 		httpOnly: true,
-		secure: NODE_ENV === 'production',
+		// secure: NODE_ENV === 'production',
+		secure: true,
 		sameSite: 'none',
     // maxAge: 30 * 24 * 60 * 60 * 1000 // 30 day
 	}

@@ -45,7 +45,8 @@ export const passportConfig = () => {
 	passport.use( new oAuth2Strategy.Strategy({
 		clientID: GOOGLE_CLIENT_ID,
 		clientSecret: GOOGLE_CLIENT_SECRET,
-		callbackURL: '/auth/google/callback', 							// same as origin-redirect: 	if request this route will show google login popup window
+		// callbackURL: '/auth/google/callback', 						// same as origin-redirect: 	if request this route will show google login popup window
+		callbackURL: '/api/auth/google/callback', 					// same as origin-redirect: 	if request this route will show google login popup window
 		scope: ['profile', 'email'] 												// ?
 	}, async (_accessToken, _refreshToken, profile, done) => {
 		try {
@@ -63,7 +64,8 @@ export const passportConfig = () => {
 						secure_url: profile.photos[0].value,
 					},
 					password: randomValue,
-					confirmPassword: randomValue
+					confirmPassword: randomValue,
+					isActive: true,
 				})
 				if(!user) return done(appError('create user in database is failed', 401, 'AuthError'), false)
 			}

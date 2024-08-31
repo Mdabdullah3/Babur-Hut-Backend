@@ -41,7 +41,7 @@ export interface IShippingInfo {
 export type OrderDocument = Document & {
 	product: Types.ObjectId;
 	user: Types.ObjectId;
-	transactionId: Types.ObjectId;
+	transactionId: string;
 
 	price: number;
 	currency: string;

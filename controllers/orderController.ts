@@ -70,8 +70,6 @@ export const getOrdersByIds:RequestHandler = catchAsync( async (req, res, _next)
 
 // POST 	/api/orders
 export const createOrder: RequestHandler = catchAsync( async (req, res, next) => {
-	// body = { order } || [ { order }, { order }]
-	console.log(req.body)
 	const order = await Order.create(req.body)
 	if(!order) return next(appError('order create failed'))
 

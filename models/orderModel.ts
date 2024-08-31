@@ -128,11 +128,11 @@ const orderSchema = new Schema<OrderDocument>({
 		ref: 'Product',
 		required: true,
 	},
-	// transactionId: {
-	// 	type: Schema.Types.ObjectId,
-	// 	// required: true,
-	// 	// unique: true,
-	// },
+	transactionId: {
+		type: String,
+		required: true,
+		// unique: true,
+	},
 
 	price: {
 		type: Number,

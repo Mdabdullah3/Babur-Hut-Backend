@@ -275,6 +275,7 @@ export const googleCallbackHandler:RequestHandler = catchAsync( async (req, res,
         const authToken = await tokenService.generateTokenForUser(user._id); // Implement your token generation logic
         res.redirect(`/api/auth/google/success/?authToken=${authToken}`);
 				console.log({ web: authToken })
+				console.log({ state: req.query.state, sessionState: (req.session as CustomSession).state })
       }
     });
   })(req, res, next);
@@ -536,8 +537,10 @@ body {
 */
 
 export const verifyOTP = catchAsync( async (req, res, next) => {
-	const { phone, otp, hash, role='vendor' } = req.body
+	const { phone, otp, hash } = req.body
 	if(!phone || !otp || !hash) return next(appError('you must send: { phone, otp, hash: hashedOTP }'))
+
+	req.body.role = 'vendor'
 
 	// step-1: check expires
 	const [ hashedOTP, expires ] = hash.split('.')
@@ -561,11 +564,9 @@ export const verifyOTP = catchAsync( async (req, res, next) => {
 		const requiredFields = {
 			// email: phone, 																		// just to prevent empty duplication error
 			phone,
-			role,
 			name: crypto.randomBytes(4).toString('hex'), 			// => 590e4eec
 			password,
 			confirmPassword : password,
-			isVerified: true,
 			isActive: true,
 		}
 		user = await User.create(requiredFields)
