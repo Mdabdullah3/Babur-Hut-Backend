@@ -1623,7 +1623,12 @@ body {
   "user": "user._id",                                   (*)
   "name": "any name",
   "banner": "any tag name",
-  "image" : "data:image/jpg,aksdjadjf"
+  "image" : "data:image/jpg,aksdjadjf",
+
+  "mobileBanner" : "data:image/jpg,aksdjadjf",
+  "popupImageMobile" : "data:image/jpg,aksdjadjf",
+  "logo" : "data:image/jpg,aksdjadjf",
+  "popupImage" : "data:image/jpg,aksdjadjf",
 }
 
 POST {{origin}}/api/vouchers
@@ -1636,6 +1641,11 @@ body {
   "banner": "any tag name",
   "user": "user._id",
   "image" : "data:image/jpg,aksdjadjf"
+
+  "mobileBanner" : "data:image/jpg,aksdjadjf",
+  "popupImageMobile" : "data:image/jpg,aksdjadjf",
+  "logo" : "data:image/jpg,aksdjadjf",
+  "popupImage" : "data:image/jpg,aksdjadjf",
 }
 PATCH {{origin}}/api/other/:otherId
 ```
