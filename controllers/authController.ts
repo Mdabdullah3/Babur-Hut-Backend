@@ -229,8 +229,6 @@ export const logout:RequestHandler = (req, res, next) => {
 
 // GET /auth/google/ 		=> 	/api/auth/google 	(Proxy Reverse For API)
 export const googleLoginRequest:RequestHandler = catchAsync( async (req, res, next) => {
-	
-
   // const state = generateRandomState(); 				// Generate a unique state parameter
   const state = crypto.randomUUID(); 							// Semi-clone required because next line type casting
   (req.session as CustomSession).state = state; 	// Store the state in the session
@@ -239,7 +237,6 @@ export const googleLoginRequest:RequestHandler = catchAsync( async (req, res, ne
     scope: ['profile', 'email'],
     state: state 																	// Include the state in the request to Google
   })(req, res, next);
-
 })
 
 
@@ -256,7 +253,10 @@ export const googleCallbackHandler:RequestHandler = catchAsync( async (req, res,
     //   // return res.status(403).send('Invalid state parameter');
     // }
 
-		console.log({ state: req.query.state, sessionState: (req.session as CustomSession).state })
+		console.log({ 
+			state: req.query.state, 
+			sessionState1: (req.session as CustomSession).state 
+		})
 
     req.logIn(user, async (err) => {
       if (err) { 
@@ -274,8 +274,8 @@ export const googleCallbackHandler:RequestHandler = catchAsync( async (req, res,
       } else {
         const authToken = await tokenService.generateTokenForUser(user._id); // Implement your token generation logic
         res.redirect(`/api/auth/google/success/?authToken=${authToken}`);
-				console.log({ web: authToken })
-				console.log({ state: req.query.state, sessionState: (req.session as CustomSession).state })
+
+
       }
     });
   })(req, res, next);
@@ -287,7 +287,7 @@ export const googleCallbackHandler:RequestHandler = catchAsync( async (req, res,
 export const googleSuccessHandler: RequestHandler = catchAsync( async (req, res, next) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const authToken = req.query.authToken as any
-	console.log({ googleSuccessHandler: authToken })
+	// console.log({ googleSuccessHandler: authToken })
 
 	if(!authToken) return next(appError('No authToken: authentication failed'))
 

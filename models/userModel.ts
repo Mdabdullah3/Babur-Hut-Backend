@@ -104,6 +104,11 @@ const userSchema = new Schema<UserDocument>({
 		unique: true,
 		validate: isEmail
 	},
+	phone: {
+		type: String,
+		trim: true,
+		unique: true,
+	},
 	password: {
 		type: String,
 		required: true,
@@ -148,11 +153,6 @@ const userSchema = new Schema<UserDocument>({
 		size: String
 	},
 
-	phone: {
-		type: String,
-		trim: true,
-		unique: true,
-	},
 
 	location: {
 		address1: {

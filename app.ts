@@ -17,8 +17,8 @@ dbConnect() 		// also add dotenv.config()
 errorController.exceptionErrorHandler() // put it very top
 
 
-// const { SESSION_SECRET,  MONGO_HOST, NODE_ENV } = process.env || {}
-const { SESSION_SECRET,  MONGO_HOST } = process.env || {}
+const { SESSION_SECRET,  MONGO_HOST, NODE_ENV } = process.env || {}
+// const { SESSION_SECRET,  MONGO_HOST } = process.env || {}
 const publicDirectory = path.join(process.cwd(), 'public')
 
 // MONGO_HOST required into session({ store })
@@ -29,18 +29,6 @@ if(!SESSION_SECRET) throw new Error(`Error: => SESSION_SECRET=${SESSION_SECRET}`
 
 const app: Express = express()
 
-
-
-// any pug file got cspNonce variable as global built-in has
-app.use((_req, res, next) => {
-	res.locals.cspNonce = crypto.randomBytes(16).toString('hex')
-	next()
-})
-
-
-
-
-// http://baburhaatbd.com:5000/register
 
 // List of allowed origins
 const allowedOrigins = [
@@ -87,20 +75,17 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 
-
 // app.use(cors({ 
 // 	// origin: NODE_ENV === 'production' ? CLIENT_ORIGIN : "*",
 // 	origin: "https://baburhaat.com",
 // 	credentials: true,
 // }))
 
-app.set('query parser', 'simple') 													// To prevent default query query [] parser
-
-app.use(express.static( publicDirectory ))
-app.use(express.urlencoded({ extended: false })) 						// required for passport login formData
-app.use(express.json({ limit: '500mb' }))
-app.set('view engine', 'pug')
-
+// any pug file got cspNonce variable as global built-in has
+app.use((_req, res, next) => {
+	res.locals.cspNonce = crypto.randomBytes(16).toString('hex')
+	next()
+})
 
 
 // Step-1: set session
@@ -111,8 +96,8 @@ app.use(session({
 	store: MongoStore.create({ mongoUrl: DATABASE_URL }),
 	cookie: {
 		httpOnly: true,
-		// secure: NODE_ENV === 'production',
-		secure: true,
+		secure: NODE_ENV === 'production',
+		// secure: true,
 		sameSite: 'none',
     // maxAge: 30 * 24 * 60 * 60 * 1000 // 30 day
 	}
@@ -130,6 +115,14 @@ passportConfig()
 // Step-5: app passport.authenticate('local', {...}) 	on 	`POST /login` route
 
 
+app.set('trust proxy', 1); 																	// Trust the first proxy of Nginx
+
+app.set('query parser', 'simple') 													// To prevent default query query [] parser
+app.set('view engine', 'pug')
+
+app.use(express.static( publicDirectory ))
+app.use(express.urlencoded({ extended: false })) 						// required for passport login formData
+app.use(express.json({ limit: '500mb' }))
 
 app.use('/', routers)
 

@@ -1,13 +1,23 @@
 // used in app.js
 import passport from 'passport'
-// import { Strategy as LocalStrategy } from 'passport-local'
 import * as localStrategy from 'passport-local'
-// import { Strategy as OAuth2Strategy } from 'passport-google-oauth2'
-import * as oAuth2Strategy from 'passport-google-oauth2'
+import { Strategy as OAuth2Strategy } from 'passport-google-oauth20'
+// import * as oAuth2Strategy from 'passport-google-oauth2'
 import bcryptjs from 'bcryptjs'
 import User from '../models/userModel'
 import { appError } from './errorController'
 import { isEmail } from 'validator'
+
+type Email = {
+	value: string
+}
+type Photo = {
+	value: string
+}
+type Profile = {
+	emails: Email[],
+	photos: Photo[],
+}
 
 
 export const passportConfig = () => {
@@ -42,13 +52,16 @@ export const passportConfig = () => {
 	}))
 
 
-	passport.use( new oAuth2Strategy.Strategy({
+	passport.use( new OAuth2Strategy({
 		clientID: GOOGLE_CLIENT_ID,
 		clientSecret: GOOGLE_CLIENT_SECRET,
 		// callbackURL: '/auth/google/callback', 						// same as origin-redirect: 	if request this route will show google login popup window
 		callbackURL: '/api/auth/google/callback', 					// same as origin-redirect: 	if request this route will show google login popup window
 		scope: ['profile', 'email'] 												// ?
 	}, async (_accessToken, _refreshToken, profile, done) => {
+
+		const googleProfile = profile as Profile
+
 		try {
 			let user = await User.findOne({ clientId: profile.id })
 			if(!user) {
@@ -58,10 +71,10 @@ export const passportConfig = () => {
 				user = await User.create({
 					clientId: profile.id,
 					name: profile.displayName,
-					email: profile.emails[0].value,
+					email: googleProfile.emails[0].value,
 					avatar: {
 						public_id: '',
-						secure_url: profile.photos[0].value,
+						secure_url: googleProfile.photos[0].value,
 					},
 					password: randomValue,
 					confirmPassword: randomValue,
