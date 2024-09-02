@@ -15,6 +15,8 @@ export const filterReviewDocument = (review: ReviewDocument) => {
 		'_id',
 		'id',
 		'createdAt',
+
+		'replyTo',
 	]
 	return filterObjectByArray(review, allowedFields)
 }
@@ -28,6 +30,8 @@ export const filterBodyForCreateReview = (body: CreateReview) => {
 		'comment',
 		'image',
 		'ratings',
+
+		'replyTo',
 	]
 
 	return filterObjectByArray(body, allowedFields)
@@ -40,6 +44,8 @@ export const filterBodyForUpdateReview = (body: UpdateReview) => {
 		'comment',
 		'image',
 		'ratings',
+
+		'replyTo',
 	]
 
 	return filterObjectByArray(body, allowedFields)

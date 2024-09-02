@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express'
-import type { Image} from '../types/product'
+import type { Image, ProductVariant } from '../types/product'
 import Product from '../models/productModel'
 import User from '../models/userModel'
 import { appError, catchAsync } from './errorController'
@@ -8,6 +8,8 @@ import { isValidObjectId } from 'mongoose'
 import * as productDto from '../dtos/productDto'
 import * as fileService from '../services/fileService'
 import { promisify } from 'node:util'
+import mongoose from 'mongoose'
+
 
 // type ResponseType<T> = {
 // 	status: 'success' | 'failed' | 'error'
@@ -15,9 +17,11 @@ import { promisify } from 'node:util'
 // }
 
 
-// => GET 	/api/products/get-random-products
-export const gerRandomProducts:RequestHandler = catchAsync(async (_req, res, _next) => {
-	const products = await Product.aggregate().sample(1)
+// => GET 	/api/products/get-random-products?_limit=5
+export const gerRandomProducts:RequestHandler = catchAsync(async (req, res, _next) => {
+	const limit = Number(req.query._limit) || 5
+
+	const products = await Product.aggregate().sample(limit)
 	res.json({
 		status: 'success',
 		total: products.length,
@@ -96,14 +100,8 @@ req.body = {
 export const addProduct:RequestHandler = catchAsync(async (req, res, next) => {
 
 	try {
-		//--- Custom product Id
-		// const currentDocuments = await Product.countDocuments()
-		const	customId = generateSequentialCustomId({ 
-			categoryName: 'product', 
-			// countDocuments: currentDocuments
-		})
+		const	customId = generateSequentialCustomId({ categoryName: 'product' })
 		req.body.customId = customId
-
 
 		//--- handle body
 		if(!req.body.coverPhoto) return next(appError('coverPhoto field required'))
@@ -231,8 +229,23 @@ const allowedFields = [
 	'coverPhoto',
 	'images',
 ]
+
+// Only update product
 req.body = {
-	... addProduct
+  "summary": "this is little summary so that identify product",
+}
+
+// update product + productVariants
+req.body = {
+  "summary": "this is little summary so that identify product",
+
+  "productVariant": {
+    "id": "66d62252d8e66708a18adb62",
+			"name": "string update again clean update",
+			"price": 444,
+			"_id": "66d6055047aa51aed002a8cef",
+			"size": "updated"
+		}
 }
 */
 export const updateProductByIdOrSlug:RequestHandler = async (req, res, next) => {
@@ -303,29 +316,49 @@ export const updateProductByIdOrSlug:RequestHandler = async (req, res, next) => 
 
 		const filteredBody = productDto.filterBodyForUpdateProduct(req.body)
 
-		const filter = (isValidObjectId(productId)) ?  { _id: productId } : { slug: productId }
+		const { productVariant, ...restBody } = req.body
+		let updatedProduct = null
 
-		const product = await Product.findOne(filter )
-		if(!product) return next(appError('product not found'))
-		
-		const updatedProduct = await Product.findOneAndUpdate(filter, filteredBody, { new: true })
-		if(!updatedProduct) return next(appError('product not found'))
-		
-		// delete old images
-		if(req.body.coverPhoto && product.coverPhoto?.secure_url) {
-			setTimeout(() => {
-				promisify(fileService.removeFile)(product.coverPhoto.secure_url)
-			}, 1000);
+		if(productVariant) {
+			const { id:productVariantId, _id, ...restVariant } = req.body.productVariant
+			// if(!productVariantId) return next(appError('productVariant.id requried'))
+			// updatedProduct = await updateProductVariantById( productId, productVariantId, { ...restVariant })
+
+			updatedProduct = await createOrUpdateProductVariant ( productId, productVariantId, { ...restVariant })
 		}
 
-		if(req.body.images && product.images?.length) {
-			product.images.forEach( (image: Image) => {
+		if(restBody) {
+			const filter = (isValidObjectId(productId)) ?  { _id: productId } : { slug: productId }
+
+			const product = await Product.findOne(filter )
+			if(!product) return next(appError('product not found'))
+		
+			updatedProduct = await Product.findOneAndUpdate(filter, filteredBody, { new: true })
+			if(!updatedProduct) return next(appError('product not found'))
+
+			// delete old video
+			if(req.body.video && !product.video?.secure_url?.startsWith('http')) {
 				setTimeout(() => {
-					promisify(fileService.removeFile)(image.secure_url)
+					promisify(fileService.removeFile)(product.video.secure_url)
 				}, 1000);
-			})
-		}
+			}
 
+			// delete old images
+			if(req.body.coverPhoto && product.coverPhoto?.secure_url) {
+				setTimeout(() => {
+					promisify(fileService.removeFile)(product.coverPhoto.secure_url)
+				}, 1000);
+			}
+
+			if(req.body.images && product.images?.length) {
+				product.images.forEach( (image: Image) => {
+					setTimeout(() => {
+						promisify(fileService.removeFile)(image.secure_url)
+					}, 1000);
+				})
+			}
+
+		}
 
 		res.status(201).json({
 			status: 'success',
@@ -333,6 +366,13 @@ export const updateProductByIdOrSlug:RequestHandler = async (req, res, next) => 
 		})
 
 	} catch (error) {
+		// delete old video
+		if(req.body.video?.secure_url && !req.body.video?.secure_url?.startsWith('http')) {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(req.body.video.secure_url)
+			}, 1000);
+		}
+
 		setTimeout(() => {
 			if(req.body.coverPhoto?.secure_url) {
 				setTimeout(() => {
@@ -355,40 +395,51 @@ export const updateProductByIdOrSlug:RequestHandler = async (req, res, next) => 
 }
 
 // => DELETE /api/products/:productId
+// => DELETE /api/products/:productId?productVariantId='667ea9b1df5d6c0e864f1841'
 export const deleteProductByIdOrSlug:RequestHandler = catchAsync(async (req, res, next) => {
 	const productId = req.params.productId
 
-	const filter = (isValidObjectId(productId)) ?  { _id: productId } : { slug: productId }
-	const product = await Product.findOneAndDelete(filter)
-	if(!product) return next(appError('product not found'))
-	
+	const productVariantId = req.query.productVariantId
 
-	if(product?.coverPhoto?.secure_url) {
-		setTimeout(() => {
-			promisify(fileService.removeFile)(product.coverPhoto.secure_url)
-		}, 1000);
-	}
-	if(product.images.length) {
-		product.images.forEach( image => {
-			if(image?.secure_url) {
-				setTimeout(() => {
-					promisify(fileService.removeFile)(image.secure_url)
-				}, 1000);
-			}
-		})
-	}
-	if(product?.video?.secure_url && !product?.video?.secure_url?.startsWith('http')) {
-		setTimeout(() => {
-			promisify(fileService.removeFile)(product.video.secure_url)
-		}, 1000);
-	}
+	if(productVariantId) {
+		if(typeof productVariantId !== 'string') return next(appError('productVariantId must be string'))
+		await deleteProductVariantById(productId, productVariantId)
 
-	// deleting productId from user.likes = [ ...productIds ]
-	await User.findByIdAndUpdate(product.user, { "$pull": { likes: productId }}, { new: true, }) 	
+	} else {
+
+		const filter = (isValidObjectId(productId)) ?  { _id: productId } : { slug: productId }
+		const product = await Product.findOneAndDelete(filter)
+		if(!product) return next(appError('product not found'))
+		
+
+		if(product?.coverPhoto?.secure_url) {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(product.coverPhoto.secure_url)
+			}, 1000);
+		}
+		if(product.images.length) {
+			product.images.forEach( image => {
+				if(image?.secure_url) {
+					setTimeout(() => {
+						promisify(fileService.removeFile)(image.secure_url)
+					}, 1000);
+				}
+			})
+		}
+		if(product?.video?.secure_url && !product?.video?.secure_url?.startsWith('http')) {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(product.video.secure_url)
+			}, 1000);
+		}
+
+		// deleting productId from user.likes = [ ...productIds ]
+		await User.findByIdAndUpdate(product.user, { "$pull": { likes: productId }}, { new: true, }) 	
+
+	}
 
 	res.status(204).json({
 		status: 'success',
-		data: product
+		// data: product
 	})
 })
 
@@ -432,4 +483,141 @@ export const updateProductLike = catchAsync(async (req, res, next) => {
 		data: updatedProduct
 	})
 })
+
+
+
+// Method-1: Update 	productVariant.name
+// updateProductVariant('productObjectId', 'blue shirt', { price: 29.99, quantity: 10 });
+// const updateProductVariant = async (productId: string, variantName: string, updatedData: Partial<ProductVariant>) => {
+//   try {
+//     const result = await Product.findOneAndUpdate(
+//       { _id: productId, 'productVariants.name': variantName },  // Find product and specific variant
+//       {
+//         $set: {
+//           'productVariants.$.name': updatedData.name,  
+//           'productVariants.$.price': updatedData.price,  
+//           'productVariants.$.discount': updatedData.discount,  
+//           'productVariants.$.quantity': updatedData.quantity,
+//           'productVariants.$.gender': updatedData.gender,
+//           'productVariants.$.color': updatedData.color,
+//           'productVariants.$.material': updatedData.material,
+//           'productVariants.$.size': updatedData.size,
+//           // 'productVariants.$.image': updatedData.image,
+//         }
+//       },
+//       { new: true }  // Return the updated document
+//     );
+    
+//     console.log('Updated Product:', result);
+//   } catch (error) {
+//     console.error('Error updating product variant:', error);
+//   }
+// }
+
+
+
+// Method-2: Update 	productVariant._id
+// updateProductVariantById('productObjectId', 'variantObjectId', { 
+// 	price: '29.99', 
+// 	quantity: '10', 
+// 	color: 'red', 
+// 	size: 'M' 
+// });
+// const updateProductVariantById = async (productId: string, variantId: string, updatedData: Partial<ProductVariant>) => {
+//     const updatedProductVariant = await Product.findOneAndUpdate(
+//       { _id: productId, 'productVariants._id': variantId },  // Find the product and the specific variant by its _id
+//       {
+//         $set: {
+//           'productVariants.$[elem].name': updatedData.name,  
+//           'productVariants.$[elem].price': updatedData.price,  // Update price
+//           'productVariants.$[elem].quantity': updatedData.quantity,  // Update quantity
+//           'productVariants.$[elem].color': updatedData.color,  // Update color
+//           'productVariants.$[elem].size': updatedData.size,  // Update size
+
+//           'productVariants.$[elem].discount': updatedData.discount,  
+//           'productVariants.$[elem].gender': updatedData.gender,
+//           'productVariants.$[elem].material': updatedData.material,
+//         }
+//       },
+//       {
+//         new: true,  				// Return the updated document
+//         arrayFilters: [{ 'elem._id': variantId }]  // Use array filter to specify the element to update
+//       }
+//     );
+
+// 		return updatedProductVariant
+
+// }
+
+
+
+const createOrUpdateProductVariant = async (
+  productId: string,
+  variantId: string | null,  // If null, create a new variant
+  updatedData: Partial<ProductVariant>
+) => {
+  // If `variantId` is provided, update the existing variant
+  if (variantId) {
+    const updatedProduct = await Product.findOneAndUpdate(
+      { _id: productId, 'productVariants._id': variantId },
+      {
+        $set: {
+          'productVariants.$[elem].name': updatedData.name,
+          'productVariants.$[elem].price': updatedData.price,
+          'productVariants.$[elem].quantity': updatedData.quantity,
+          'productVariants.$[elem].color': updatedData.color,
+          'productVariants.$[elem].size': updatedData.size,
+          'productVariants.$[elem].discount': updatedData.discount,
+          'productVariants.$[elem].gender': updatedData.gender,
+          'productVariants.$[elem].material': updatedData.material,
+        },
+      },
+      {
+        new: true, // Return the updated document
+        arrayFilters: [{ 'elem._id': variantId }], // Use array filter to specify the element to update
+      }
+    );
+
+    return updatedProduct;
+
+  } else {
+    // If no `variantId` is provided, create a new variant
+    const newVariantId = new mongoose.Types.ObjectId(); // Generate a new ObjectId for the variant
+
+    const updatedProduct = await Product.findOneAndUpdate(
+      { _id: productId },
+      {
+        $push: {
+          productVariants: {
+            _id: newVariantId,
+            ...updatedData,
+          },
+        },
+      },
+      {
+        new: true, // Return the updated document after the addition
+      }
+    );
+
+    return updatedProduct;
+  }
+};
+
+
+
+// deleteProductVariantById('productObjectId', 'variantObjectId')
+const deleteProductVariantById = async (productId: string, variantId: string) => {
+	const updatedProduct = await Product.findOneAndUpdate(
+		{ _id: productId },  
+		{
+			$pull: { 
+				productVariants: { _id: variantId }  // Remove the product variant with the specified _id
+			}
+		},
+		{ new: true }  // Return the updated document after the deletion
+	);
+
+
+	return updatedProduct;
+};
 

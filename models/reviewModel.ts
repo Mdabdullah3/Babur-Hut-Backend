@@ -9,6 +9,8 @@ import { Schema, models, model } from 'mongoose'
 	"review": "this is my review 1",
 	"comment": "this is my comment 1",
 	"image": "data:...",
+
+	"replyTo": "review.comment.id",
 }
 */
 
@@ -67,6 +69,11 @@ const reviewSchema = new Schema<ReviewDocument>({
 		// required: true
 	}],
 
+	replyTo: {
+		type: Schema.Types.ObjectId,
+		ref: 'Review',
+	},
+
 }, {
 	timestamps: true,
 })
@@ -86,6 +93,8 @@ reviewSchema.pre(/^find/, function(next) {
 	// 	path: 'user',
 	// 	select: 'name email avatar'
 	// })
+
+	this.populate('replyTo')
 
 	next()
 })

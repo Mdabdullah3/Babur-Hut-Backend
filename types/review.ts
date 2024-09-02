@@ -1,4 +1,4 @@
-import type { Types } from 'mongoose'
+import type { Types, Document } from 'mongoose'
 import type { Image } from './product'
 
 // export type ReviewDocument = {
@@ -10,21 +10,23 @@ import type { Image } from './product'
 // 	disliked: number
 // }
 
-export type ReviewDocument = {
+export type ReviewDocument = Document & {
 	populate(arg0: string): unknown
-	_id: Types.ObjectId,
-	id: string,
+	// _id: Types.ObjectId,
+	// id: string,
+	// createdAt: Date,
+	// updatedAt: Date
+
 	user: Types.ObjectId, 				
 	product: Types.ObjectId,
-	review: string, 			// comment field
-	comment: string, 			// comment field
+	review: string, 							// used for review
+	comment: string, 							// comment field
 	likes: Types.ObjectId[],
 	dislikes: Types.ObjectId[],
 	image: Image
 	ratings: number, 			
 
-	createdAt: Date,
-	updatedAt: Date
+	replyTo: Types.ObjectId, 			// Review.comment 
 }
 
 export type CreateReview = {
@@ -34,6 +36,8 @@ export type CreateReview = {
 	comment: string, 			// comment field
 	image: Image
 	ratings: number, 			
+
+	replyTo: Types.ObjectId, 			// Review.comment 
 }
 export type UpdateReview = {
 	product: Types.ObjectId,
@@ -41,4 +45,6 @@ export type UpdateReview = {
 	comment: string, 			// comment field
 	image: Image
 	ratings: number, 			
+
+	replyTo: Types.ObjectId, 			// Review.comment 
 }

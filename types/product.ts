@@ -25,19 +25,27 @@ type Packaging = {
 }
 
 
+export type ProductVariant = {
+	name: string
+	gender: string
+	color: string
+	material: string
+	image: Image
+	size: string
+
+	price: string
+	discount: string
+	quantity: string
+}
 
 export type ProductDocument = Document & {
 	customId: string
 	user: Types.ObjectId
-	productVariants: Types.ObjectId[]
 	name: string
-	// price: number
 	summary: string
 	description: string
 	category: string
 	brand: string
-	// size: string
-	// quantity: number,
 	coverPhoto: Image
 	images: Image[]
 	video: Image
@@ -52,12 +60,18 @@ export type ProductDocument = Document & {
 	specifications: Specifications
 	likes: Types.ObjectId[]
 
-	// discount: string
 	subCategory: Types.ObjectId
 	warranty: string
 	packaging: Packaging
   discountPrice: string
   status: string
+
+
+	// discount: string
+	// price: number
+	// size: string
+	// quantity: number,
+	productVariants: ProductVariant[]
 }
 
 export type CreateProduct = {
@@ -84,6 +98,9 @@ export type CreateProduct = {
 	packaging: Packaging
   discountPrice: string
   status: string
+
+
+	productVariants: ProductVariant[]
 }
 
 export type UpdateProduct = {
@@ -109,5 +126,7 @@ export type UpdateProduct = {
 	packaging: Packaging
   discountPrice: string
   status: string
+
+	productVariants: ProductVariant[]
 }
 

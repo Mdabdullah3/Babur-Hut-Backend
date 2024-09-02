@@ -30,14 +30,20 @@ export const getAllReviews:RequestHandler = catchAsync( async (req, res, _next) 
 	if(productId) filter = { product: productId.toString() } 
 	if(userId) filter = { user: userId.toString() } 
 
-	// console.log(filter)
-	
+	if(req.query.reviewsOnly) filter = { review: { $exists: true, $ne: null } } 
+	if(req.query.repliesOnly) filter = { replyTo: { $exists: true, $ne: null } } 
+	if(req.query.commentsOnly) filter = { 
+		comment: { $exists: true },
+		replyTo: { $exists: false },
+	} 
+
 	const reviews:ReviewDocument[] = await apiFeatures(Review, req.query, filter)
 	const total = await Review.countDocuments()
 
 	res.json({
 		status: 'success',
 		total,
+		// total: reviews.length,
 		data: reviews
 	})
 })

@@ -2,7 +2,6 @@ import type { ProductDocument } from '../types/product'
 import type { Model } from 'mongoose'
 import { model, models, Schema } from 'mongoose'
 import slug from 'slugify'
-// import { product } from '../data/product'
 
 
 /*
@@ -10,14 +9,11 @@ import slug from 'slugify'
 	"user": "alskdjfalksdjfaksjdf",
 	"name": "my-product-name",
 	"slug": "my-product-name",
-//	"price": 40,
-//	"quantity": 2,
 	"summary": "summary description between 10-150",
 	"description": "description between 10-1000",
 
 	"category": "shirt",
 	"brand": "niki",
-//	"size": "xl",
 
 	"coverPhoto": "/upload/images/cover-photo.jpg",
 	"images": [
@@ -26,17 +22,48 @@ import slug from 'slugify'
 		"/upload/images/photo-3.jpg",
 	],
 	
+	"subCategory": "subcategory.id"
+	"warranty": "12 Months",
+	"packaging": {
+		"weight": "12kg",
+		"height": "12cm",
+		"width": "12cm",
+		"dimension": "12x12x12",
+	},
+
 //	discount: "1243",
-	subCategory: "subcategory.id"
-	warranty: "12 Months",
-	packaging: {
-		weight: "12kg",
-		height: "12cm",
-		width: "12cm",
-		dimension: "12x12x12",
-	}
+//	"size": "xl",
+//	"price": 40,
+//	"quantity": 2,
+
+
+	"productVariants": [
+		{
+			"name": "string 1",
+			"price": "number",
+			"discount": "number",
+			"quantity": "number",
+			"gender": "string",
+			"color": "string",
+			"material": "string",
+			"size": "string",
+			"image": "Image"
+		},
+		{
+			"name": "string 2",
+			"price": "number",
+			"discount": "number",
+			"quantity": "number",
+			"gender": "string",
+			"color": "string",
+			"material": "string",
+			"size": "string",
+			"image": "Image"
+		},
+	]
 
 }
+
 */
 
 
@@ -52,11 +79,6 @@ const productSchema = new Schema<ProductDocument>({
 		ref: 'User',
 		required: true
 	},
-	productVariants: [{
-		type: Schema.Types.ObjectId,
-		ref: 'ProductVariant',
-		// required: true
-	}],
 	name: {
 		type: String,
 		required: true,
@@ -225,6 +247,40 @@ const productSchema = new Schema<ProductDocument>({
 		lowercase: true,
 	},
 
+	productVariants: [{
+		name: {
+			type: String,
+			trim: true,
+			lowercase: true,
+		},
+		color: {
+			type: String,
+			trim: true,
+			lowercase: true,
+		},
+		gender: {
+			type: String,
+			trim: true,
+			lowercase: true,
+		},
+		size: {
+			type: String,
+			trim: true,
+			lowercase: true,
+		},
+		material: {
+			type: String,
+			trim: true,
+			lowercase: true,
+		},
+
+		price: String,
+		discount: String,
+		quantity: String,
+		// image: Image
+
+	}],
+
 }, {
 	timestamps: true,
 	toJSON: {
@@ -256,7 +312,7 @@ productSchema.pre(/^find/, function (this: ProductDocument, next) {
 
 	this.populate('reviews')
 	this.populate('user')
-	this.populate('productVariants')
+	// this.populate('productVariants')
 	// this.populate('subCategory') 	// if populate here and populate on Category then it create loop
 
 	next()

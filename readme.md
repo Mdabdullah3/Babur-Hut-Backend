@@ -503,15 +503,15 @@ Product GET/PATCH/DELETE can be either by `id` or by `slug`
 - DELETE {{origin}}/api/products/6649ebc8dabbe03d553861f9
 - DELETE {{origin}}/api/products/it-is-my-sample-product
 -
-- GET {{origin}}/api/products/get-random-products
+- GET {{origin}}/api/products/get-random-products?_limit=5      : default value 5
 
 
 ```
 GET /api/products/
 GET /api/products/?_page=1&_limit=4
 GET /api/products/?_sort='createdAt' 										: any field name, or multiple field name
-GET /api/products/?_search='search value, name,slug' 		: Search on any fields: namly `name` & `slug`
-GET /api/products/?_fields='name,slug,price' 						: Only got 3 fields (+ _id, populated fields)
+GET /api/products/?_search='search value, name,slug' 	: Search on any fields: namly `name` & `slug`
+GET /api/products/?_fields='name,slug,price' 	        : Only got 3 fields (+ _id, populated fields)
 ```
 
 #### Get Products
@@ -534,7 +534,8 @@ GET /api/products/?_fields='name,slug,price' 						: Only got 3 fields (+ _id, p
 
 #### Get Random Products
 ```
-- GET {{origin}}/api/products/get-random-products
+- GET {{origin}}/api/products/get-random-products               : get only 5 random products 
+- GET {{origin}}/api/products/get-random-products?_limit=20     : get any number of random product
 ```
 
 #### Get all Products of single user
@@ -558,8 +559,7 @@ POST {{origin}}/api/products/many                       : To get multiple produc
 ```
 body: {
   "customId": 'unique-id',
-  "productVariants": ['productVariant._id', '...'],
-# "user": logedInUser.id,                               (*) : comes from logedIn session
+  "user": logedInUser.id,                               (*) : comes from logedIn session
   "name": "it is my sample product",                    (*)
   "slug": "it-is-my-sample-product-unitque",
   "price": 500,                                         (*)
@@ -604,6 +604,32 @@ body: {
   },
 
   status: "string"
+
+
+  "productVariants": [                          : To add product variants
+    {
+      "name": "string 1",
+      "price": 500,
+      "discount": 30,
+      "quantity": 2,
+      "gender": "string",
+      "color": "string",
+      "material": "string",
+      "size": "string",
+      "image": "Image"
+    },
+    {
+      "name": "string 2",
+      "price": "number",
+      "discount": "number",
+      "quantity": "number",
+      "gender": "string",
+      "color": "string",
+      "material": "string",
+      "size": "string",
+      "image": "Image"
+    }
+  ]
 }
 
 - POST {{origin}}/api/products
@@ -612,6 +638,49 @@ body: {
 
 #### Update Product
 ```
+# Only Update productVariant with variant id
+
+body {
+  "productVariant": {
+    "id": "66d62252d8e66708a18adb62",
+    "name": "string update again clean update",
+    "price": 444,
+    "_id": "66d6055047aa51aed002a8cef",
+    "size": "updated"
+  }
+}
+
+
+# Without productVariant id will add item to variant
+
+body {
+  "productVariant": {
+    "id": "66d62252d8e66708a18adb62",
+    "name": "string update again clean update",
+    "price": 444,
+    "_id": "66d6055047aa51aed002a8cef",
+    "size": "updated"
+  }
+}
+
+
+# Update product + update productVariant in the same time
+
+body {
+  "summary": "this is little summary so that identify product",
+
+  "productVariant": {
+    "id": "66d62252d8e66708a18adb62",
+    "name": "string update again clean update",
+    "price": 444,
+    "_id": "66d6055047aa51aed002a8cef",
+    "size": "updated"
+  }
+}
+
+
+# Regular Update product 
+
 body: {
   "customId": 'unique-id',
   "name": "it is my sample product",
@@ -668,12 +737,12 @@ body: {
 
 
 
-
-
 #### delete Product
 ```
-- DELETE {{origin}}/api/products/6649ebc8dabbe03d553861f9
+- DELETE {{origin}}/api/products/6649ebc8dabbe03d553861f9                       : Delete product
 - DELETE {{origin}}/api/products/it-is-my-sample-product
+
+- DELETE /api/products/:productId?productVariantId='667ea9b1df5d6c0e864f1841'   : Delete only productVariant
 ```
 
 
@@ -761,9 +830,15 @@ GET /api/reviews/?_page=1&_limit=4
 GET /api/reviews/?_sort='createdAt' 			// any field name, or multiple field name
 GET /api/reviews/?_search='search value, review'        // Search on any fields: namly `review` 
 GET /api/reviews/?_fields='review,product,user'         // Only got 3 fields (+ _id, populated fields)
+
+
+GET /api/reviews/                                       : Get all reviews + comments + replies
+GET /api/reviews/?reviewsOnly=true                      : Get Only all Reviews 
+GET /api/reviews/?commentsOnly=true                     : Get Only all comments 
+GET /api/reviews/?repliesOnly=true                      : Get Only all Replies 
 ```
 
-#### Add Review / Comment
+#### Add Review / Comment  / Reply
 ```
 body: {
 # "user": "will comes from logedIn User",
@@ -775,7 +850,8 @@ body: {
   "review" : "I'm using too (delete me)",
 
   # or for comment
-  "comment": "this is comments on product"
+  "comment": "this is comments on product",
+  "replyTo: "comment.id"
 }
 
 - POST {{origin}}/api/reviews
@@ -794,6 +870,7 @@ body: {
 
   # or for comment
   "comment": "this is comments on product"
+  "replyTo: "comment.id"
 }
 
 - PATCH {{origin}}/api/reviews/reviewId

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "nodemon server.ts --ext ts,pug --ignore public",
+    "dev": "NODE_ENV=development nodemon server.ts --ext ts,pug --ignore public",
     "build": "yarn tsc",
     "start": "node ."
   },
