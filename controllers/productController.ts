@@ -165,6 +165,27 @@ export const addProduct:RequestHandler = catchAsync(async (req, res, next) => {
 		})
 		req.body.images = await Promise.all( images )
 
+
+		// handle productVariants images
+		if(req.body.productVariants?.length) {
+			const variantImages = req.body.productVariants.map( async (productVariant: { image: string }) => {
+				// if(productVariant.image)
+				// Check image size
+				const imageSize = getDataUrlSize(productVariant.image)
+				const maxImageSize = 1024 * 1024 * 5 			// => 5 MB
+				if(imageSize > maxImageSize) return next(appError('You cross the max image size: 5MB(max)'))
+
+				// save image into disk
+				const { error: _imageError, image } = await fileService.handleBase64File(productVariant.image, '/products')
+				// if(imageError || !image) throw new Error(imageError) 
+
+				return image ? { ...productVariant, image } : productVariant
+			})
+			req.body.productVariants = await Promise.all( variantImages )
+		}
+
+
+
 		const product = await Product.create(req.body)
 		if(!product) return next(appError('product not found'))
 
@@ -321,8 +342,19 @@ export const updateProductByIdOrSlug:RequestHandler = async (req, res, next) => 
 
 		if(productVariant) {
 			const { id:productVariantId, _id, ...restVariant } = req.body.productVariant
-			// if(!productVariantId) return next(appError('productVariant.id requried'))
-			// updatedProduct = await updateProductVariantById( productId, productVariantId, { ...restVariant })
+
+			// // update productVariant.image
+			// if(productVariant.image) {
+			// 	const imageSize = getDataUrlSize(productVariant.image)
+			// 	const maxImageSize = 1024 * 1024 * 5 			// => 5 MB
+			// 	if(imageSize > maxImageSize) return next(appError('You cross the max image size: 5MB(max)'))
+
+			// 	// upload file and return { error, image: { public_i, secure_url }}
+			// 	const { error: _avatarError, image } = await fileService.handleBase64File(productVariant.image, '/products')
+			// 	// if(avatarError || !coverPhoto) return next(appError(avatarError))
+
+			// 	if(image) productVariant.image = image
+			// }
 
 			updatedProduct = await createOrUpdateProductVariant ( productId, productVariantId, { ...restVariant })
 		}
@@ -432,6 +464,20 @@ export const deleteProductByIdOrSlug:RequestHandler = catchAsync(async (req, res
 			}, 1000);
 		}
 
+		// delete productVariants images
+		if(req.body.productVariants?.length) {
+			product.productVariants.forEach( productVariant => {
+				if(productVariant.image?.secure_url) {
+					setTimeout(() => {
+						promisify(fileService.removeFile)(productVariant.image.secure_url)
+					}, 1000);
+				}
+			})
+		}
+
+
+
+		// ---------
 		// deleting productId from user.likes = [ ...productIds ]
 		await User.findByIdAndUpdate(product.user, { "$pull": { likes: productId }}, { new: true, }) 	
 
@@ -558,6 +604,7 @@ const createOrUpdateProductVariant = async (
 ) => {
   // If `variantId` is provided, update the existing variant
   if (variantId) {
+
     const updatedProduct = await Product.findOneAndUpdate(
       { _id: productId, 'productVariants._id': variantId },
       {
@@ -570,6 +617,7 @@ const createOrUpdateProductVariant = async (
           'productVariants.$[elem].discount': updatedData.discount,
           'productVariants.$[elem].gender': updatedData.gender,
           'productVariants.$[elem].material': updatedData.material,
+          'productVariants.$[elem].image': updatedData.image,
         },
       },
       {
@@ -577,6 +625,18 @@ const createOrUpdateProductVariant = async (
         arrayFilters: [{ 'elem._id': variantId }], // Use array filter to specify the element to update
       }
     );
+
+		// // delete old existing image
+    // const product = await Product.findById(productId)
+		// if(updatedData.image?.secure_url) {
+		// 	product?.productVariants.forEach( variant => {
+		// 		if( variant._id.toString() !== variantId ) return
+
+		// 		setTimeout(() => {
+		// 			promisify(fileService.removeFile)(variant.image.secure_url)
+		// 		}, 1000);
+		// 	})
+		// }
 
     return updatedProduct;
 

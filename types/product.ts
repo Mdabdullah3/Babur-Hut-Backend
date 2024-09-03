@@ -36,6 +36,9 @@ export type ProductVariant = {
 	price: string
 	discount: string
 	quantity: string
+
+	id: string
+	_id: Types.ObjectId
 }
 
 export type ProductDocument = Document & {

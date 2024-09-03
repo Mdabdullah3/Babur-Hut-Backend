@@ -277,8 +277,17 @@ const productSchema = new Schema<ProductDocument>({
 		price: String,
 		discount: String,
 		quantity: String,
-		// image: Image
 
+		image: {
+			public_id: {
+				type: String,
+				required: true,
+			},
+			secure_url: {
+				type: String,
+				required: true,
+			}
+		},
 	}],
 
 }, {
