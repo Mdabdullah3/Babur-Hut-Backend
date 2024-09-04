@@ -10,7 +10,7 @@ import helmet from 'helmet'
 import mongoSanitize from 'express-mongo-sanitize'
 import rateLimit from 'express-rate-limit'
 import hpp from 'hpp'
-import csurf from 'csurf'
+// import csurf from 'csurf'
 
 import routers from './routes'
 import * as errorController from './controllers/errorController'
@@ -34,7 +34,11 @@ if(!SESSION_SECRET) throw new Error(`Error: => SESSION_SECRET=${SESSION_SECRET}`
 
 const app: Express = express()
 
-app.use(helmet()) 		// adds security headers
+// app.use(helmet()) 		// adds security headers
+app.use(helmet({
+	contentSecurityPolicy: false,  				// Disable CSP if it's interfering
+	noSniff: false,  											// Disable X-Content-Type-Options header
+}));
 // app.use(
 //   helmet.contentSecurityPolicy({
 //     directives: {
@@ -53,7 +57,9 @@ app.use(rateLimit({ 														//
 })) 	
 
 app.use(hpp()) 																	// prevent HTML paramiter polution
-app.use( csurf({ cookie: true })) 							// prevent Cross-Site Request Forgery attacks
+
+// // require to send csurf token to access from frontend
+// app.use( csurf({ cookie: true })) 							// prevent Cross-Site Request Forgery attacks
 
 
 
