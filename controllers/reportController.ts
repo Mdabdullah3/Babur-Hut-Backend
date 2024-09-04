@@ -9,12 +9,20 @@ import Report from '../models/reportModel';
 
 // GET 	/api/reports
 export const getReports: RequestHandler = catchAsync( async (req, res, _next) => {
-	const reports = await apiFeatures(Report, req.query, {})
-	const total = await Report.countDocuments()
+
+	let filter = {}
+
+	if(req.query.reportsOnly) filter = { product: { $exists: true, $ne: null } } 
+	if(req.query.chatsOnly) filter = { product: { $exists: false } } 
+
+
+	const reports = await apiFeatures(Report, req.query, filter)
+	// const total = await Report.countDocuments()
 
 	res.status(200).json({
 		status: 'success',
-		total,
+		// total,
+		total: reports.length,
 		data: reports
 	})
 })

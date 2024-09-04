@@ -2020,18 +2020,25 @@ PATCH {{origin}}/delivery-fees/update-many
 
 
 ## Report
-- GET {{origin}}/api/reports 		        // get all 
-- GET {{origin}}/api/reports/:reportId          // Get Single 
+- GET {{origin}}/api/reports  				: Get All Reports + Chats
+- GET {{origin}}/api/reports?reportsOnly=true 		: Only Get reports
+- GET {{origin}}/api/reports?chatsOnly=true 		: Only Get chats 
 
-- POST {{origin}}/api/reports                  // To create 
-- PATCH {{origin}}/api/reports/:reportId       // To Update 
-- DELETE {{origin}}/api/reports/:reportId      // To Delete
+- GET {{origin}}/api/reports/:reportId                  : Get Single 
+
+- POST {{origin}}/api/reports                           : To create 
+- PATCH {{origin}}/api/reports/:reportId                : To Update 
+- DELETE {{origin}}/api/reports/:reportId               : To Delete
 
 
 #### Add Report 
+If product._id exists in while creating report, it can be fetched as report specific to a product,
+else it will can be used for personal chats, between user and admin
+
 ```
-{
-  "product" : "667e915a3204d8967daaf4a1",     
+body {
+  "product" : "667e915a3204d8967daaf4a1",               : It is report about product (because productId exits)
+
   "user" : "667e915a3204d8967daaf4a1",                  (*)
   "title": "test report 2",                             (*)
   "message": "this is a sourt summary",                 (*)
@@ -2039,8 +2046,21 @@ PATCH {{origin}}/delivery-fees/update-many
   "image" : "data:image/jpg,aksdjadjf"
 }
 
-POST {{origin}}/reports/:reportId 
+POST {{origin}}/api/reports/
 ```
+
+```
+body {
+  "user" : "667e915a3204d8967daaf4a1",                  : It is chats
+  "title": "test report 2",
+  "message": "this is a sourt summary",
+  "description": "long descriptions goes here",
+  "image": "data://..."
+}
+POST {{origin}}/api/reports  				: 
+```
+
+
 
 #### Update Report
 ```
@@ -2051,7 +2071,7 @@ body {
   "description": "long descriptions goes here"
   "image" : "data:image/jpg,aksdjadjf"
 }
-PATCH {{origin}}/reports/:reportId 
+PATCH {{origin}}/api/reports/:reportId 
 ```
 
 
