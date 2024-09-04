@@ -5,6 +5,7 @@ import bcryptjs from 'bcryptjs'
 import crypto from 'node:crypto'
 
 import isEmail from 'validator/lib/isEmail'
+import { sanitizeSchema } from '../services/sanitizeService'
 
 // // Method-1.1:
 // interface UserDocumentMethods extends Document {
@@ -305,6 +306,8 @@ const userSchema = new Schema<UserDocument>({
 }, {
 	timestamps: true
 })
+
+userSchema.plugin(sanitizeSchema)
 
 userSchema.pre('save', async function(next) {
 	if( !this.isModified('password') ) return

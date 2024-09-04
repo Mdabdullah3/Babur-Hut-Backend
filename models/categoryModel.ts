@@ -1,6 +1,7 @@
 import type { CategoryDocument } from '../types/category'
 import type { Model } from 'mongoose'
 import { Schema, models, model } from 'mongoose'
+import { sanitizeSchema } from '../services/sanitizeService'
 
 /*
 {
@@ -98,6 +99,7 @@ const categorySchema = new Schema<CategoryDocument>({
 	}
 })
 
+categorySchema.plugin(sanitizeSchema)
 
 // Step-2: Create virtual fields on document
 categorySchema.virtual('subCategories', {

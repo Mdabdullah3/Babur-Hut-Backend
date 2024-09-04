@@ -3,10 +3,15 @@ import path from 'node:path'
 import crypto from 'node:crypto'
 import express from 'express'
 import cors from 'cors'
-import passport from 'passport'
-
 import session from 'express-session'
+import passport from 'passport'
 import MongoStore from 'connect-mongo'
+import helmet from 'helmet'
+import mongoSanitize from 'express-mongo-sanitize'
+import rateLimit from 'express-rate-limit'
+import hpp from 'hpp'
+import csurf from 'csurf'
+
 import routers from './routes'
 import * as errorController from './controllers/errorController'
 import { passportConfig } from './controllers/passportConfig'
@@ -28,6 +33,28 @@ if(!SESSION_SECRET) throw new Error(`Error: => SESSION_SECRET=${SESSION_SECRET}`
 
 
 const app: Express = express()
+
+app.use(helmet()) 		// adds security headers
+// app.use(
+//   helmet.contentSecurityPolicy({
+//     directives: {
+//       defaultSrc: ["'self'"],
+//       scriptSrc: ["'self'", "'baburhaatbd.com'"],
+//     },
+//   })
+// )
+
+
+app.use(mongoSanitize()) 												// prevent mongodb injection attach
+app.use(rateLimit({ 														// 
+	limit: 300,
+	windowMs: 1000 * 60 * 60, 										// window == request /ms
+	message: 'reached max limit'
+})) 	
+
+app.use(hpp()) 																	// prevent HTML paramiter polution
+app.use( csurf({ cookie: true })) 							// prevent Cross-Site Request Forgery attacks
+
 
 
 // List of allowed origins

@@ -1,6 +1,7 @@
 import type { ProductVariantDocument } from '../types/productVariant'
 import type { Model } from 'mongoose'
 import { Schema, models, model } from 'mongoose'
+import { sanitizeSchema } from '../services/sanitizeService'
 
 /*
 {
@@ -78,6 +79,7 @@ const productVariantSchema = new Schema<ProductVariantDocument>({
 	timestamps: true,
 })
 
+productVariantSchema.plugin(sanitizeSchema)
 
 productVariantSchema.pre('save', function(next) {
 	this.price = +this.price 								// convert to number

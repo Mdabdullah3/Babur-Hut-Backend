@@ -1,6 +1,7 @@
 import type { PayableDocument } from '../types/payblePayment'
 import type { Model } from 'mongoose'
 import { Schema, models, model } from 'mongoose'
+import { sanitizeSchema } from '../services/sanitizeService'
 
 /*
 	user: Types.ObjectId, 				// vendor
@@ -69,6 +70,7 @@ const payableSchema = new Schema<PayableDocument>({
 })
 
 
+payableSchema.plugin(sanitizeSchema)
 
 export const PayablePayment: Model<PayableDocument> = models.PayablePayment || model<PayableDocument>('PayablePayment', payableSchema)
 export default PayablePayment

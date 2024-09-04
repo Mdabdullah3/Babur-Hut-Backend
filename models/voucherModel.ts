@@ -1,6 +1,7 @@
 import type { VoucherDocument } from '../types/voucher'
 import type { Model } from 'mongoose'
 import { Schema, models, model } from 'mongoose'
+import { sanitizeSchema } from '../services/sanitizeService'
 
 /*
 {
@@ -55,6 +56,7 @@ const voucherSchema = new Schema<VoucherDocument>({
 	timestamps: true,
 })
 
+voucherSchema.plugin(sanitizeSchema)
 
 voucherSchema.pre('save', function(next) {
 	this.discount = +this.discount

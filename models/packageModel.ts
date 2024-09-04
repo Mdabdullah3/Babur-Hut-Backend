@@ -1,6 +1,7 @@
 import type { PackageDocument } from '../types/package'
 import type { Model } from 'mongoose'
 import { Schema, models, model } from 'mongoose'
+import { sanitizeSchema } from '../services/sanitizeService'
 
 /*
 {
@@ -60,6 +61,7 @@ const packageSchema = new Schema<PackageDocument>({
 	timestamps: true,
 })
 
+packageSchema.plugin(sanitizeSchema)
 
 packageSchema.pre('save', function(next) {
 	this.price = +this.price

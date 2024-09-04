@@ -2,6 +2,7 @@ import type { ProductDocument } from '../types/product'
 import type { Model } from 'mongoose'
 import { model, models, Schema } from 'mongoose'
 import slug from 'slugify'
+import { sanitizeSchema } from '../services/sanitizeService'
 
 
 /*
@@ -297,7 +298,9 @@ const productSchema = new Schema<ProductDocument>({
 	}
 })
 
-// productSchema.pre('save', function(this) {
+productSchema.plugin(sanitizeSchema)
+
+
 productSchema.pre('save', function(next) {
 	// this.price = +this.price 								// convert to number
 	// this.quantity = +this.quantity

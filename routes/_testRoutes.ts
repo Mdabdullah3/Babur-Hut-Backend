@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import * as _testController from '../controllers/_testController'
 
-// => /api/test/
+// => /api/tests/
 export const router = Router({ mergeParams: true })
 
 router.route('/')

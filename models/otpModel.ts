@@ -1,5 +1,6 @@
 import type { Model } from 'mongoose'
 import { Schema, models, model } from 'mongoose'
+import { sanitizeSchema } from '../services/sanitizeService'
 
 type OTPDocument = {
 	phone: string,
@@ -27,6 +28,7 @@ const otpSchema = new Schema<OTPDocument>({
 	}
 })
 
+otpSchema.plugin(sanitizeSchema)
 
 export const OtpModel: Model<OTPDocument> = models.Review || model<OTPDocument>('Otp', otpSchema)
 export default OtpModel

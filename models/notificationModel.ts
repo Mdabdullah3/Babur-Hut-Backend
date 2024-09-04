@@ -1,6 +1,7 @@
 import type { CreateNotification, NotificationDocument } from '../types/notification'
 import type { Model } from 'mongoose'
 import { Schema, model } from 'mongoose'
+import { sanitizeSchema } from '../services/sanitizeService';
 
 /*
 {
@@ -47,6 +48,8 @@ const notificationSchema = new Schema<NotificationDocument>({
 	timestamps: true,
 })
 
+
+notificationSchema.plugin(sanitizeSchema)
 
 /*
 // GET /api/tweets/:id/retweet

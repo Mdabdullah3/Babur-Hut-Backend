@@ -1,6 +1,7 @@
 import type { ReportDocument } from '../types/report'
 import type { Model } from 'mongoose'
 import { Schema, models, model } from 'mongoose'
+import { sanitizeSchema } from '../services/sanitizeService'
 
 /*
 	user: Types.ObjectId,
@@ -47,6 +48,7 @@ const reportSchema = new Schema<ReportDocument>({
 })
 
 
+reportSchema.plugin(sanitizeSchema)
 
 export const Report: Model<ReportDocument> = models.Report || model<ReportDocument>('Report', reportSchema)
 export default Report

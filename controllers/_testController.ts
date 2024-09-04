@@ -1,12 +1,11 @@
-
 import type { RequestHandler } from 'express';
 import { appError, catchAsync } from './errorController';
-import Order from '../models/_testModel';
+import Test from '../models/_testModel';
 
 
-// GET 	/api/test
+// GET 	/api/tests
 export const getTest: RequestHandler = catchAsync( async (_req, res, _next) => {
-	const tests = await Order.find()
+	const tests = await Test.find()
 
 	res.status(200).json({
 		status: 'success',
@@ -15,55 +14,57 @@ export const getTest: RequestHandler = catchAsync( async (_req, res, _next) => {
 	})
 })
 
-// GET 	/api/test/:testId
+// GET 	/api/tests/:testId
 export const getTestById: RequestHandler = catchAsync( async (req, res, next) => {
 	const { testId = ''} = req.params
 
-	const order = await Order.findById(testId)
-	if(!order) return next(appError('no order document found'))
+	const test = await Test.findById(testId)
+	if(!test) return next(appError('no test document found'))
 
 	res.status(200).json({
 		status: 'success',
-		data: order
+		data: test
 	})
 })
 
-// POST 	/api/test
+// POST 	/api/tests
 export const addTest: RequestHandler = catchAsync( async (req, res, next) => {
 
-	const order = await Order.create(req.body)
-	// const order = req.body
-	if(!order) return next(appError('no order document found'))
+	console.log('add', req.body)
+
+	const test = await Test.create(req.body)
+	// const test = req.body
+	if(!test) return next(appError('no test document found'))
 
 	res.status(201).json({
 		status: 'success',
-		data: order
+		data: test
 	})
 })
 
-// PATCH 	/api/finances/:testId
+// PATCH 	/api/tests/:testId
 export const updateTest: RequestHandler = catchAsync( async (req, res, next) => {
 	const { testId = ''} = req.params
 
-	const order = await Order.findByIdAndUpdate(testId, req.body, { new: true })
-	if(!order) return next(appError('no order document update failed'))
+	const test = await Test.findByIdAndUpdate(testId, req.body, { new: true })
+	if(!test) return next(appError('no test document update failed'))
 
 	res.status(201).json({
 		status: 'success',
-		data: order
+		data: test
 	})
 })
 
-// DELETE 	/api/finances/:testId
+// DELETE 	/api/tests/:testId
 export const deleteTest: RequestHandler = catchAsync( async (req, res, next) => {
 	const { testId = ''} = req.params
 
-	const order = await Order.findByIdAndDelete(testId)
-	if(!order) return next(appError('no order document deletation failed'))
+	const test = await Test.findByIdAndDelete(testId)
+	if(!test) return next(appError('no test document deletation failed'))
 
 	res.status(204).json({
 		status: 'success',
-		data: order
+		data: test
 	})
 })
 

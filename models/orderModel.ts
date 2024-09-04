@@ -2,6 +2,7 @@ import type { OrderDocument } from '../types/order'
 import type { Model } from 'mongoose'
 import { model, models, Schema } from 'mongoose'
 import isEmail from 'validator/lib/isEmail'
+import { sanitizeSchema } from '../services/sanitizeService'
 
 
 /*
@@ -248,7 +249,8 @@ const orderSchema = new Schema<OrderDocument>({
 	timestamps: true
 })
 
-// productSchema.pre('save', function(this) {
+orderSchema.plugin(sanitizeSchema)
+
 orderSchema.pre('save', function(next) {
 	this.price = +this.price 								// convert to number
 	// this.quantity = +this.quantity

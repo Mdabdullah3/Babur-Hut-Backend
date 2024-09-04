@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 
 import { IProduct, IShippingInfo, IOrder } from '../types/payment'
+import { sanitizeSchema } from '../services/sanitizeService';
 
 
 // Create the Product schema
@@ -166,6 +167,7 @@ paymentSchema.pre(/^find/, function (this: IProduct, next) {
 
 
 
+paymentSchema.plugin(sanitizeSchema)
 
 
 // Create and export the Order model

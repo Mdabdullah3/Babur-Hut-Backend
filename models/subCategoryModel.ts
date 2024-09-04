@@ -1,6 +1,7 @@
 import type { SubCategoryDocument } from '../types/category'
 import type { Model } from 'mongoose'
 import { Schema, models, model } from 'mongoose'
+import { sanitizeSchema } from '../services/sanitizeService'
 
 /*
 {
@@ -94,6 +95,8 @@ const subCategorySchema = new Schema<SubCategoryDocument>({
 	timestamps: true,
 })
 
+
+subCategorySchema.plugin(sanitizeSchema)
 
 // subCategorySchema.pre(/^find/, function (this: SubCategoryDocument, next) {
 

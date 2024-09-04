@@ -1,6 +1,7 @@
 import type { FinanceDocument } from '../types/finance'
 import type { Model } from 'mongoose'
 import { Schema, models, model } from 'mongoose'
+import { sanitizeSchema } from '../services/sanitizeService'
 
 /*
 	user: Types.ObjectId,
@@ -66,6 +67,7 @@ const financeSchema = new Schema<FinanceDocument>({
 })
 
 
+financeSchema.plugin(sanitizeSchema)
 
 export const Finance: Model<FinanceDocument> = models.Finance || model<FinanceDocument>('Finance', financeSchema)
 export default Finance

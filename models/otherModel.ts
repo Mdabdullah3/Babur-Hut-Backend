@@ -1,6 +1,7 @@
 import type { OtherDocument } from '../types/other'
 import type { Model } from 'mongoose'
 import { Schema, models, model } from 'mongoose'
+import { sanitizeSchema } from '../services/sanitizeService'
 
 /*
 {
@@ -53,6 +54,7 @@ const otherSchema = new Schema<OtherDocument>({
 })
 
 
+otherSchema.plugin(sanitizeSchema)
 
 export const Other: Model<OtherDocument> = models.Other || model<OtherDocument>('Other', otherSchema)
 export default Other

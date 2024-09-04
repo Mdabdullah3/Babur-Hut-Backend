@@ -1,6 +1,7 @@
 import type { EventProductsDocument } from '../types/eventProduct'
 import type { Model } from 'mongoose'
 import { Schema, models, model } from 'mongoose'
+import { sanitizeSchema } from '../services/sanitizeService'
 
 /*
 	user: Types.ObjectId,
@@ -35,6 +36,7 @@ const eventProductSchema = new Schema<EventProductsDocument>({
 })
 
 
+eventProductSchema.plugin(sanitizeSchema)
 
 export const EventProduct: Model<EventProductsDocument> = models.EventProduct || model<EventProductsDocument>('EventProduct', eventProductSchema)
 export default EventProduct

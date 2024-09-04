@@ -1,6 +1,7 @@
 import type { ReviewDocument } from '../types/review'
 import type { Model } from 'mongoose'
 import { Schema, models, model } from 'mongoose'
+import { sanitizeSchema } from '../services/sanitizeService'
 
 /*
 {
@@ -78,6 +79,7 @@ const reviewSchema = new Schema<ReviewDocument>({
 	timestamps: true,
 })
 
+reviewSchema.plugin(sanitizeSchema)
 
 // productSchema.pre('save', function(this) {
 reviewSchema.pre('save', function(next) {
