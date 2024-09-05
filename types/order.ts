@@ -40,6 +40,7 @@ export interface IShippingInfo {
 // Define the Order interface extending Document
 export type OrderDocument = Document & {
 	product: Types.ObjectId;
+	variantId: Types.ObjectId;
 	user: Types.ObjectId;
 	transactionId: string;
 

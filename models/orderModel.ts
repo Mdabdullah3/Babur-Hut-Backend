@@ -129,6 +129,9 @@ const orderSchema = new Schema<OrderDocument>({
 		ref: 'Product',
 		required: true,
 	},
+	variantId: {
+		type: Schema.Types.ObjectId,
+	},
 	transactionId: {
 		type: String,
 		required: true,

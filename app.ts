@@ -6,9 +6,9 @@ import cors from 'cors'
 import session from 'express-session'
 import passport from 'passport'
 import MongoStore from 'connect-mongo'
-import helmet from 'helmet'
+// import helmet from 'helmet'
 import mongoSanitize from 'express-mongo-sanitize'
-import rateLimit from 'express-rate-limit'
+// import rateLimit from 'express-rate-limit'
 import hpp from 'hpp'
 // import csurf from 'csurf'
 
@@ -34,11 +34,10 @@ if(!SESSION_SECRET) throw new Error(`Error: => SESSION_SECRET=${SESSION_SECRET}`
 
 const app: Express = express()
 
-// app.use(helmet()) 		// adds security headers
-app.use(helmet({
-	contentSecurityPolicy: false,  				// Disable CSP if it's interfering
-	noSniff: false,  											// Disable X-Content-Type-Options header
-}));
+// app.use(helmet({
+// 	contentSecurityPolicy: false,  				// Disable CSP if it's interfering
+// 	noSniff: false,  											// Disable X-Content-Type-Options header
+// }));
 // app.use(
 //   helmet.contentSecurityPolicy({
 //     directives: {
@@ -51,13 +50,15 @@ app.use(helmet({
 
 app.use(mongoSanitize()) 												// prevent mongodb injection attach
 
-const limit = 400
-const message = `you API sending too many request, limit: ${limit}`
-app.use(rateLimit({ 														// 
-	limit,
-	windowMs: 1000 * 60 * 60, 										// window == request /ms
-	handler: (_req, _res, next) => next(errorController.appError(message, 400, 'LimitError'))
-})) 	
+// const limit = 400
+// const message = `you API sending too many request, limit: ${limit}`
+// app.use(rateLimit({ 														// 
+// 	limit,
+// 	windowMs: 1000 * 60 * 60, 										// window == request /ms
+// 	handler: (_req, _res, next) => {
+// 		next(errorController.appError(message, 400, 'LimitError'))
+// 	}
+// })) 	
 
 
 app.use(hpp()) 																	// prevent HTML paramiter polution
