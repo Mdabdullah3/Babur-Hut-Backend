@@ -50,11 +50,15 @@ app.use(helmet({
 
 
 app.use(mongoSanitize()) 												// prevent mongodb injection attach
+
+const limit = 400
+const message = `you API sending too many request, limit: ${limit}`
 app.use(rateLimit({ 														// 
-	limit: 300,
+	limit,
 	windowMs: 1000 * 60 * 60, 										// window == request /ms
-	message: 'reached max limit'
+	handler: (_req, _res, next) => next(errorController.appError(message, 400, 'LimitError'))
 })) 	
+
 
 app.use(hpp()) 																	// prevent HTML paramiter polution
 

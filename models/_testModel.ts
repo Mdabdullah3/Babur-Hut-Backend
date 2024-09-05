@@ -9,7 +9,7 @@ type Image = {
 type Test = {
 	status: string
 	currency: string
-	image: Image
+	image: Image[]
 }
 
 
@@ -20,19 +20,19 @@ const testSchema = new Schema<Test>({
 	currency: {
 			type: String,
 	},
-	image: {
+	image: [{
 		public_url: String,
 		secure_url: String,
-	},
+	}],
 }, { timestamps: true });
 
 testSchema.plugin(sanitizeSchema)
 
-testSchema.pre('save', (next) => {
-	console.log(this)
+// testSchema.pre('save', (next) => {
+// 	console.log(this)
 
-	next()
-})
+// 	next()
+// })
 
 const Test = model<Test>('Test', testSchema);
 export default Test;
