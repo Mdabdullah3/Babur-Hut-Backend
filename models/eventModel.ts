@@ -48,6 +48,11 @@ const eventSchema = new Schema<EventsDocument>({
 		lowercase: true,
 		trim: true,
 	},
+	price: { 
+		type: String,
+		// lowercase: true,
+		// trim: true,
+	},
 
 }, {
 	timestamps: true,

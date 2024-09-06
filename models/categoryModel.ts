@@ -15,6 +15,9 @@ import { sanitizeSchema } from '../services/sanitizeService'
 	commissionType: "string",
 	vatType: "string",
 	transactionCostType: "string",
+
+	isHomeShown: boolean,
+	iconImage: 'data'
 }
 */
 
@@ -65,8 +68,6 @@ const categorySchema = new Schema<CategoryDocument>({
 	image: {
 		public_id: String,
 		secure_url: String,
-		alt: String,
-		size: String
 	},
 	icon: {
 		type: String,
@@ -91,6 +92,14 @@ const categorySchema = new Schema<CategoryDocument>({
 		lowercase: true,
 	},
 
+	iconImage: {
+		public_id: String,
+		secure_url: String,
+	},
+	isHomeShown: {
+		type: Boolean,
+		default: false,
+	},
 
 }, {
 	timestamps: true,

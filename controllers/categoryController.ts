@@ -32,6 +32,14 @@ export const addCategory:RequestHandler = catchAsync(async (req, res, next) => {
 			const { error: _errorImage, image } = await fileService.handleBase64File(req.body.image, '/categories')
 			if(image) req.body.image = image
 		}
+		if(req.body.iconImage) {
+			const imageSize = getDataUrlSize(req.body.iconImage)
+			const maxImageSize = 1024 * 1024 * 2 			// => 2 MB
+			if(imageSize > maxImageSize) return next(appError('You cross the max iconImage size: 2MB(max)'))
+
+			const { error: _errorImage, image } = await fileService.handleBase64File(req.body.iconImage, '/categories')
+			if(image) req.body.iconImage = image
+		}
 
 		const filteredBody = categoryDto.filterBodyForAddCategory(req.body)
 		const category = await Category.create(filteredBody)
@@ -44,7 +52,10 @@ export const addCategory:RequestHandler = catchAsync(async (req, res, next) => {
 
 	} catch (error) {
 		setTimeout(() => {
-			promisify(fileService.removeFile)(req.body.image.secure_url)
+			promisify(fileService.removeFile)(req.body.image?.secure_url)
+		}, 1000);
+		setTimeout(() => {
+			promisify(fileService.removeFile)(req.body.iconImage?.secure_url)
 		}, 1000);
 
 		if(error instanceof Error) next(appError(error.message))
@@ -81,6 +92,14 @@ export const updateCategoryById:RequestHandler = catchAsync(async (req, res, nex
 			const { error: _errorImage, image } = await fileService.handleBase64File(req.body.image, '/categories')
 			if(image) req.body.image = image
 		}
+		if(req.body.iconImage) {
+			const imageSize = getDataUrlSize(req.body.iconImage)
+			const maxImageSize = 1024 * 1024 * 2 			// => 2 MB
+			if(imageSize > maxImageSize) return next(appError('You cross the max iconImage size: 2MB(max)'))
+
+			const { error: _errorImage, image } = await fileService.handleBase64File(req.body.iconImage, '/categories')
+			if(image) req.body.iconImage = image
+		}
 
 		const filteredBody = categoryDto.filterBodyForUpdateCategory(req.body) 
 
@@ -90,7 +109,9 @@ export const updateCategoryById:RequestHandler = catchAsync(async (req, res, nex
 			'vat',
 			'status',
 			'commission',
-			'image'
+			'image',
+			'iconImage',
+			'isHomeShown',
 		]
 
 		const category = await Category.findById(categoryId )
@@ -105,6 +126,11 @@ export const updateCategoryById:RequestHandler = catchAsync(async (req, res, nex
 				promisify(fileService.removeFile)(category.image.secure_url)
 			}, 1000);
 		}
+		if(req.body.iconImage && category.iconImage?.secure_url) {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(category.iconImage.secure_url)
+			}, 1000);
+		}
 
 		res.status(201).json({
 			status: 'success',
@@ -117,6 +143,11 @@ export const updateCategoryById:RequestHandler = catchAsync(async (req, res, nex
 		if(req.body.image?.secure_url) {
 			setTimeout(() => {
 				promisify(fileService.removeFile)(req.body.image.secure_url)
+			}, 1000);
+		}
+		if(req.body.iconImage?.secure_url) {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(req.body.iconImage.secure_url)
 			}, 1000);
 		}
 
@@ -138,6 +169,11 @@ export const deleteCategoryById:RequestHandler = catchAsync(async (req, res, nex
 				promisify(fileService.removeFile)(category.image.secure_url)
 			}, 1000);
 		}
+		if(category.iconImage) {
+			setTimeout(() => {
+				promisify(fileService.removeFile)(category.iconImage.secure_url)
+			}, 1000);
+		}
 
 		res.status(204).json({
 			status: 'success',
@@ -148,6 +184,11 @@ export const deleteCategoryById:RequestHandler = catchAsync(async (req, res, nex
 		setTimeout(() => {
 			if( req.body.image ) {
 				promisify(fileService.removeFile)(req.body.image.secure_url)
+			}
+		}, 1000)
+		setTimeout(() => {
+			if( req.body.iconImage ) {
+				promisify(fileService.removeFile)(req.body.iconImage.secure_url)
 			}
 		}, 1000)
 

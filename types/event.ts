@@ -21,6 +21,8 @@ export type EventsDocument = Document & {
 
 	description: string
 	// products: Product[]
+
+	price: string
 }
 
 export type UpdateEvent = {
@@ -34,4 +36,5 @@ export type UpdateEvent = {
 
 	description: string
 	// products: Product[]
+	price: string
 }

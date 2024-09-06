@@ -24,6 +24,7 @@ export type CategoryDocument = Document & {
 	transactionId: string
 
 	isHomeShown: boolean
+	iconImage: Image
 }
 
 export type CreateCagetory = {
@@ -41,7 +42,8 @@ export type CreateCagetory = {
 	transactionCostType: string
 	transactionId: string
 
-	// isHomeShown: boolean
+	isHomeShown: boolean
+	iconImage: Image
 }
 export type UpdateCagetory = {
 	name: string
@@ -58,7 +60,8 @@ export type UpdateCagetory = {
 	transactionCostType: string
 	transactionId: string
 
-	// isHomeShown: boolean
+	isHomeShown: boolean
+	iconImage: Image
 }
 
 

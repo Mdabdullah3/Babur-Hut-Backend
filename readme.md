@@ -1291,11 +1291,12 @@ PATCH {{origin}}/api/vouchers/:voucherId
   "commission": "0",
   "commissionType": "string",
   "image: "data:image/jpg;a3wwra...",
+  "iconImage: "data:image/jpg;a3wwra...",
   "icon": "my icon name",
   "transactionCost": "2",
   "transactionCostType": "string",
   "transactionId": "askdjfalsdjf",
-
+  "isHomeShown": false
 }
 
 POST {{origin}}/api/categories
@@ -1314,9 +1315,12 @@ body {
   "commission": "0",
   "commissionType": "string",
   "icon": "my icon name",
+  "image: "data:image/jpg;a3wwra...",
+  "iconImage: "data:image/jpg;a3wwra...",
   "transactionCost": "2",
   "transactionCostType": "string",
   "transactionId": "askdjfalsdjf",
+  "isHomeShown": false
 
 }
 PATCH {{origin}}/api/categories/:categoryId
@@ -1461,6 +1465,7 @@ POST {{origin}}/api/orders/many
 body {
   "user" : "66cb6175017d8682d2b9e6ef",
   "product" : "667ea9b1df5d6c0e864f1841",
+  "variantId" : "667ea9b1df5d6c0e864f1814",
   "transactionId" : "UniqueId",                         : Unique Id
 
   "price": 525,
@@ -1494,6 +1499,7 @@ body [
   {
     "user" : "66cb6175017d8682d2b9e6ef",
     "product" : "667ea9b1df5d6c0e864f1841",
+  	"variantId" : "667ea9b1df5d6c0e864f1814",
     "transactionId" : "UniqueId",                         : Unique Id, but same for product one
   
     "price": 525,
@@ -1521,6 +1527,7 @@ body [
   {
     "user" : "66cb6175017d8682d2b9e6ef",
     "product" : "667ea9b1df5d6c0e864f1841",
+  	"variantId" : "667ea9b1df5d6c0e864f1814",
     "transactionId" : "UniqueId",                         : Unique Id, but same for 2nd product 
   
     "price": 525,
@@ -1792,6 +1799,7 @@ body {
   "startDate": "new Date( Date.now() )",
   "endDate": "new Date( Date.now() + 1000 * 60 * 60 * 5)",
   "description": "any description",   
+  "price": 200
 }
 
 POST {{origin}}/events/:eventId
@@ -1807,6 +1815,7 @@ body {
   "startDate": "new Date( Date.now() )",
   "endDate": "new Date( Date.now() + 1000 * 60 * 60 * 5)",
   "description": "any description",   
+  "price": 200
 }
 PATCH {{origin}}/events/:eventId
 ```

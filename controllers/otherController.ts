@@ -98,27 +98,27 @@ export const addOther: RequestHandler = catchAsync( async (req, res, next) => {
 	} catch (err: unknown) {
 
 		setTimeout(() => {
-			if( !req.body.image?.secure_url.startsWith('http') ) {
+			if( !req.body.image?.secure_url?.startsWith('http') ) {
 				promisify(fileService.removeFile)(req.body.image.secure_url)
 			}
 		}, 1000)
 		setTimeout(() => {
-			if( !req.body.mobileBanner?.secure_url.startsWith('http') ) {
+			if( !req.body.mobileBanner?.secure_url?.startsWith('http') ) {
 				promisify(fileService.removeFile)(req.body.mobileBanner.secure_url)
 			}
 		}, 1000)
 		setTimeout(() => {
-			if( !req.body.popupImageMobile?.secure_url.startsWith('http') ) {
+			if( !req.body.popupImageMobile?.secure_url?.startsWith('http') ) {
 				promisify(fileService.removeFile)(req.body.popupImageMobile.secure_url)
 			}
 		}, 1000)
 		setTimeout(() => {
-			if( !req.body.logo?.secure_url.startsWith('http') ) {
+			if( !req.body.logo?.secure_url?.startsWith('http') ) {
 				promisify(fileService.removeFile)(req.body.logo.secure_url)
 			}
 		}, 1000)
 		setTimeout(() => {
-			if( !req.body.popupImage?.secure_url.startsWith('http') ) {
+			if( !req.body.popupImage?.secure_url?.startsWith('http') ) {
 				promisify(fileService.removeFile)(req.body.popupImage.secure_url)
 			}
 		}, 1000)
