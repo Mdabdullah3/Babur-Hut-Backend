@@ -343,20 +343,20 @@ export const updateProductByIdOrSlug:RequestHandler = async (req, res, next) => 
 		if(productVariant) {
 			const { id:productVariantId, _id, ...restVariant } = req.body.productVariant
 
-			// // update productVariant.image
-			// if(productVariant.image) {
-			// 	const imageSize = getDataUrlSize(productVariant.image)
-			// 	const maxImageSize = 1024 * 1024 * 5 			// => 5 MB
-			// 	if(imageSize > maxImageSize) return next(appError('You cross the max image size: 5MB(max)'))
+			// update productVariant.image
+			if(productVariant.image) {
+				const imageSize = getDataUrlSize(productVariant.image)
+				const maxImageSize = 1024 * 1024 * 5 			// => 5 MB
+				if(imageSize > maxImageSize) return next(appError('You cross the max image size: 5MB(max)'))
 
-			// 	// upload file and return { error, image: { public_i, secure_url }}
-			// 	const { error: _avatarError, image } = await fileService.handleBase64File(productVariant.image, '/products')
-			// 	// if(avatarError || !coverPhoto) return next(appError(avatarError))
+				// upload file and return { error, image: { public_i, secure_url }}
+				const { error: _avatarError, image } = await fileService.handleBase64File(productVariant.image, '/products')
+				// if(avatarError || !coverPhoto) return next(appError(avatarError))
 
-			// 	if(image) productVariant.image = image
-			// }
+				if(image) productVariant.image = image
+			}
 
-			updatedProduct = await createOrUpdateProductVariant ( productId, productVariantId, { ...restVariant })
+			updatedProduct = await createOrUpdateProductVariant ( productId, productVariantId, { ...restVariant, image: productVariant.image })
 		}
 
 		if(restBody) {
@@ -602,6 +602,7 @@ const createOrUpdateProductVariant = async (
   variantId: string | null,  // If null, create a new variant
   updatedData: Partial<ProductVariant>
 ) => {
+	 
   // If `variantId` is provided, update the existing variant
   if (variantId) {
 
@@ -626,17 +627,17 @@ const createOrUpdateProductVariant = async (
       }
     );
 
-		// // delete old existing image
-    // const product = await Product.findById(productId)
-		// if(updatedData.image?.secure_url) {
-		// 	product?.productVariants.forEach( variant => {
-		// 		if( variant._id.toString() !== variantId ) return
+		// delete old existing image
+    const product = await Product.findById(productId)
+		if(updatedData.image?.secure_url) {
+			product?.productVariants.forEach( variant => {
+				if( variant._id.toString() !== variantId ) return
 
-		// 		setTimeout(() => {
-		// 			promisify(fileService.removeFile)(variant.image.secure_url)
-		// 		}, 1000);
-		// 	})
-		// }
+				setTimeout(() => {
+					promisify(fileService.removeFile)(variant.image.secure_url)
+				}, 1000);
+			})
+		}
 
     return updatedProduct;
 
