@@ -11,6 +11,7 @@ import mongoSanitize from 'express-mongo-sanitize'
 // import rateLimit from 'express-rate-limit'
 import hpp from 'hpp'
 // import csurf from 'csurf'
+import morgan from 'morgan'
 
 import routers from './routes'
 import * as errorController from './controllers/errorController'
@@ -70,7 +71,14 @@ app.use(hpp()) 																	// prevent HTML paramiter polution
 
 // List of allowed origins
 const allowedOrigins = [
-	'https://baburhaatbd.com',
+	'https://baburhaatbd.com', 					// main
+	'https://vendor.baburhaatbd.com', 	// vendor
+	'https://admin.baburhaatbd.com', 		// admin
+	'http2://103.148.15.24:3002',  			// admin
+	'http://103.148.15.24:3002',  			// admin
+
+
+	'http://localhost:3002', 
 	'http://baburhaatbd.com',
 
 	'https://baburhaatbd.com:5000',
@@ -88,13 +96,15 @@ const allowedOrigins = [
 
 	'https://103.148.15.24:3000', 
 	'http://103.148.15.24:3000', 
+	'https://103.148.15.24:3001', 
 	'http://103.148.15.24:3001', 
-	'http://103.148.15.24:3002', 
+	// 'http://103.148.15.24:3002', 
+	// 'http2://103.148.15.24:3002', 
 
 	'http://localhost:5000', 
 	'http://localhost:3000', 
 	'http://localhost:3001', 
-	'http://localhost:3002', 
+	// 'http://localhost:3002', 
 ]
 
 // CORS configuration
@@ -159,8 +169,10 @@ app.set('query parser', 'simple') 													// To prevent default query query
 app.set('view engine', 'pug')
 
 app.use(express.static( publicDirectory ))
-app.use(express.urlencoded({ extended: false })) 						// required for passport login formData
-app.use(express.json({ limit: '500mb' }))
+app.use(express.json({ limit: '400mb' }));
+app.use(express.urlencoded({ limit: '400mb', extended: true }));
+
+app.use(morgan('dev')) 					// 
 
 app.use('/', routers)
 

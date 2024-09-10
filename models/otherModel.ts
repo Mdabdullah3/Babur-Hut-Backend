@@ -48,6 +48,10 @@ const otherSchema = new Schema<OtherDocument>({
 		secure_url: String,
 	},
 
+	link: {
+		type: String,
+		// trim: true,
+	},
 
 }, {
 	timestamps: true,

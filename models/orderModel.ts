@@ -124,6 +124,11 @@ const orderSchema = new Schema<OrderDocument>({
 		ref: 'User',
 		required: true,
 	},
+	vendor: { 																	// vendor
+		type: Schema.Types.ObjectId,
+		ref: 'User',
+		// required: true,
+	},
 	product: {
 		type: Schema.Types.ObjectId,
 		ref: 'Product',
@@ -246,7 +251,45 @@ const orderSchema = new Schema<OrderDocument>({
 			maxlength: 200,
 			default: 'bangladesh',
 		},
-	}
+	},
+
+
+	vat: {
+		type: String,
+		// lowercase: true,
+		// trim: true,
+	},
+	commission: {
+		type: String,
+		// lowercase: true,
+		// trim: true,
+	},
+	transactionCost: {
+		type: String,
+		// lowercase: true,
+		// trim: true,
+	},
+	shippingCharge: {
+		type: String,
+		// lowercase: true,
+		// trim: true,
+	},
+	profit: {
+		type: String,
+		// lowercase: true,
+		// trim: true,
+	},
+	quantity: {
+		type: String,
+		// lowercase: true,
+		// trim: true,
+	},
+	vendorPaid: {
+		type: String,
+		// lowercase: true,
+		// trim: true,
+	},
+
 
 }, {
 	timestamps: true

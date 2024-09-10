@@ -17,6 +17,8 @@ export type OtherDocument = Document & {
 	popupImageMobile: Image
 	logo: Image
 	popupImage: Image
+
+	link: string
 }
 
 export type UpdateOther = {
@@ -29,4 +31,6 @@ export type UpdateOther = {
 	popupImageMobile: Image
 	logo: Image
 	popupImage: Image
+
+	link: string
 }

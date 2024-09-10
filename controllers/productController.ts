@@ -169,7 +169,8 @@ export const addProduct:RequestHandler = catchAsync(async (req, res, next) => {
 		// handle productVariants images
 		if(req.body.productVariants?.length) {
 			const variantImages = req.body.productVariants.map( async (productVariant: { image: string }) => {
-				// if(productVariant.image)
+				if(!productVariant.image) return productVariant 
+
 				// Check image size
 				const imageSize = getDataUrlSize(productVariant.image)
 				const maxImageSize = 1024 * 1024 * 5 			// => 5 MB
@@ -603,23 +604,42 @@ const createOrUpdateProductVariant = async (
   updatedData: Partial<ProductVariant>
 ) => {
 	 
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const updateFields: any = {
+		'productVariants.$[elem].name': updatedData.name,
+		'productVariants.$[elem].price': updatedData.price,
+		'productVariants.$[elem].quantity': updatedData.quantity,
+		'productVariants.$[elem].color': updatedData.color,
+		'productVariants.$[elem].size': updatedData.size,
+		'productVariants.$[elem].discount': updatedData.discount,
+		'productVariants.$[elem].gender': updatedData.gender,
+		'productVariants.$[elem].material': updatedData.material,
+	};
+
+	// Conditionally add the image field if it's available and not undefined
+	if (updatedData.image !== undefined) {
+		updateFields['productVariants.$[elem].image'] = updatedData.image;
+	}
+	 
   // If `variantId` is provided, update the existing variant
   if (variantId) {
 
     const updatedProduct = await Product.findOneAndUpdate(
       { _id: productId, 'productVariants._id': variantId },
       {
-        $set: {
-          'productVariants.$[elem].name': updatedData.name,
-          'productVariants.$[elem].price': updatedData.price,
-          'productVariants.$[elem].quantity': updatedData.quantity,
-          'productVariants.$[elem].color': updatedData.color,
-          'productVariants.$[elem].size': updatedData.size,
-          'productVariants.$[elem].discount': updatedData.discount,
-          'productVariants.$[elem].gender': updatedData.gender,
-          'productVariants.$[elem].material': updatedData.material,
-          'productVariants.$[elem].image': updatedData.image,
-        },
+				$set: updateFields,
+        // $set: {
+        //   'productVariants.$[elem].name': updatedData.name,
+        //   'productVariants.$[elem].price': updatedData.price,
+        //   'productVariants.$[elem].quantity': updatedData.quantity,
+        //   'productVariants.$[elem].color': updatedData.color,
+        //   'productVariants.$[elem].size': updatedData.size,
+        //   'productVariants.$[elem].discount': updatedData.discount,
+        //   'productVariants.$[elem].gender': updatedData.gender,
+        //   'productVariants.$[elem].material': updatedData.material,
+        //   'productVariants.$[elem].image': updatedData.image,
+        // },
       },
       {
         new: true, // Return the updated document
@@ -651,7 +671,8 @@ const createOrUpdateProductVariant = async (
         $push: {
           productVariants: {
             _id: newVariantId,
-            ...updatedData,
+            // ...updatedData,
+            ...updateFields,
           },
         },
       },

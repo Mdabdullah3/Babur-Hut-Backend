@@ -49,8 +49,14 @@ export type OrderDocument = Document & {
 	paymentType: string;
 	status: string
 
-  // orderCost?: number;
-  // profit?: number;
-  // brand?: string;
 	shippingInfo: IShippingInfo;
+
+	vendor: Types.ObjectId,
+	vat: string,
+	commission: string,
+	transactionCost: string,
+	shippingCharge: string,
+	profit: string,
+	quantity: string,
+	vendorPaid: string
 }

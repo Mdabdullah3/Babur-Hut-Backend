@@ -616,7 +616,7 @@ body: {
       "color": "string",
       "material": "string",
       "size": "string",
-      "image": "Image"
+      "image": "data:jpg/images;alkjdfajd...=",
     },
     {
       "name": "string 2",
@@ -627,7 +627,7 @@ body: {
       "color": "string",
       "material": "string",
       "size": "string",
-      "image": "Image"
+      "image": "data:jpg/images;alkjdfajd...=",
     }
   ]
 }
@@ -646,6 +646,7 @@ body {
     "name": "string update again clean update",
     "price": 444,
     "_id": "66d6055047aa51aed002a8cef",
+    "image": "data:jpg/images;alkjdfajd...=",
     "size": "updated"
   }
 }
@@ -659,7 +660,8 @@ body {
     "name": "string update again clean update",
     "price": 444,
     "_id": "66d6055047aa51aed002a8cef",
-    "size": "updated"
+    "size": "updated",
+    "image": "data:jpg/images;alkjdfajd...=",
   }
 }
 
@@ -1464,6 +1466,7 @@ POST {{origin}}/api/orders/many
 
 body {
   "user" : "66cb6175017d8682d2b9e6ef",
+  "vendor": "66cb6175017d8682d2b9e6ef",
   "product" : "667ea9b1df5d6c0e864f1841",
   "variantId" : "667ea9b1df5d6c0e864f1814",
   "transactionId" : "UniqueId",                         : Unique Id
@@ -1487,7 +1490,15 @@ body {
     "country": "Bangladesh",
     
     "deliveryFee": 40
-  }
+  },
+
+  "vat": 4,
+  "commission": 20,
+  "transactionCost": 50,
+  "shippingCharge": 50,
+  "profit": 20,
+  "quantity": 2,
+  "vendorPaid": "unpaid" 		                : any string allowed
 }
 
 
@@ -1498,8 +1509,9 @@ body {
 body [
   {
     "user" : "66cb6175017d8682d2b9e6ef",
+    "vendor": "66cb6175017d8682d2b9e6ef",
     "product" : "667ea9b1df5d6c0e864f1841",
-  	"variantId" : "667ea9b1df5d6c0e864f1814",
+    "variantId" : "667ea9b1df5d6c0e864f1814",
     "transactionId" : "UniqueId",                         : Unique Id, but same for product one
   
     "price": 525,
@@ -1521,13 +1533,23 @@ body [
       "country": "Bangladesh",
       
       "deliveryFee": 40
-    }
+    },
+
+    "vendor": "66cb6175017d8682d2b9e6ef",
+    "vat": 4,
+    "commission": 20,
+    "transactionCost": 50,
+    "shippingCharge": 50,
+    "profit": 20,
+    "quantity": 2,
+    "vendorPaid": "unpaid" 		                : any string allowed
   },
 
   {
     "user" : "66cb6175017d8682d2b9e6ef",
+    "vendor": "66cb6175017d8682d2b9e6ef",
     "product" : "667ea9b1df5d6c0e864f1841",
-  	"variantId" : "667ea9b1df5d6c0e864f1814",
+    "variantId" : "667ea9b1df5d6c0e864f1814",
     "transactionId" : "UniqueId",                         : Unique Id, but same for 2nd product 
   
     "price": 525,
@@ -1549,7 +1571,15 @@ body [
       "country": "Bangladesh",
       
       "deliveryFee": 40
-    }
+    },
+
+    "vat": 4,
+    "commission": 20,
+    "transactionCost": 50,
+    "shippingCharge": 50,
+    "profit": 20,
+    "quantity": 2,
+    "vendorPaid": "unpaid" 		                : any string allowed
   }
 ]
 
@@ -1713,6 +1743,8 @@ body {
   "popupImageMobile" : "data:image/jpg,aksdjadjf",
   "logo" : "data:image/jpg,aksdjadjf",
   "popupImage" : "data:image/jpg,aksdjadjf",
+
+	"link": "http://your-image-link"
 }
 
 POST {{origin}}/api/vouchers
@@ -1730,6 +1762,8 @@ body {
   "popupImageMobile" : "data:image/jpg,aksdjadjf",
   "logo" : "data:image/jpg,aksdjadjf",
   "popupImage" : "data:image/jpg,aksdjadjf",
+
+	"link": "http://your-image-link"
 }
 PATCH {{origin}}/api/other/:otherId
 ```

@@ -102,13 +102,13 @@ const userSchema = new Schema<UserDocument>({
 		// required: true,
 		lowercase: true,
 		trim: true,
-		unique: true,
+		// unique: true,
 		validate: isEmail
 	},
 	phone: {
 		type: String,
 		trim: true,
-		unique: true,
+		// unique: true,
 	},
 	password: {
 		type: String,
