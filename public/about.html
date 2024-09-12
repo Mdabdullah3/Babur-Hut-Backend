@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stream Download with Progress</title>
+</head>
+<body>
+    <progress id="progressBar" value="0" max="100"></progress>
+    <p id="status">Buffering...</p>
+    
+    <script>
+			const url = 'https://baburhaatbd.com/upload/products/f3fcdbfb-44a1-450f-94cf-4ea56d476814.mp4'
+
+
+        const progressBar = document.getElementById('progressBar');
+        const statusText = document.getElementById('status');
+
+        async function downloadFile() {
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                statusText.textContent = 'Download failed!';
+                return;
+            }
+
+            // Get total file size from custom header
+            const totalSize = response.headers.get('X-Total-Size');
+            let receivedLength = 0;
+
+            const reader = response.body.getReader();
+
+            if (totalSize) {
+                progressBar.max = parseInt(totalSize, 10);
+            }
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                receivedLength += value.length;
+
+                if (totalSize) {
+                    const percentComplete = (receivedLength / totalSize) * 100;
+                    progressBar.value = percentComplete;
+                    statusText.textContent = `Buffering: ${percentComplete.toFixed(2)}%`;
+                } else {
+                    progressBar.value = receivedLength;
+                    statusText.textContent = `Downloaded ${receivedLength} bytes so far...`;
+                }
+            }
+
+            statusText.textContent = 'Download complete!';
+        }
+
+        downloadFile();
+    </script>
+</body>
+</html>
