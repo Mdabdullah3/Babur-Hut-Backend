@@ -301,7 +301,11 @@ orderSchema.pre('save', function(next) {
 	this.price = +this.price 								// convert to number
 	// this.quantity = +this.quantity
 
+	next()
+})
 
+orderSchema.pre(/^find/, function (this: OrderDocument, next) {
+	this.populate('product')
 	next()
 })
 

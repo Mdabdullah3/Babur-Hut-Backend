@@ -11,15 +11,10 @@ import Order from '../models/orderModel';
 export const getOrders: RequestHandler = catchAsync( async (req, res, _next) => {
 	const logedInUser = req.user as LogedInUser
 
-	const userId = req.params.userId === 'me' ? logedInUser._id : req.params.userId
-	// const productId = req.params.productId
-
 	let filter = {}
-	// if(productId) filter = { product: productId.toString() } 
+	const userId = req.params.userId === 'me' ? logedInUser._id : req.params.userId
 	if(userId) filter = { user: userId.toString() } 
 
-	// console.log(filter)
-	
 	const orders = await apiFeatures(Order, req.query, filter)
 	const total = await Order.countDocuments()
 
@@ -31,17 +26,6 @@ export const getOrders: RequestHandler = catchAsync( async (req, res, _next) => 
 })
 
 
-// export const getOrders: RequestHandler = catchAsync( async (req, res, _next) => {
-// 	// const orders = await Order.find()
-// 	const orders = await apiFeatures(Order, req.query, {})
-// 	const total = await Order.countDocuments()
-
-// 	res.status(200).json({
-// 		status: 'success',
-// 		total,
-// 		data: orders
-// 	})
-// })
 
 // GET 	/api/orders/:orderId
 export const getOrderById: RequestHandler = catchAsync( async (req, res, next) => {

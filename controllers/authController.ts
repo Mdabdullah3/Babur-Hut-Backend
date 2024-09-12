@@ -492,7 +492,7 @@ export const sendOTP = catchAsync( async(req, res, next) => {
 	try {
 		const data = await otpService.sendSMS(phone, otp) 				// get twilio details first
 		if(data.error) return next( appError(data.msg, data.error, 'OTP_ERROR') )
-		console.log(data)
+		// console.log(data)
 
 		// await sendMail({
 		// 	to: 'your_target_user@gmail.com',
@@ -540,8 +540,6 @@ export const verifyOTP = catchAsync( async (req, res, next) => {
 	const { phone, otp, hash } = req.body
 	if(!phone || !otp || !hash) return next(appError('you must send: { phone, otp, hash: hashedOTP }'))
 
-	req.body.role = 'vendor'
-
 	// step-1: check expires
 	const [ hashedOTP, expires ] = hash.split('.')
 
@@ -562,7 +560,7 @@ export const verifyOTP = catchAsync( async (req, res, next) => {
 	const password = crypto.randomBytes(6).toString('hex')
 	if(!user) {
 		const requiredFields = {
-			// email: phone, 																		// just to prevent empty duplication error
+			role: 'vendor', 																	// just to prevent empty duplication error
 			phone,
 			name: crypto.randomBytes(4).toString('hex'), 			// => 590e4eec
 			password,

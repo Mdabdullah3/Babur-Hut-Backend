@@ -51,7 +51,8 @@ export const apiFeatures = (Model:any, query:any, newFilter={}) => {
 	}
 	searchObj = search[1] ? searchObj : {}
 
-	const _filter = query._filter || newFilter
+	// const _filter = query._filter || newFilter 				// it bypass newFilter, so 
+	const _filter = { ...query._filter, ...newFilter } 		// we need merge both filter
 	const filter = { ...searchObj, ..._filter }
 
 	return Model.find(filter) 					// => Searching

@@ -72,39 +72,34 @@ app.use(hpp()) 																	// prevent HTML paramiter polution
 // List of allowed origins
 const allowedOrigins = [
 	'https://baburhaatbd.com', 					// main
+	'http://baburhaatbd.com',
+	'https://baburhaatbd.com:3000',
+	'http://baburhaatbd.com:3000',
+	'https://103.148.15.24:3000', 
+	'http://103.148.15.24:3000', 
+	'http://localhost:3000', 
+
 	'https://vendor.baburhaatbd.com', 	// vendor
+	'https://baburhaatbd.com:3001',
+	'http://baburhaatbd.com:3001',
+	'http2://103.148.15.24:3001',  			// vendor
+	'http://103.148.15.24:3001',  			// vendor
+	'https://103.148.15.24:3001', 
+	'http://103.148.15.24:3001', 
+	'http://localhost:3001', 
+
 	'https://admin.baburhaatbd.com', 		// admin
+	'https://baburhaatbd.com:3002',
+	'http://baburhaatbd.com:3002',
 	'http2://103.148.15.24:3002',  			// admin
 	'http://103.148.15.24:3002',  			// admin
-
-
 	'http://localhost:3002', 
-	'http://baburhaatbd.com',
 
 	'https://baburhaatbd.com:5000',
 	'http://baburhaatbd.com:5000',
-
-	'https://baburhaatbd.com:3000',
-	'https://baburhaatbd.com:3001',
-	'https://baburhaatbd.com:3002',
-	'http://baburhaatbd.com:3000',
-	'http://baburhaatbd.com:3001',
-	'http://baburhaatbd.com:3002',
-
 	'https://103.148.15.24:5000', 
 	'http://103.148.15.24:5000', 
-
-	'https://103.148.15.24:3000', 
-	'http://103.148.15.24:3000', 
-	'https://103.148.15.24:3001', 
-	'http://103.148.15.24:3001', 
-	// 'http://103.148.15.24:3002', 
-	// 'http2://103.148.15.24:3002', 
-
 	'http://localhost:5000', 
-	'http://localhost:3000', 
-	'http://localhost:3001', 
-	// 'http://localhost:3002', 
 ]
 
 // CORS configuration
@@ -145,7 +140,6 @@ app.use(session({
 	cookie: {
 		httpOnly: true,
 		secure: NODE_ENV === 'production',
-		// secure: true,
 		sameSite: 'none',
     // maxAge: 30 * 24 * 60 * 60 * 1000 // 30 day
 	}
