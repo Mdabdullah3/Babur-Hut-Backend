@@ -79,7 +79,7 @@ export const addOther: RequestHandler = catchAsync( async (req, res, next) => {
 		}
 
 		if(req.body.popupImage) {
-			const imageSize = getDataUrlSize(req.body.logo)
+			const imageSize = getDataUrlSize(req.body.popupImage)
 			const maxImageSize = 1024 * 1024 * 5 			// => 5 MB
 			if(imageSize > maxImageSize) return next(appError('You cross the max logo size: 5MB(max)'))
 
