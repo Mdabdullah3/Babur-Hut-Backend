@@ -42,21 +42,20 @@ export type OrderDocument = Document & {
 	product: Types.ObjectId;
 	variantId: Types.ObjectId;
 	user: Types.ObjectId;
+	vendor: Types.ObjectId,
 	transactionId: string;
 
 	price: number;
 	currency: string;
 	paymentType: string;
-	status: string
-
 	shippingInfo: IShippingInfo;
-
-	vendor: Types.ObjectId,
 	vat: string,
 	commission: string,
 	transactionCost: string,
 	shippingCharge: string,
 	profit: string,
 	quantity: string,
+
+	status: string  
 	vendorPaid: string
 }

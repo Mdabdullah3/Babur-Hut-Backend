@@ -100,6 +100,9 @@ const allowedOrigins = [
 	'https://103.148.15.24:5000', 
 	'http://103.148.15.24:5000', 
 	'http://localhost:5000', 
+
+	'https://babur-hut-dashboard.vercel.app/',
+	'https://babur-hat.vercel.app/',
 ]
 
 // CORS configuration

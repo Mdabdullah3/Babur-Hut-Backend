@@ -68,7 +68,8 @@ export const updateOrder: RequestHandler = catchAsync( async (req, res, next) =>
 	const { orderId = ''} = req.params
 
 	const body = {
-		status: req.body.status
+		status: req.body.status,
+		vendorPaid: req.body.vendorPaid,
 	}
 
 	const updatedOther = await Order.findByIdAndUpdate(orderId, body, { new: true })
