@@ -76,6 +76,7 @@ export const filterUserDocument = (user: UserDocument) => {
 		'avatar',
 		'role',
 		'isActive',
+		'isVerified',
 
 		'id',
 		'_id',
@@ -97,6 +98,8 @@ export const filterBodyForUpdate = (body: UpdateUser) => {
 		'email', 							// update seperate route to verify email
 		'phone', 							// update seperate route to verify otp
 		'role',
+		'isActive',
+		'isVerified',
 
 		'username',
 		'password',

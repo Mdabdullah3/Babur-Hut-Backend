@@ -156,7 +156,7 @@ export const updateUserById:RequestHandler = async (req, res, next) => {
 		// console.log({ body: filteredBody })
 
 		// const updatedUser = await User.findOne({ _id: userId }, filteredBody)
-		const updatedUser = await User.findOneAndUpdate({ _id: userId }, filteredBody)
+		const updatedUser = await User.findOneAndUpdate({ _id: userId }, filteredBody, { new: true })
 		if(!updatedUser) return next(appError('review not found'))
 		
 		// remove old image
