@@ -59,9 +59,24 @@ const packageSchema = new Schema<PackageDocument>({
 
 }, {
 	timestamps: true,
+	toJSON: {
+		virtuals: true 	// Step-1: required for virtual field 'reviews'
+	}
 })
 
 packageSchema.plugin(sanitizeSchema)
+
+// // Step-2: Generate virtual field: 'reviews' from Review model where Review.product === product._id
+packageSchema.virtual('packageProducts', {
+	ref: 'PackageProduct',
+	foreignField: 'package',
+	localField: '_id'
+})
+// Step-3: Show virtual fields on document
+packageSchema.pre(/^find/, function (this: PackageDocument, next) {
+	this.populate('packageProducts')
+	next()
+})
 
 packageSchema.pre('save', function(next) {
 	this.price = +this.price

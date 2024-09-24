@@ -38,5 +38,13 @@ const eventProductSchema = new Schema<EventProductsDocument>({
 
 eventProductSchema.plugin(sanitizeSchema)
 
+eventProductSchema.pre(/^find/, function (this: EventProductsDocument, next) {
+
+	this.populate('product')
+	// this.populate('event') 		// it create's infinite loop
+
+	next()
+})
+
 export const EventProduct: Model<EventProductsDocument> = models.EventProduct || model<EventProductsDocument>('EventProduct', eventProductSchema)
 export default EventProduct

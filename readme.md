@@ -846,14 +846,15 @@ body: {
 # "user": "will comes from logedIn User",
   "product": "6649ebc8dabbe03d553861f9",                (*)
   "image" : "data:image/jpeg;base64,/9j/4AAQSkZJRgA..."
-	"ratings: 5, 
+  "ratings: 5, 
 
   # for Review
   "review" : "I'm using too (delete me)",
 
   # or for comment
   "comment": "this is comments on product",
-  "replyTo: "comment.id"
+
+  "replyTo: "comment.id / review.id"
 }
 
 - POST {{origin}}/api/reviews
@@ -872,7 +873,8 @@ body: {
 
   # or for comment
   "comment": "this is comments on product"
-  "replyTo: "comment.id"
+
+  "replyTo: "comment.id / review.id"
 }
 
 - PATCH {{origin}}/api/reviews/reviewId
@@ -1429,6 +1431,56 @@ PATCH {{origin}}/api/packages/:packageId
 ```
 
 
+## PackageProducts      (To add selecteProduct into packages.packageProducts)                         
+- GET {{origin}}/api/package-products 		                # get all 
+- GET {{origin}}/api/package-products/:packageProductId         # Get Single 
+
+- POST {{origin}}/api/package-products                          # To create 
+- PATCH {{origin}}/api/package-products/:packageProductId       # To Update 
+- DELETE {{origin}}/api/package-products/:packageProductId      # To Delete
+
+
+#### Add PackageProuct 
+```
+body {
+  "user" : "667e915a3204d8967daaf4a1",                  (*)
+  "product" : "667ea9b1df5d6c0e864f1841",               (*)
+  "package" : "66c1f8ca97074e09b1ee95b6",               (*)
+  "name" : "package one"                                 
+}
+
+POST {{origin}}/package-products/:packageProductId
+```
+
+#### Update package-product
+```
+body {
+  "user" : "667e915a3204d8967daaf4a1",
+  "product" : "667ea9b1df5d6c0e864f1841",
+  "package" : "66c1f8ca97074e09b1ee95b6",
+  "name" : "package two"                                 # (optional)
+}
+
+PATCH {{origin}}/package-products/:packageProductId
+```
+
+
+#### Get Multiple Package-Products by packageProductIds
+```
+body {
+  "packageProductIds": [
+    "66cb15a49a40eb566f4ffba8",
+    "66c1fb657f3326eca9bc9fce"
+  ]
+}
+
+POST {{origin}}/api/package-products/many                 : To get multiple package products
+```
+
+
+
+
+
 
 ## Order
 - GET   /api/orders                             : Get All orders
@@ -1591,6 +1643,7 @@ POST {{origin}}/api/orders
 ```
 body {
   "status": "completed",                          : ['pending', 'completed', 'shipped', 'cancelled']
+  "vendorPaid": "unpaid" 		          : any string allowed
 }
 PATCH {{origin}}/api/orders/:orderId
 ```
@@ -2075,8 +2128,8 @@ PATCH {{origin}}/delivery-fees/update-many
 
 
 #### Add Report 
-If product._id exists in while creating report, it can be fetched as report specific to a product,
-else it will can be used for personal chats, between user and admin
+If product._id exists in while creating report, it will be product report,
+else it will can be used for personal chats, between users  (user and admin)
 
 ```
 body {
