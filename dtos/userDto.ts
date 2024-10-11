@@ -59,6 +59,7 @@ export const filterBodyForCreateUser = (body: CreateUser) => {
 		'bankName',
 		'bankBranch',
 		'status',
+		'isFeatured',
 	]
 
 	return filterObjectByArray(body, allowedFields)
@@ -120,6 +121,7 @@ export const filterBodyForUpdate = (body: UpdateUser) => {
 		'bankName',
 		'bankBranch',
 		'status',
+		'isFeatured',
 	]
 	return filterObjectByArray(body, allowedFields)
 }

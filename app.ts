@@ -1,16 +1,10 @@
 import type { Express } from 'express'
 import path from 'node:path'
-import crypto from 'node:crypto'
 import express from 'express'
 import cors from 'cors'
 import session from 'express-session'
 import passport from 'passport'
 import MongoStore from 'connect-mongo'
-// import helmet from 'helmet'
-import mongoSanitize from 'express-mongo-sanitize'
-// import rateLimit from 'express-rate-limit'
-import hpp from 'hpp'
-// import csurf from 'csurf'
 import morgan from 'morgan'
 
 import routers from './routes'
@@ -19,15 +13,13 @@ import { passportConfig } from './controllers/passportConfig'
 import { dbConnect } from './models/dbConnect'
 
 
-dbConnect() 		// also add dotenv.config()
-errorController.exceptionErrorHandler() // put it very top
+dbConnect() 		
+errorController.exceptionErrorHandler() 
 
 
 const { SESSION_SECRET,  MONGO_HOST, NODE_ENV } = process.env || {}
-// const { SESSION_SECRET,  MONGO_HOST } = process.env || {}
 const publicDirectory = path.join(process.cwd(), 'public')
 
-// MONGO_HOST required into session({ store })
 const DATABASE_URL = `mongodb://${MONGO_HOST}/babur-hat`
 if(!MONGO_HOST) throw new Error(`Error => MONGO_HOST: ${MONGO_HOST}`)
 if(!SESSION_SECRET) throw new Error(`Error: => SESSION_SECRET=${SESSION_SECRET}`)
@@ -35,41 +27,6 @@ if(!SESSION_SECRET) throw new Error(`Error: => SESSION_SECRET=${SESSION_SECRET}`
 
 const app: Express = express()
 
-// app.use(helmet({
-// 	contentSecurityPolicy: false,  				// Disable CSP if it's interfering
-// 	noSniff: false,  											// Disable X-Content-Type-Options header
-// }));
-// app.use(
-//   helmet.contentSecurityPolicy({
-//     directives: {
-//       defaultSrc: ["'self'"],
-//       scriptSrc: ["'self'", "'baburhaatbd.com'"],
-//     },
-//   })
-// )
-
-
-app.use(mongoSanitize()) 												// prevent mongodb injection attach
-
-// const limit = 400
-// const message = `you API sending too many request, limit: ${limit}`
-// app.use(rateLimit({ 														// 
-// 	limit,
-// 	windowMs: 1000 * 60 * 60, 										// window == request /ms
-// 	handler: (_req, _res, next) => {
-// 		next(errorController.appError(message, 400, 'LimitError'))
-// 	}
-// })) 	
-
-
-app.use(hpp()) 																	// prevent HTML paramiter polution
-
-// // require to send csurf token to access from frontend
-// app.use( csurf({ cookie: true })) 							// prevent Cross-Site Request Forgery attacks
-
-
-
-// List of allowed origins
 const allowedOrigins = [
 	'https://baburhaatbd.com', 					// main
 	'http://baburhaatbd.com',
@@ -105,7 +62,6 @@ const allowedOrigins = [
 	'https://babur-hat.vercel.app/',
 ]
 
-// CORS configuration
 const corsOptions = {
   origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
     // Allow requests with no origin (like mobile apps or curl requests)
@@ -121,17 +77,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 
-// app.use(cors({ 
-// 	// origin: NODE_ENV === 'production' ? CLIENT_ORIGIN : "*",
-// 	origin: "https://baburhaat.com",
-// 	credentials: true,
-// }))
-
-// any pug file got cspNonce variable as global built-in has
-app.use((_req, res, next) => {
-	res.locals.cspNonce = crypto.randomBytes(16).toString('hex')
-	next()
-})
 
 
 // Step-1: set session
@@ -144,7 +89,6 @@ app.use(session({
 		httpOnly: true,
 		secure: NODE_ENV === 'production',
 		sameSite: 'none',
-    // maxAge: 30 * 24 * 60 * 60 * 1000 // 30 day
 	}
 }))
 
@@ -160,7 +104,7 @@ passportConfig()
 // Step-5: app passport.authenticate('local', {...}) 	on 	`POST /login` route
 
 
-app.set('trust proxy', 1); 																	// Trust the first proxy of Nginx
+app.set('trust proxy', 1); 																	// Trust the proxy, which coming via Nginx
 
 app.set('query parser', 'simple') 													// To prevent default query query [] parser
 app.set('view engine', 'pug')
@@ -170,14 +114,7 @@ app.use(express.json({ limit: '400mb' }));
 app.use(express.urlencoded({ limit: '400mb', extended: true }));
 
 app.use(morgan('dev')) 					// 
-
 app.use('/', routers)
-
-app.get('/api/test', (req, res) => {
-	console.log(req.query)
-
-	res.redirect('/api/users')
-})
 
 app.all('*', errorController.routeNotFound)
 app.use(errorController.globalErrorHandler)

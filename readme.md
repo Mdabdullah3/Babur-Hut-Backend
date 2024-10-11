@@ -980,6 +980,7 @@ body {
   bankBranch: "Bank Branch", 
   
   status: "pending", 
+  isFeatured: true,
 }
 
 
@@ -1027,6 +1028,7 @@ body: {
 	bankBranch: string
 
 	status: string
+        isFeatured: true,
 	email: string
 	phone: string
 }

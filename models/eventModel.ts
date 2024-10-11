@@ -1,7 +1,6 @@
 import type { EventsDocument } from '../types/event'
 import type { Model } from 'mongoose'
 import { Schema, models, model } from 'mongoose'
-import { sanitizeSchema } from '../services/sanitizeService'
 
 /*
 {
@@ -61,7 +60,6 @@ const eventSchema = new Schema<EventsDocument>({
 	}
 })
 
-eventSchema.plugin(sanitizeSchema)
 
 // // Step-2: Generate virtual field: 'reviews' from Review model where Review.product === product._id
 eventSchema.virtual('eventProducts', {

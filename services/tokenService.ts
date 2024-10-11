@@ -1,5 +1,9 @@
 // import crypto from 'node:crypto'
+import dotenv from 'dotenv'
 import * as jwt from 'jsonwebtoken'
+
+dotenv.config()
+
 
 const { JWT_AUTH_TOKEN_SECRET } = process.env
 

@@ -98,6 +98,7 @@ export type UserDocument = Document & {
 	bankBranch: string
 
 	status: string
+	isFeatured: boolean
 }
 
 
@@ -126,6 +127,7 @@ export type CreateUser = {
 	bankBranch: string
 
 	status: string
+	isFeatured: boolean
 }
 
 export type UpdateUser = {
@@ -163,4 +165,5 @@ export type UpdateUser = {
 	bankBranch: string
 
 	status: string
+	isFeatured: boolean
 }

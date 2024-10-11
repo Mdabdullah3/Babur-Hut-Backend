@@ -1,7 +1,6 @@
 import type { DeliveryFeeDocument } from '../types/deliveryFee'
 import type { Model } from 'mongoose'
 import { Schema, models, model } from 'mongoose'
-import { sanitizeSchema } from '../services/sanitizeService'
 
 /*
 	district: string
@@ -26,7 +25,6 @@ const deliveryFeeSchema = new Schema<DeliveryFeeDocument>({
 	timestamps: true,
 })
 
-deliveryFeeSchema.plugin(sanitizeSchema)
 
 deliveryFeeSchema.pre('save', function(next) {
 	this.deliveryFee = +this.deliveryFee 								// convert to number

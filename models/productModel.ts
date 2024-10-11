@@ -2,7 +2,6 @@ import type { ProductDocument } from '../types/product'
 import type { Model } from 'mongoose'
 import { model, models, Schema } from 'mongoose'
 import slug from 'slugify'
-import { sanitizeSchema } from '../services/sanitizeService'
 
 
 /*
@@ -298,7 +297,6 @@ const productSchema = new Schema<ProductDocument>({
 	}
 })
 
-productSchema.plugin(sanitizeSchema)
 
 
 productSchema.pre('save', function(next) {

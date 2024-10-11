@@ -1,7 +1,6 @@
 import type { PackageProductsDocument } from '../types/packageProduct'
 import type { Model } from 'mongoose'
 import { Schema, models, model } from 'mongoose'
-import { sanitizeSchema } from '../services/sanitizeService'
 
 /*
 	user: Types.ObjectId,
@@ -36,7 +35,6 @@ const packageProductSchema = new Schema<PackageProductsDocument>({
 })
 
 
-packageProductSchema.plugin(sanitizeSchema)
 
 // Step-3: Show virtual fields on document
 packageProductSchema.pre(/^find/, function (this: PackageProductsDocument, next) {
