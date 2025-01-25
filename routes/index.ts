@@ -9,6 +9,7 @@ import { router as reviewRouter } from './reviewRoutes'
 import { router as orderRouter } from './orderRouters'
 // import { router as paymentRouter } from './paymentRoutes'
 import { router as voucherRouter } from './voucherRoutes'
+import { router as billingRouter } from './billingRoutes'
 import { router as categoryRouter } from './cagegoryRouter'
 import { router as subCategoryRouter } from './subCagegoryRouter'
 import { router as packageRouter } from './packageRoutes'
@@ -42,6 +43,7 @@ router.use('/api/orders', orderRouter)
 router.use('/api/notifications', notificationRouter)
 
 router.use('/api/vouchers', voucherRouter)
+router.use('/api/billing-addresses', billingRouter)
 router.use('/api/categories', categoryRouter)
 router.use('/api/sub-categories', subCategoryRouter)
 router.use('/api/packages', packageRouter)

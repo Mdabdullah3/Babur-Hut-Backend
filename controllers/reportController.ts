@@ -1,4 +1,5 @@
 import type { RequestHandler } from 'express';
+import type { LogedInUser } from '../types/user'   	
 import { appError, catchAsync } from './errorController';
 import { apiFeatures } from '../utils';
 import { getDataUrlSize } from '../utils';
@@ -10,19 +11,23 @@ import Report from '../models/reportModel';
 // GET 	/api/reports
 export const getReports: RequestHandler = catchAsync( async (req, res, _next) => {
 
+	const logedInUser = req.user as LogedInUser
+  const userId = req.params.userId === 'me' ?  logedInUser._id : req.params.userId
+		
 	let filter = {}
+	if(userId) filter = { user: userId.toString() }
 
 	if(req.query.reportsOnly) filter = { product: { $exists: true, $ne: null } } 
 	if(req.query.chatsOnly) filter = { product: { $exists: false } } 
 
 
 	const reports = await apiFeatures(Report, req.query, filter)
-	// const total = await Report.countDocuments()
+	const total = await Report.countDocuments()
 
 	res.status(200).json({
 		status: 'success',
-		// total,
-		total: reports.length,
+		total,
+		count: reports.length,
 		data: reports
 	})
 })

@@ -21,6 +21,7 @@ export const getOrders: RequestHandler = catchAsync( async (req, res, _next) => 
 	res.json({
 		status: 'success',
 		total,
+		count: orders.length,
 		data: orders
 	})
 })

@@ -1,0 +1,36 @@
+doctype html
+html(lang="en")
+	head
+		meta(charset="UTF-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		title #{title}
+		link(rel='icon' type='image/png' href='/favicon.ico')
+		script(type="module", src="/js/pages/home.js") 
+	body 
+
+		br
+		div
+			a(href="/login") Login 
+		div
+			a(href="/profile") Profile 
+		div
+			a(href="/product") View product 
+		div
+			a(href="/dashboard/product") Add product 
+
+		br
+		br
+		div
+			//- a(href="/api/users/logout") Logout by POST /logout route
+			button(name="logout") Logout 
+		
+
+		div
+			if user
+				pre
+					#{JSON.stringify(user, null, 2)}
+		
+		hr
+		p All users
+		div(name='users-container')
+

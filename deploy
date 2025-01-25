@@ -1,0 +1,12 @@
+#!/bin/bash
+
+
+ssh riajul@192.168.0.80
+echo 'ssh success'
+
+cd /home/riajul/baburhaatbd/backend/
+
+ls
+
+exit
+

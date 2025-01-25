@@ -7,6 +7,8 @@ import { router as productRouter } from '../routes/productRoutes'
 import { router as orderRouter } from '../routes/orderRouters'
 import { router as paymentRouter } from '../routes/paymentRoutes'
 import { router as voucherRouter } from '../routes/voucherRoutes'
+import { router as billingRouter } from '../routes/billingRoutes'
+import { router as reportRouter	 } from '../routes/reportRoutes'
 
 // => /api/users/
 export const router = Router()
@@ -21,11 +23,12 @@ router.use('/:userId/products', productRouter)
 router.use('/:userId/orders', orderRouter)
 router.use('/:userId/payments', paymentRouter)
 router.use('/:userId/vouchers', voucherRouter)
-
+router.use('/:userId/billing-addresses', billingRouter)
+router.use('/:userId/reports', reportRouter)
 
 router.route('/')
 	.get(
-		authController.protect,
+//		authController.protect,
 		// authController.restrictTo('admin'), 
 		userController.getAllUsers
 	)

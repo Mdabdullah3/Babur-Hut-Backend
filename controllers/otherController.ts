@@ -15,6 +15,7 @@ export const getOthers: RequestHandler = catchAsync( async (req, res, _next) => 
 	res.status(200).json({
 		status: 'success',
 		total,
+		count: others.length,
 		data: others
 	})
 })

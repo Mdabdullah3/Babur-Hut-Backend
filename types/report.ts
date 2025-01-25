@@ -6,8 +6,9 @@ type Image = {
 }
 
 export type ReportDocument = Document & {
-	product: Types.ObjectId,
-	user: Types.ObjectId,
+	product: Types.ObjectId
+	user: Types.ObjectId
+	replyTo: Types.ObjectId
 	title: string
 	message: string
 	description: string
@@ -15,7 +16,9 @@ export type ReportDocument = Document & {
 }
 
 export type UpdateReport = {
-	product: Types.ObjectId,
+	product: Types.ObjectId
+  user: Types.ObjectId
+  replyTo: Types.ObjectId
 	title: string
 	message: string
 	description: string

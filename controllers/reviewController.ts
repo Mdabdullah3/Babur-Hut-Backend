@@ -43,7 +43,7 @@ export const getAllReviews:RequestHandler = catchAsync( async (req, res, _next) 
 	res.json({
 		status: 'success',
 		total,
-		// total: reviews.length,
+		count: reviews.length,
 		data: reviews
 	})
 })

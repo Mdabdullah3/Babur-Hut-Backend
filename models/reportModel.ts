@@ -4,9 +4,12 @@ import { Schema, models, model } from 'mongoose'
 
 /*
 	user: Types.ObjectId,
+	product: Types.ObjectId,
 	title: string
 	message: string
 	description: string
+	image: 'data:...',
+	replyTo: Types.ObjectId   // userId
 */
 
 const reportSchema = new Schema<ReportDocument>({
@@ -19,6 +22,10 @@ const reportSchema = new Schema<ReportDocument>({
 		type: Schema.Types.ObjectId,
 		ref: 'User',
 		required: true
+	},
+	replyTo: {
+    type: Schema.Types.ObjectId,
+		ref: 'User',
 	},
 	title: {
 		type: String,
@@ -46,6 +53,11 @@ const reportSchema = new Schema<ReportDocument>({
 	timestamps: true,
 })
 
+
+reportSchema.pre('find', function (this: ReportDocument, next) {
+     this.populate('user')
+                                                           next()
+   })
 
 
 export const Report: Model<ReportDocument> = models.Report || model<ReportDocument>('Report', reportSchema)

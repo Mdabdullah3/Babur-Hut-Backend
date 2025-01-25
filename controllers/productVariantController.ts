@@ -15,6 +15,7 @@ export const getProductVariants: RequestHandler = catchAsync( async (req, res, _
 	res.status(200).json({
 		status: 'success',
 		total,
+    count: productVariants.length,
 		data: productVariants
 	})
 })

@@ -40,11 +40,12 @@ export const getAllProducts:RequestHandler = catchAsync( async (req, res, _next)
 	if(userId) filter = { user: userId.toString() } 
 
 	const products = await apiFeatures(Product, req.query, filter)
-	// const total = await Product.countDocuments()
+	const total = await Product.countDocuments()
 
 	res.json({
 		status: 'success',
-		total: products.length,
+		total,
+		count: products.length,
 		data: products,
 	})
 })

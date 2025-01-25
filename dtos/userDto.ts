@@ -48,6 +48,7 @@ export const filterBodyForCreateUser = (body: CreateUser) => {
 		'role',
 		'isActive',
 		'isVerified',
+		'isFeatured',
 
 		'idCardFrontPageImage',
 		'idCardBackPageImage',
@@ -59,7 +60,6 @@ export const filterBodyForCreateUser = (body: CreateUser) => {
 		'bankName',
 		'bankBranch',
 		'status',
-		'isFeatured',
 	]
 
 	return filterObjectByArray(body, allowedFields)
@@ -78,6 +78,7 @@ export const filterUserDocument = (user: UserDocument) => {
 		'role',
 		'isActive',
 		'isVerified',
+		'isFeatured',
 
 		'id',
 		'_id',

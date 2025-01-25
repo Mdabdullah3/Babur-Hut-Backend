@@ -20,6 +20,7 @@ export const getAllVouchers:RequestHandler = catchAsync(async (req, res, _next) 
 	res.status(200).json({
 		status: 'success',
 		total,
+    count: vouchers.length,
 		data: vouchers,
 	})
 })

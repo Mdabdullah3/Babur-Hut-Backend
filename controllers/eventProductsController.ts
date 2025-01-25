@@ -14,6 +14,7 @@ export const getEventProducts: RequestHandler = catchAsync( async (req, res, _ne
 	res.status(200).json({
 		status: 'success',
 		total,
+		count: eventProducts.length,
 		data: eventProducts
 	})
 })

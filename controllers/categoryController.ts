@@ -17,6 +17,7 @@ export const getAllCagegories:RequestHandler = catchAsync(async (_req, res, _nex
 	res.status(200).json({
 		status: 'success',
 		total,
+		count: categories.length,
 		data: categories,
 	})
 })
