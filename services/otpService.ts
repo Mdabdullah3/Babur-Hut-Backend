@@ -16,7 +16,7 @@ export const sendSMS = async (phone: string, otp: number) => {
   try {
     const { data } = await axios.post( 'https://api.sms.net.bd/sendsms', { 
 			api_key: OTP_SECRET,
-			msg: `Your baburhaatbd OTP Code is ${otp}`,
+			msg: `Your Ready How OTP Code is ${otp}`,
 			to: phone 
 		});
 
